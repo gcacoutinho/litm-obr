@@ -1,4 +1,5 @@
 import { translations as t } from './translations';
+import Input from './components/Input';
 
 const Backpack = () => {
   return (
@@ -8,8 +9,8 @@ const Backpack = () => {
         <tbody>
           {Array.from({ length: 10 }, (_, i) => (
             <tr key={i}>
-              <td style={{ border: '1px solid #ccc', padding: '8px' }}>
-                <input type="text" placeholder={t[`Item ${i + 1}`]} />
+              <td style={{ border: '1px solid #ccc', padding: 0 }}>
+                <Input type="text" placeholder={t[`Item ${i + 1}`]} />
               </td>
             </tr>
           ))}
@@ -20,8 +21,8 @@ const Backpack = () => {
         <tbody>
           {Array.from({ length: 4 }, (_, i) => (
             <tr key={i}>
-              <td style={{ border: '1px solid #ccc', padding: '8px' }}>
-                <input type="text" placeholder={t[`Note ${i + 1}`]} />
+              <td style={{ border: '1px solid #ccc', padding: 0 }}>
+                <Input type="text" placeholder={t[`Note ${i + 1}`]} />
               </td>
             </tr>
           ))}

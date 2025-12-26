@@ -11,6 +11,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 body {
@@ -53,10 +54,8 @@ td {
 }
 
 .tab-bar {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
   display: flex;
   align-items: center;
   background-color: #b27f57;
@@ -85,6 +84,7 @@ td {
   border-radius: 4px 4px 0 0;
   margin-right: 2px;
   color: #ebdecc;
+  text-transform: uppercase;
 }
 
 .tab:hover {
@@ -121,14 +121,12 @@ td {
 }
 
 .tab-content {
-  border: 1px solid #ccc;
-  padding: 1rem 0 0 0;
-  background-color: #fff;
-  margin-top: 2.5rem;
-  height: calc(100vh - 2.5rem - 2em);
-  overflow: auto;
-  box-sizing: border-box;
-  color: #52281a;
+   flex: 1;
+   height: auto;
+   overflow: auto;
+   overflow-x: hidden;
+   box-sizing: border-box;
+   padding: 1rem 0 0 0;
 }
 
 /* Scrollbar styling */
@@ -188,14 +186,18 @@ td {
   cursor: not-allowed;
 }
 
-input, textarea {
+
+
+.input-base {
   background-color: transparent;
   color: #52281a;
   border: none;
   border-bottom: 1px solid #e4d2c1;
+  font-family: 'Cormorant Unicase', serif;
+  font-size: 1em;
 }
 
-input::placeholder, textarea::placeholder {
+.input-base::placeholder {
   color: #dec1a2;
 }
 
@@ -211,12 +213,38 @@ input::placeholder, textarea::placeholder {
 }
 
 .label-style {
-  display: block;
-  background-color: #e7d2b8;
-  width: 100%;
-  padding: 0.5rem;
-  font-weight: 700;
-  text-transform: uppercase;
+   display: block;
+   background-color: #e7d2b8;
+   width: 100%;
+   padding: 0.5rem;
+   font-weight: 700;
+   text-transform: uppercase;
+   box-sizing: border-box;
+   color: #52281a;
+   font-family: 'Cormorant Unicase', serif;
+   text-align: center;
+}
+
+.promise-checkbox {
+   width: 18px;
+   height: 18px;
+   border-radius: 50%;
+   background-color: #fbf9f6;
+   border: 1px solid #c1a997;
+   cursor: pointer;
+   appearance: none;
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   transition: all 0.2s ease;
+}
+
+.promise-checkbox:hover {
+   border-color: #a0897a;
+   box-shadow: 0 0 6px rgba(193, 169, 151, 0.5);
+}
+
+.promise-checkbox:checked {
+   background-color: #52281a;
 }
 
 @media (prefers-color-scheme: light) {

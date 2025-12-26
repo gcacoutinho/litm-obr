@@ -27,6 +27,7 @@ export const translations: Record<string, string> = {
   'Tag 4': 'Tag 4',
   'Companion 5': 'Companion 5',
   'Tag 5': 'Tag 5',
+  'Quintessences': 'Quintessences',
 
   // Other tabs
   'Backpack Content': 'Hero Card 2 Content',
