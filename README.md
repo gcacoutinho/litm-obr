@@ -3,6 +3,11 @@
 > 
 > The main goal of this project is to learn how to best take advantage of these technologies by building something that is useful to me.
 
+> [!WARNING]
+> This project is not affiliated with, endorsed by, or associated with  [Legend in the Mist](https://sonofoak.com/pages/legend-in-the-mist), [Son of Oak](https://sonofoak.com/) or [Owlbear Rodeo](https://owlbear.rodeo).
+> 
+> It is a personal, non-commercial project created for learning and experimentation purposes.
+
 # LITM-OBR
 
 LITM-OBR is a web-based extension for **Owlbear Rodeo**, built with **React**, **TypeScript**, and **Vite**.
