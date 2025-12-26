@@ -1,0 +1,13 @@
+{
+  "name": "Hello, World!",
+  "version": "1.0.0",
+  "description": "Owlbear Rodeo extension for the TTRPG Legend in the Mist by Son of Oak",
+  "manifest_version": 1,
+  "action": {
+    "title": "Misty Rodeo",
+    "icon": "/icon.svg",
+    "popover": "/",
+    "width": 400,
+    "height": 800
+  }
+}
