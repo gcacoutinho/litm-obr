@@ -192,7 +192,7 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
          lines={3}
          placeholder="quest"
          value={quests}
-         onChange={(e) => handleQuestsChange(e.target.value)}
+         onChange={(e) => handleQuestsChange((e.target as HTMLTextAreaElement).value)}
        />
     </div>
   )
