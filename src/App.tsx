@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { translations as t } from './translations'
+import { useCharacterStorage } from './hooks/useCharacterStorage'
 import HeroCard from './HeroCard'
 import Backpack from './Backpack'
 import FellowshipThemeCard from './FellowshipThemeCard'
@@ -12,6 +13,7 @@ import ThemeCard4 from './ThemeCard4'
 import Configurations from './Configurations'
 
 function App() {
+  const { character, isLoading, updateCharacter } = useCharacterStorage()
   const [activeTab, setActiveTab] = useState<string>('hero-card')
   const tabContentRef = useRef<HTMLDivElement>(null)
 
@@ -63,23 +65,27 @@ function App() {
   }, [activeTab])
 
   const renderContent = () => {
+    if (isLoading || !character) {
+      return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading character...</div>
+    }
+
     switch (activeTab) {
       case 'hero-card':
-        return <HeroCard />
+        return <HeroCard character={character} onUpdate={updateCharacter} />
       case 'backpack':
-        return <Backpack />
+        return <Backpack character={character} onUpdate={updateCharacter} />
       case 'fellowship-theme-card':
         return <FellowshipThemeCard />
       case 'fellowship-special-improvements':
         return <FellowshipSpecialImprovements />
       case 'theme-card-1':
-        return <ThemeCard1 />
+        return <ThemeCard1 character={character} onUpdate={updateCharacter} />
       case 'theme-card-2':
-        return <ThemeCard2 />
+        return <ThemeCard2 character={character} onUpdate={updateCharacter} />
       case 'theme-card-3':
-        return <ThemeCard3 />
+        return <ThemeCard3 character={character} onUpdate={updateCharacter} />
       case 'theme-card-4':
-        return <ThemeCard4 />
+        return <ThemeCard4 character={character} onUpdate={updateCharacter} />
       case 'configurations':
         return <Configurations />
       default:

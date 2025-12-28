@@ -1,0 +1,13 @@
+<svg viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <!-- Three parallel horizontal scratch marks, rotated as a group for even tilt -->
+  <g transform="translate(16, 16) rotate(130) translate(-16, -16)">
+    <!-- Top outer line: 80% length -->
+    <line x1="7.2" y1="10" x2="24.8" y2="10" stroke="#000000" stroke-width="1.5" stroke-linecap="butt"/>
+    
+    <!-- Middle line: 100% length -->
+    <line x1="2" y1="16" x2="30" y2="16" stroke="#000000" stroke-width="1.5" stroke-linecap="butt"/>
+    
+    <!-- Bottom outer line: 80% length -->
+    <line x1="7.2" y1="22" x2="24.8" y2="22" stroke="#000000" stroke-width="1.5" stroke-linecap="butt"/>
+  </g>
+</svg>

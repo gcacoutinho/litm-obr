@@ -307,12 +307,62 @@ td {
   border-width: 2px;
 }
 
+.scratch-checkbox-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.scratch-checkbox-input {
+  display: none;
+}
+
+.scratch-checkbox-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scratch-checkbox-icon > svg {
+   width: 25px;
+   height: 25px;
+   border-radius: 50%;
+   transition: all 0.2s ease;
+   stroke: #000000;
+}
+
+.scratch-checkbox-wrapper:hover .scratch-checkbox-icon > svg {
+   filter: brightness(0.85);
+}
+
+.scratch-checkbox-input:checked ~ .scratch-checkbox-icon > svg {
+   box-shadow: 0 0 0 2px #c1a997;
+}
+
+.scratch-checkbox-wrapper:hover .scratch-checkbox-input:not(:checked) ~ .scratch-checkbox-icon > svg {
+   box-shadow: 0 0 0 2px rgba(193, 169, 151, 0.3);
+}
+
+.scratch-checkbox-input:disabled ~ .scratch-checkbox-icon {
+  opacity: 0.5;
+}
+
+.scratch-checkbox-input:disabled {
+  cursor: not-allowed;
+}
+
+.scratch-checkbox-wrapper:has(.scratch-checkbox-input:disabled) {
+  cursor: not-allowed;
+}
+
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+   :root {
+     color: #213547;
+     background-color: #ffffff;
+   }
+   button {
+     background-color: #f9f9f9;
+   }
 }
