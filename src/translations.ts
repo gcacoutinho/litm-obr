@@ -55,4 +55,7 @@ export const translations: Record<string, string> = {
   'Theme Card 4 Content': 'Theme Card 4 Content',
   '⚙️': '⚙️',
   'Configurations Content': 'Configurations Content',
+  'Origin': 'Origin',
+  'Adventure': 'Adventure',
+  'Greatness': 'Greatness',
 };

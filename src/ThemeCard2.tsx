@@ -1,7 +1,7 @@
-import { translations as t } from './translations';
+import ThemeCard from './ThemeCard';
 
 const ThemeCard2 = () => {
-  return <h1>{t['Theme Card 2 Content']}</h1>;
+  return <ThemeCard cardNumber={2} />;
 };
 
 export default ThemeCard2;

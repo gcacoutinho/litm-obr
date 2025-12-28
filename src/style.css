@@ -260,7 +260,38 @@ td {
 }
 
 .promise-checkbox:checked {
-   background-color: #52281a;
+    background-color: #52281a;
+}
+
+.might-selector {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.might-option {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 50px;
+  transition: all 0.2s ease;
+  color: #52281a;
+  font-family: 'Cormorant Unicase', serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: none;
+  font-size: 1em;
+  font-size: 1em;
+}
+
+.might-option:hover {
+  border-color: #b27f57;
+}
+
+.might-option.active {
+  border-color: #b27f57;
+  border-width: 2px;
 }
 
 @media (prefers-color-scheme: light) {
