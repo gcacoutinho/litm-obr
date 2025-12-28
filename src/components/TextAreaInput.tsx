@@ -23,8 +23,18 @@ const TextAreaInput = React.forwardRef<HTMLTextAreaElement, TextAreaInputProps>(
       (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = event.target.value;
         const textarea = event.target;
+        const isDeleting = newValue.length < prevValueRef.current.length;
 
-        // Measure scroll height to determine rendered line count
+        // Allow deletions unconditionally
+        if (isDeleting) {
+          prevValueRef.current = newValue;
+          if (onChange) {
+            onChange(event);
+          }
+          return;
+        }
+
+        // Measure scroll height to determine rendered line count for additions
         // Use setTimeout to ensure DOM has updated with new content
         setTimeout(() => {
           const scrollHeight = textarea.scrollHeight;
