@@ -190,7 +190,7 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
        <label className="label-style">QUEST</label>
        <TextAreaInput
          lines={3}
-         placeholder="Quest 1&#10;Quest 2&#10;Quest 3"
+         placeholder="quest"
          value={quests}
          onChange={(e) => handleQuestsChange(e.currentTarget.value)}
        />
