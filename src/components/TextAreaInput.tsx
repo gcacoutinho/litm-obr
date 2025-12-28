@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef } from 'react';
 import './TextAreaInput.css';
 
 interface TextAreaInputProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -6,60 +6,14 @@ interface TextAreaInputProps extends React.TextareaHTMLAttributes<HTMLTextAreaEl
 }
 
 const TextAreaInput = React.forwardRef<HTMLTextAreaElement, TextAreaInputProps>(
-  ({ className, style, lines, onChange, value: propValue, ...props }, ref) => {
+  ({ className, style, lines, value: propValue, ...props }, ref) => {
     const defaultClass = 'input-base';
     const combinedClass = className ? `${defaultClass} ${className}`.trim() : defaultClass;
 
     const lineHeightEm = 1.5;
     const lineHeight = `${lineHeightEm}em`;
-    const baseFontSizePixels = 16; // standard browser default
-    const lineHeightPixels = lineHeightEm * baseFontSizePixels;
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const [isFlashing, setIsFlashing] = useState(false);
-    const prevValueRef = useRef<string>(propValue?.toString() ?? '');
-
-    const handleChange = useCallback(
-      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newValue = event.target.value;
-        const textarea = event.target;
-        const isDeleting = newValue.length < prevValueRef.current.length;
-
-        // Allow deletions unconditionally
-        if (isDeleting) {
-          prevValueRef.current = newValue;
-          if (onChange) {
-            onChange(event);
-          }
-          return;
-        }
-
-        // Measure scroll height to determine rendered line count for additions
-        // Use setTimeout to ensure DOM has updated with new content
-        setTimeout(() => {
-          const scrollHeight = textarea.scrollHeight;
-          const renderedLines = Math.ceil(scrollHeight / lineHeightPixels);
-
-          if (renderedLines > lines) {
-            // Exceeded limit: revert to previous value and flash
-            textarea.value = prevValueRef.current;
-            
-            // Trigger flash animation
-            setIsFlashing(true);
-            const timeoutId = setTimeout(() => setIsFlashing(false), 600);
-            return () => clearTimeout(timeoutId);
-          } else {
-            // Within limit: update previous value and call original onChange
-            prevValueRef.current = newValue;
-            
-            if (onChange) {
-              onChange(event);
-            }
-          }
-        }, 0);
-      },
-      [lines, onChange, lineHeightPixels]
-    );
 
     const defaultStyle: React.CSSProperties = {
       width: '100%',
@@ -88,9 +42,8 @@ const TextAreaInput = React.forwardRef<HTMLTextAreaElement, TextAreaInputProps>(
             }
           } : textareaRef}
           rows={lines}
-          className={`${combinedClass} ${isFlashing ? 'textareaInput--error' : ''}`}
+          className={combinedClass}
           value={propValue ?? ''}
-          onChange={handleChange}
           {...props}
           style={{ ...defaultStyle, ...style }}
         />
