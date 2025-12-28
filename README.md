@@ -43,46 +43,22 @@ This project intentionally leaves game mechanics to the table and the players.
 ```
 litm-obr/
 ├── src/
-│   ├── main.tsx                 # React entry point
-│   ├── App.tsx                  # Main application shell
-│   ├── App.css                  # Component styles
-│   ├── style.css                # Global styles
-│   ├── translations.ts          # Translation data
-│   ├── [multiple other .tsx]    # Additional React components (Backpack, Configurations, etc.)
-│   ├── components/              # UI components
-│   │   ├── InputCheckbox.tsx
-│   │   ├── OBRReady.tsx
-│   │   ├── ScratchCheckbox.tsx
-│   │   ├── TextAreaInput.tsx
-│   │   ├── TextInput.tsx
-│   │   ├── WeaknessTagLeading.tsx
-│   │   └── TextAreaInput.css
-│   ├── hooks/                   # Custom React hooks
-│   │   ├── useCharacterStorage.ts
-│   │   └── useDebouncedCallback.ts
-│   └── obrd/                    # Owlbear SDK wrappers / adapters
-│       ├── constants.ts
-│       ├── localStore.ts
-│       ├── playerMetadata.ts
-│       └── types.ts
-├── public/
-│   ├── icon.svg
-│   ├── manifest.json
-│   ├── scratches.svg
-│   └── weakness-tag.svg
-├── .envrc
-├── .gitignore
-├── index.html
-├── vite.config.js
-├── tsconfig.json
-├── tsconfig.node.json
-├── vite-env.d.ts
-├── flake.nix
-├── flake.lock
-├── package.json
-├── package-lock.json
-├── AGENTS.md
-└── README.md
+│   ├── main.tsx        # React entry point
+│   ├── App.tsx         # Main application shell
+│   ├── App.css         # Component styles
+│   ├── style.css       # Global styles
+│   ├── hooks/          # Custom React hooks
+│   ├── obrd/           # Owlbear SDK wrappers / adapters
+│   ├── components/     # UI components
+│   └── translations.ts # Translation data
+├── public/             # Static assets
+├── index.html          # HTML template
+├── vite.config.js      # Vite configuration
+├── tsconfig.json       # TypeScript configuration
+├── flake.nix           # Nix flake
+├── package.json        # NPM dependencies
+├── AGENTS.md           # Agent behavior guidelines
+└── README.md           # This file
 ```
 
 ---
