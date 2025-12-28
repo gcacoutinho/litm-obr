@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { translations as t } from './translations'
 import TextInput from './components/TextInput'
+import TextAreaInput from './components/TextAreaInput'
 import ScratchCheckbox from './components/ScratchCheckbox'
 import WeaknessTagLeading from './components/WeaknessTagLeading'
 import { Character, ThemeMight } from './obrd/types'
@@ -24,9 +25,7 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
   const [powerTag3, setPowerTag3] = useState(themeCardData.powerTags.tag3.text)
   const [powerTag3Scratched, setPowerTag3Scratched] = useState(themeCardData.powerTags.tag3.scratched)
   const [weaknessTag, setWeaknessTag] = useState(themeCardData.weaknessTag)
-  const [quest1, setQuest1] = useState(themeCardData.quests.quest1)
-  const [quest2, setQuest2] = useState(themeCardData.quests.quest2)
-  const [quest3, setQuest3] = useState(themeCardData.quests.quest3)
+  const [quests, setQuests] = useState(themeCardData.quests)
 
   // Sync with character prop changes
   useEffect(() => {
@@ -40,9 +39,7 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
     setPowerTag3(data.powerTags.tag3.text)
     setPowerTag3Scratched(data.powerTags.tag3.scratched)
     setWeaknessTag(data.weaknessTag)
-    setQuest1(data.quests.quest1)
-    setQuest2(data.quests.quest2)
-    setQuest3(data.quests.quest3)
+    setQuests(data.quests)
   }, [character, themeCardKey])
 
   const updateThemeCard = (updates: Partial<typeof themeCardData>) => {
@@ -133,28 +130,16 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
     updateThemeCard({ weaknessTag: value })
   }
 
-  const handleQuest1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setQuest1(value)
-    updateThemeCard({
-      quests: { ...themeCardData.quests, quest1: value }
-    })
-  }
-
-  const handleQuest2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setQuest2(value)
-    updateThemeCard({
-      quests: { ...themeCardData.quests, quest2: value }
-    })
-  }
-
-  const handleQuest3Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setQuest3(value)
-    updateThemeCard({
-      quests: { ...themeCardData.quests, quest3: value }
-    })
+  const handleQuestsChange = (value: string) => {
+    const lines = value.split('\n')
+    // Trim each line and ensure we have exactly 3 quests
+    const updated = {
+      quest1: (lines[0] || '').trim(),
+      quest2: (lines[1] || '').trim(),
+      quest3: (lines[2] || '').trim()
+    }
+    setQuests(updated)
+    updateThemeCard({ quests: updated })
   }
 
   const mightOptions = ['origin', 'adventure', 'greatness'] as const
@@ -204,20 +189,11 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
         placeholder="Weakness tag"
       />
       <label className="label-style">QUEST</label>
-      <TextInput
-        value={quest1}
-        onChange={handleQuest1Change}
-        placeholder="Quest 1"
-      />
-      <TextInput
-        value={quest2}
-        onChange={handleQuest2Change}
-        placeholder="Quest 2"
-      />
-      <TextInput
-        value={quest3}
-        onChange={handleQuest3Change}
-        placeholder="Quest 3"
+      <TextAreaInput
+        lines={3}
+        placeholder="Quest 1&#10;Quest 2&#10;Quest 3"
+        value={`${quests.quest1}\n${quests.quest2}\n${quests.quest3}`}
+        onChange={(e) => handleQuestsChange(e.currentTarget.value)}
       />
     </div>
   )

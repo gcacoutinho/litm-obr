@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { translations as t } from './translations';
 import TextInput from './components/TextInput';
+import TextAreaInput from './components/TextAreaInput';
 import { Character } from './obrd/types';
 
 interface BackpackProps {
@@ -25,9 +26,10 @@ const Backpack = ({ character, onUpdate }: BackpackProps) => {
     onUpdate({ backpack: { items: updated, notes } });
   };
 
-  const handleNoteChange = (index: number, value: string) => {
-    const updated = [...notes];
-    updated[index] = value;
+  const handleNotesChange = (value: string) => {
+    const lines = value.split('\n');
+    // Trim each line and ensure we have exactly 4 elements
+    const updated = Array.from({ length: 4 }, (_, i) => (lines[i] || '').trim());
     setNotes(updated);
     onUpdate({ backpack: { items, notes: updated } });
   };
@@ -43,13 +45,12 @@ const Backpack = ({ character, onUpdate }: BackpackProps) => {
         ))}
       </div>
       <label className="label-style">{t['Notes']}</label>
-      <div className="flex-item-container" style={{ marginBottom: '1rem', width: '100%' }}>
-        {Array.from({ length: 4 }, (_, i) => (
-          <div key={i}>
-            <TextInput type="text" placeholder={t[`Note ${i + 1}`]} value={notes[i]} onChange={(e) => handleNoteChange(i, e.target.value)} />
-          </div>
-        ))}
-      </div>
+      <TextAreaInput
+        lines={4}
+        placeholder={t['Notes']}
+        value={notes.join('\n')}
+        onChange={(e) => handleNotesChange(e.currentTarget.value)}
+      />
     </div>
   );
 };
