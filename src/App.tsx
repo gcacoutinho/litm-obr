@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { translations as t } from './translations'
 import HeroCard from './HeroCard'
@@ -13,6 +13,7 @@ import Configurations from './Configurations'
 
 function App() {
   const [activeTab, setActiveTab] = useState<string>('hero-card')
+  const tabContentRef = useRef<HTMLDivElement>(null)
 
   const tabs = [
     { id: 'hero-card', label: t['Hero Card'] },
@@ -55,6 +56,10 @@ function App() {
 
   useEffect(() => {
     scrollToSelectedTab();
+    // Reset tab-content scroll to top
+    if (tabContentRef.current) {
+      tabContentRef.current.scrollTop = 0;
+    }
   }, [activeTab])
 
   const renderContent = () => {
@@ -113,7 +118,7 @@ function App() {
           ▶
         </button>
       </div>
-      <div className={`tab-content ${activeTab}`}>
+      <div ref={tabContentRef} className={`tab-content ${activeTab}`}>
         {renderContent()}
       </div>
     </div>
