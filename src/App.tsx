@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import './App.css'
 import { translations as t } from './translations'
 import HeroCard from './HeroCard'
 import Backpack from './Backpack'
