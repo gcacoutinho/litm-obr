@@ -1,22 +1,16 @@
 import React from 'react';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   leading?: React.ReactNode;
   trailing?: React.ReactNode;
 }
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, style, type, leading, trailing, ...props }, ref) => {
-  const isCheckbox = type === 'checkbox';
-  const defaultClass = isCheckbox ? '' : 'input-base';
+const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(({ className, style, leading, trailing, ...props }, ref) => {
+  const defaultClass = 'input-base';
   const combinedClass = className ? `${defaultClass} ${className}`.trim() : defaultClass;
-  const defaultStyle: React.CSSProperties = isCheckbox ? {} : { width: '100%', boxSizing: 'border-box' };
+  const defaultStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box' };
   
-  const input = <input ref={ref} type={type} className={combinedClass} {...props} style={{ ...defaultStyle, ...style }} />;
-  
-  // Wrap non-checkbox inputs with padding container
-  if (isCheckbox) {
-    return input;
-  }
+  const input = <input ref={ref} className={combinedClass} {...props} style={{ ...defaultStyle, ...style }} />;
   
   // If no leading or trailing slots, use current behavior
   if (!leading && !trailing) {
@@ -39,6 +33,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, style
   );
 });
 
-Input.displayName = 'Input';
+TextInput.displayName = 'TextInput';
 
-export default Input;
+export default TextInput;

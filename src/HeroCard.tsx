@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import Input from './components/Input';
+import TextInput from './components/TextInput';
+import InputCheckbox from './components/InputCheckbox';
 import { translations as t } from './translations';
 
 const HeroCard = () => {
@@ -28,7 +29,7 @@ const HeroCard = () => {
       </div>
       <div style={{ marginBottom: '1rem' }}>
         <label className="label-style">{t['Player Name']}</label>
-        <Input type="text" placeholder={t['Enter player name']} />
+         <TextInput type="text" placeholder={t['Enter player name']} />
       </div>
       <label className="label-style">{t['FELLOWSHIP RELATIONSHIP']}</label>
       <div style={{ marginBottom: '1rem', width: '100%' }}>
@@ -41,10 +42,10 @@ const HeroCard = () => {
          {Array.from({ length: 5 }, (_, i) => (
            <div key={i} style={{ display: 'flex' }}>
              <div style={{ flex: 1, borderRight: '1px solid #e4d2c1' }}>
-               <Input type="text" placeholder={t[`Companion ${i + 1}`]} />
+               <TextInput type="text" placeholder={t[`Companion ${i + 1}`]} />
              </div>
              <div style={{ flex: 1 }}>
-               <Input type="text" placeholder={t[`Tag ${i + 1}`]} />
+                <TextInput type="text" placeholder={t[`Tag ${i + 1}`]} />
              </div>
            </div>
          ))}
@@ -52,7 +53,7 @@ const HeroCard = () => {
        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
           <span style={{ marginRight: '1rem', color: '#52281a', fontWeight: '700', textTransform: 'uppercase'}}>{t['Promise']}:</span>
          {Array.from({ length: 5 }, (_, i) => (
-           <Input key={i} type="checkbox" className="promise-checkbox" style={{ marginRight: '0.5rem' }} />
+            <InputCheckbox key={i} className="promise-checkbox" style={{ marginRight: '0.5rem' }} />
          ))}
       </div>
       <div>
@@ -60,7 +61,7 @@ const HeroCard = () => {
         {Array.from({ length: 5 }, (_, i) => (
           <div key={i} style={{ display: 'flex' }}>
             <div style={{ flex: 1 }}>
-              <Input type="text" placeholder={t[`Quintessece ${i + 1}`]} />
+              <TextInput type="text" placeholder={t[`Quintessece ${i + 1}`]} />
             </div>
           </div>
         ))}

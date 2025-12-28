@@ -1,5 +1,5 @@
 import { translations as t } from './translations';
-import Input from './components/Input';
+import TextInput from './components/TextInput';
 
 const Backpack = () => {
   return (
@@ -8,7 +8,7 @@ const Backpack = () => {
       <div className="flex-item-container" style={{ marginBottom: '1rem', width: '100%' }}>
         {Array.from({ length: 10 }, (_, i) => (
           <div key={i}>
-            <Input type="text" placeholder={t[`Item ${i + 1}`]} />
+            <TextInput type="text" placeholder={t[`Item ${i + 1}`]} />
           </div>
         ))}
       </div>
@@ -16,7 +16,7 @@ const Backpack = () => {
       <div className="flex-item-container" style={{ marginBottom: '1rem', width: '100%' }}>
         {Array.from({ length: 4 }, (_, i) => (
           <div key={i}>
-            <Input type="text" placeholder={t[`Note ${i + 1}`]} />
+            <TextInput type="text" placeholder={t[`Note ${i + 1}`]} />
           </div>
         ))}
       </div>
