@@ -1,8 +1,11 @@
 import React from 'react';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  leading?: React.ReactNode;
+  trailing?: React.ReactNode;
+}
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, style, type, ...props }, ref) => {
+const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, style, type, leading, trailing, ...props }, ref) => {
   const isCheckbox = type === 'checkbox';
   const defaultClass = isCheckbox ? '' : 'input-base';
   const combinedClass = className ? `${defaultClass} ${className}`.trim() : defaultClass;
@@ -15,9 +18,23 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, style
     return input;
   }
   
+  // If no leading or trailing slots, use current behavior
+  if (!leading && !trailing) {
+    return (
+      <div style={{ padding: '8px' }}>
+        {input}
+      </div>
+    );
+  }
+  
+  // With leading/trailing slots, use flex layout
   return (
-    <div style={{ padding: '8px' }}>
-      {input}
+    <div style={{ padding: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      {leading && <span className="input-leading">{leading}</span>}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        {input}
+      </div>
+      {trailing && <span className="input-trailing">{trailing}</span>}
     </div>
   );
 });
