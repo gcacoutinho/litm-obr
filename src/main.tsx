@@ -1,14 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import OBR from '@owlbear-rodeo/sdk'
 import App from './App.tsx'
+import { OBRReady } from './components/OBRReady.tsx'
 import './style.css'
 
-OBR.onReady(() => {
-  console.log('[litm-obr] OBR SDK ready, initializing app')
-  ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <OBRReady>
       <App />
-    </React.StrictMode>,
-  )
-})
+    </OBRReady>
+  </React.StrictMode>,
+)
