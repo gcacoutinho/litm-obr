@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { translations as t } from './translations'
 import TextInput from './components/TextInput'
-import InputCheckbox from './components/InputCheckbox'
+import ScratchCheckbox from './components/ScratchCheckbox'
+import WeaknessTagLeading from './components/WeaknessTagLeading'
 
 interface ThemeCardProps {
   cardNumber: 1 | 2 | 3 | 4
@@ -41,21 +42,22 @@ const ThemeCard = ({ cardNumber }: ThemeCardProps) => {
         value={powerTag1}
         onChange={(e) => setPowerTag1(e.currentTarget.value)}
         placeholder="Power Tag 1"
-        trailing={<InputCheckbox />}
+        trailing={<ScratchCheckbox />}
       />
       <TextInput
         value={powerTag2}
         onChange={(e) => setPowerTag2(e.currentTarget.value)}
         placeholder="Power Tag 2"
-        trailing={<InputCheckbox />}
+        trailing={<ScratchCheckbox />}
       />
       <TextInput
         value={powerTag3}
         onChange={(e) => setPowerTag3(e.currentTarget.value)}
         placeholder="Power Tag 3"
-        trailing={<InputCheckbox />}
+        trailing={<ScratchCheckbox />}
       />
       <TextInput
+        leading={<WeaknessTagLeading />}
         value={weaknessTag}
         onChange={(e) => setWeaknessTag(e.currentTarget.value)}
         placeholder="Weakness tag"
