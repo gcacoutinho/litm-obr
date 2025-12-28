@@ -121,12 +121,12 @@ td {
 }
 
 .tab-content {
-   flex: 1;
-   height: auto;
-   overflow: auto;
-   overflow-x: hidden;
-   box-sizing: border-box;
-   padding: 1rem 0 0 0;
+    flex: 1;
+    height: auto;
+    overflow: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    padding: 0;
 }
 
 /* Scrollbar styling */
@@ -189,19 +189,28 @@ td {
 
 
 .input-base {
-  background-color: transparent;
-  color: #52281a;
-  border: none;
-  border-bottom: 1px solid #e4d2c1;
-  font-family: 'Cormorant Unicase', serif;
-  font-size: 1em;
+   background-color: transparent;
+   color: #52281a;
+   border: none;
+   border-bottom: 1px solid #e4d2c1;
+   font-family: 'Cormorant Unicase', serif;
+   font-size: 1em;
+}
+
+.flex-item-container {
+   display: flex;
+   flex-direction: column;
 }
 
 .input-base::placeholder {
   color: #dec1a2;
 }
 
-.tab-content.hero-card,
+.tab-content.hero-card {
+  background-color: #f4e5d2;
+  padding-top: 1rem;
+}
+
 .tab-content.backpack,
 .tab-content.fellowship-theme-card,
 .tab-content.fellowship-special-improvements,
