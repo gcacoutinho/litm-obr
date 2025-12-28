@@ -9,11 +9,7 @@ export interface ThemeCardData {
     tag3: { text: string; scratched: boolean }
   }
   weaknessTag: string
-  quests: {
-    quest1: string
-    quest2: string
-    quest3: string
-  }
+  quests: string
 }
 
 export interface Character {
@@ -30,7 +26,7 @@ export interface Character {
   // Backpack
   backpack: {
     items: string[] // Length: 10
-    notes: string[] // Length: 4
+    notes: string
   }
   
   // Theme Cards (separate data for each)
@@ -50,11 +46,7 @@ export function createEmptyThemeCard(): ThemeCardData {
       tag3: { text: '', scratched: false }
     },
     weaknessTag: '',
-    quests: {
-      quest1: '',
-      quest2: '',
-      quest3: ''
-    }
+    quests: ''
   }
 }
 
@@ -70,7 +62,7 @@ export function createEmptyCharacter(): Character {
     quintessences: Array(5).fill(''),
     backpack: {
       items: Array(10).fill(''),
-      notes: Array(4).fill('')
+      notes: ''
     },
     themeCard1: createEmptyThemeCard(),
     themeCard2: createEmptyThemeCard(),

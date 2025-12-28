@@ -130,17 +130,10 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
     updateThemeCard({ weaknessTag: value })
   }
 
-  const handleQuestsChange = (value: string) => {
-    const lines = value.split('\n')
-    // Trim each line and ensure we have exactly 3 quests
-    const updated = {
-      quest1: (lines[0] || '').trim(),
-      quest2: (lines[1] || '').trim(),
-      quest3: (lines[2] || '').trim()
-    }
-    setQuests(updated)
-    updateThemeCard({ quests: updated })
-  }
+   const handleQuestsChange = (value: string) => {
+     setQuests(value)
+     updateThemeCard({ quests: value })
+   }
 
   const mightOptions = ['origin', 'adventure', 'greatness'] as const
 
@@ -188,13 +181,13 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
         onChange={handleWeaknessTagChange}
         placeholder="Weakness tag"
       />
-      <label className="label-style">QUEST</label>
-      <TextAreaInput
-        lines={3}
-        placeholder="Quest 1&#10;Quest 2&#10;Quest 3"
-        value={`${quests.quest1}\n${quests.quest2}\n${quests.quest3}`}
-        onChange={(e) => handleQuestsChange(e.currentTarget.value)}
-      />
+       <label className="label-style">QUEST</label>
+       <TextAreaInput
+         lines={3}
+         placeholder="Quest 1&#10;Quest 2&#10;Quest 3"
+         value={quests}
+         onChange={(e) => handleQuestsChange(e.currentTarget.value)}
+       />
     </div>
   )
 }

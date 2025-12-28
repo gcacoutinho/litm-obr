@@ -26,13 +26,10 @@ const Backpack = ({ character, onUpdate }: BackpackProps) => {
     onUpdate({ backpack: { items: updated, notes } });
   };
 
-  const handleNotesChange = (value: string) => {
-    const lines = value.split('\n');
-    // Trim each line and ensure we have exactly 4 elements
-    const updated = Array.from({ length: 4 }, (_, i) => (lines[i] || '').trim());
-    setNotes(updated);
-    onUpdate({ backpack: { items, notes: updated } });
-  };
+   const handleNotesChange = (value: string) => {
+     setNotes(value);
+     onUpdate({ backpack: { items, notes: value } });
+   };
 
   return (
     <div>
@@ -44,13 +41,13 @@ const Backpack = ({ character, onUpdate }: BackpackProps) => {
           </div>
         ))}
       </div>
-      <label className="label-style">{t['Notes']}</label>
-      <TextAreaInput
-        lines={4}
-        placeholder={t['Notes']}
-        value={notes.join('\n')}
-        onChange={(e) => handleNotesChange(e.currentTarget.value)}
-      />
+       <label className="label-style">{t['Notes']}</label>
+        <TextAreaInput
+          lines={4}
+          placeholder={t['Notes']}
+          value={notes}
+          onChange={(e) => handleNotesChange(e.target.value)}
+        />
     </div>
   );
 };
