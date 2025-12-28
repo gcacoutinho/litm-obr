@@ -5,6 +5,7 @@ import TextAreaInput from './components/TextAreaInput'
 import ScratchCheckbox from './components/ScratchCheckbox'
 import WeaknessTagLeading from './components/WeaknessTagLeading'
 import { Character, ThemeMight } from './obrd/types'
+import { useDebouncedCallback } from './hooks/useDebouncedCallback'
 
 interface ThemeCardProps {
   cardNumber: 1 | 2 | 3 | 4
@@ -46,6 +47,11 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
     const updated = { ...themeCardData, ...updates }
     onUpdate({ [themeCardKey]: updated })
   }
+
+  // Debounced callback for saving quests
+  const debouncedSaveQuests = useDebouncedCallback((updatedQuests: string) => {
+    updateThemeCard({ quests: updatedQuests })
+  }, 500)
 
   const handleMightChange = (newMight: ThemeMight) => {
     setMight(newMight)
@@ -130,10 +136,10 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
     updateThemeCard({ weaknessTag: value })
   }
 
-   const handleQuestsChange = (value: string) => {
-     setQuests(value)
-     updateThemeCard({ quests: value })
-   }
+  const handleQuestsChange = (value: string) => {
+    setQuests(value)
+    debouncedSaveQuests(value)
+  }
 
   const mightOptions = ['origin', 'adventure', 'greatness'] as const
 

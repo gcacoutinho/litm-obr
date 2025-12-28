@@ -3,6 +3,7 @@ import { translations as t } from './translations';
 import TextInput from './components/TextInput';
 import TextAreaInput from './components/TextAreaInput';
 import { Character } from './obrd/types';
+import { useDebouncedCallback } from './hooks/useDebouncedCallback';
 
 interface BackpackProps {
   character: Character
@@ -19,17 +20,27 @@ const Backpack = ({ character, onUpdate }: BackpackProps) => {
     setNotes(character.backpack.notes);
   }, [character.backpack]);
 
+  // Debounced callback for saving items
+  const debouncedSaveItems = useDebouncedCallback((updatedItems: string[]) => {
+    onUpdate({ backpack: { items: updatedItems, notes } });
+  }, 500);
+
+  // Debounced callback for saving notes
+  const debouncedSaveNotes = useDebouncedCallback((updatedNotes: string) => {
+    onUpdate({ backpack: { items, notes: updatedNotes } });
+  }, 500);
+
   const handleItemChange = (index: number, value: string) => {
     const updated = [...items];
     updated[index] = value;
     setItems(updated);
-    onUpdate({ backpack: { items: updated, notes } });
+    debouncedSaveItems(updated);
   };
 
-   const handleNotesChange = (value: string) => {
-     setNotes(value);
-     onUpdate({ backpack: { items, notes: value } });
-   };
+  const handleNotesChange = (value: string) => {
+    setNotes(value);
+    debouncedSaveNotes(value);
+  };
 
   return (
     <div>
