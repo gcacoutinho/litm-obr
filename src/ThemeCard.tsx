@@ -1,12 +1,10 @@
-import { useState, useEffect } from 'react'
-import { translations as t } from './translations'
+import { Character } from './obrd/types'
 import TextInput from './components/TextInput'
 import TextAreaInput from './components/TextAreaInput'
-import ScratchCheckbox from './components/ScratchCheckbox'
 import WeaknessTagLeading from './components/WeaknessTagLeading'
-import Advancement from './components/Advancement'
-import { Character, ThemeMight } from './obrd/types'
-import { useDebouncedCallback } from './hooks/useDebouncedCallback'
+import { PowerTagInput } from './components/PowerTagInput'
+import { AdvancementSection } from './components/AdvancementSection'
+import { useThemeCardForm } from './hooks/useThemeCardForm'
 
 interface ThemeCardProps {
   cardNumber: 1 | 2 | 3 | 4
@@ -14,175 +12,16 @@ interface ThemeCardProps {
   onUpdate: (updates: Partial<Character>) => void
 }
 
+/**
+ * Renders a theme card with power tags, advancements, and quest tracking.
+ * Manages form state through useThemeCardForm hook.
+ *
+ * @param cardNumber - Which theme card (1-4) to display
+ * @param character - Current character data
+ * @param onUpdate - Callback when theme card data changes
+ */
 const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
-  const themeCardKey = `themeCard${cardNumber}` as `themeCard${1 | 2 | 3 | 4}`
-  const themeCardData = character[themeCardKey]
-
-  const [might, setMight] = useState<ThemeMight>(themeCardData.might)
-  const [type, setType] = useState(themeCardData.type)
-  const [powerTag1, setPowerTag1] = useState(themeCardData.powerTags.tag1.text)
-  const [powerTag1Scratched, setPowerTag1Scratched] = useState(themeCardData.powerTags.tag1.scratched)
-  const [powerTag2, setPowerTag2] = useState(themeCardData.powerTags.tag2.text)
-  const [powerTag2Scratched, setPowerTag2Scratched] = useState(themeCardData.powerTags.tag2.scratched)
-  const [powerTag3, setPowerTag3] = useState(themeCardData.powerTags.tag3.text)
-  const [powerTag3Scratched, setPowerTag3Scratched] = useState(themeCardData.powerTags.tag3.scratched)
-  const [weaknessTag, setWeaknessTag] = useState(themeCardData.weaknessTag)
-  const [quests, setQuests] = useState(themeCardData.quests)
-  const [abandonAdvancements, setAbandonAdvancements] = useState<[boolean, boolean, boolean]>(themeCardData.advancements.abandon)
-  const [improveAdvancements, setImproveAdvancements] = useState<[boolean, boolean, boolean]>(themeCardData.advancements.improve)
-  const [milestoneAdvancements, setMilestoneAdvancements] = useState<[boolean, boolean, boolean]>(themeCardData.advancements.milestone)
-
-  // Sync with character prop changes
-  useEffect(() => {
-    const data = character[themeCardKey]
-    setMight(data.might)
-    setType(data.type)
-    setPowerTag1(data.powerTags.tag1.text)
-    setPowerTag1Scratched(data.powerTags.tag1.scratched)
-    setPowerTag2(data.powerTags.tag2.text)
-    setPowerTag2Scratched(data.powerTags.tag2.scratched)
-    setPowerTag3(data.powerTags.tag3.text)
-    setPowerTag3Scratched(data.powerTags.tag3.scratched)
-    setWeaknessTag(data.weaknessTag)
-    setQuests(data.quests)
-    setAbandonAdvancements(data.advancements.abandon)
-    setImproveAdvancements(data.advancements.improve)
-    setMilestoneAdvancements(data.advancements.milestone)
-  }, [character, themeCardKey])
-
-  const updateThemeCard = (updates: Partial<typeof themeCardData>) => {
-    const updated = { ...themeCardData, ...updates }
-    onUpdate({ [themeCardKey]: updated })
-  }
-
-  // Debounced callback for saving quests
-  const debouncedSaveQuests = useDebouncedCallback((updatedQuests: string) => {
-    updateThemeCard({ quests: updatedQuests })
-  }, 500)
-
-  const handleMightChange = (newMight: ThemeMight) => {
-    setMight(newMight)
-    updateThemeCard({ might: newMight })
-  }
-
-  const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setType(value)
-    updateThemeCard({ type: value })
-  }
-
-  const handlePowerTag1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setPowerTag1(value)
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag1: { text: value, scratched: powerTag1Scratched }
-      }
-    })
-  }
-
-  const handlePowerTag1ScratchedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked
-    setPowerTag1Scratched(checked)
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag1: { text: powerTag1, scratched: checked }
-      }
-    })
-  }
-
-  const handlePowerTag2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setPowerTag2(value)
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag2: { text: value, scratched: powerTag2Scratched }
-      }
-    })
-  }
-
-  const handlePowerTag2ScratchedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked
-    setPowerTag2Scratched(checked)
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag2: { text: powerTag2, scratched: checked }
-      }
-    })
-  }
-
-  const handlePowerTag3Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setPowerTag3(value)
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag3: { text: value, scratched: powerTag3Scratched }
-      }
-    })
-  }
-
-  const handlePowerTag3ScratchedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked
-    setPowerTag3Scratched(checked)
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag3: { text: powerTag3, scratched: checked }
-      }
-    })
-  }
-
-  const handleWeaknessTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setWeaknessTag(value)
-    updateThemeCard({ weaknessTag: value })
-  }
-
-  const handleQuestsChange = (value: string) => {
-    setQuests(value)
-    debouncedSaveQuests(value)
-  }
-
-  const handleAbandonChange = (index: 0 | 1 | 2, checked: boolean) => {
-    const updated = [...abandonAdvancements] as [boolean, boolean, boolean]
-    updated[index] = checked
-    setAbandonAdvancements(updated)
-    updateThemeCard({
-      advancements: {
-        ...themeCardData.advancements,
-        abandon: updated
-      }
-    })
-  }
-
-  const handleImproveChange = (index: 0 | 1 | 2, checked: boolean) => {
-    const updated = [...improveAdvancements] as [boolean, boolean, boolean]
-    updated[index] = checked
-    setImproveAdvancements(updated)
-    updateThemeCard({
-      advancements: {
-        ...themeCardData.advancements,
-        improve: updated
-      }
-    })
-  }
-
-  const handleMilestoneChange = (index: 0 | 1 | 2, checked: boolean) => {
-    const updated = [...milestoneAdvancements] as [boolean, boolean, boolean]
-    updated[index] = checked
-    setMilestoneAdvancements(updated)
-    updateThemeCard({
-      advancements: {
-        ...themeCardData.advancements,
-        milestone: updated
-      }
-    })
-  }
+  const form = useThemeCardForm({ cardNumber, character, onUpdate })
 
   const mightOptions = ['origin', 'adventure', 'greatness'] as const
 
@@ -192,100 +31,72 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
         {mightOptions.map((option) => (
           <button
             key={option}
-            className={`might-option ${might === option ? 'active' : ''}`}
-            onClick={() => handleMightChange(option)}
+            className={`might-option ${form.might === option ? 'active' : ''}`}
+            onClick={() => form.handleMightChange(option)}
           >
-            {t[option.charAt(0).toUpperCase() + option.slice(1)]}
+            {option.charAt(0).toUpperCase() + option.slice(1)}
           </button>
         ))}
       </div>
       <TextInput
         leading={<label>Type: </label>}
-        value={type}
-        onChange={handleTypeChange}
+        value={form.type}
+        onChange={form.handleTypeChange}
         placeholder="theme type"
       />
-      <TextInput
-        style={{ fontSize: '1.2em' }}
-        value={powerTag1}
-        onChange={handlePowerTag1Change}
-        placeholder="Power Tag 1"
-        trailing={<ScratchCheckbox checked={powerTag1Scratched} onChange={handlePowerTag1ScratchedChange} />}
+      <PowerTagInput
+        tagNumber={1}
+        text={form.powerTag1}
+        scratched={form.powerTag1Scratched}
+        onTextChange={form.handlePowerTag1Change}
+        onScratchedChange={form.handlePowerTag1ScratchedChange}
       />
-      <TextInput
-        value={powerTag2}
-        onChange={handlePowerTag2Change}
-        placeholder="Power Tag 2"
-        trailing={<ScratchCheckbox checked={powerTag2Scratched} onChange={handlePowerTag2ScratchedChange} />}
+      <PowerTagInput
+        tagNumber={2}
+        text={form.powerTag2}
+        scratched={form.powerTag2Scratched}
+        onTextChange={form.handlePowerTag2Change}
+        onScratchedChange={form.handlePowerTag2ScratchedChange}
       />
-      <TextInput
-        value={powerTag3}
-        onChange={handlePowerTag3Change}
-        placeholder="Power Tag 3"
-        trailing={<ScratchCheckbox checked={powerTag3Scratched} onChange={handlePowerTag3ScratchedChange} />}
+      <PowerTagInput
+        tagNumber={3}
+        text={form.powerTag3}
+        scratched={form.powerTag3Scratched}
+        onTextChange={form.handlePowerTag3Change}
+        onScratchedChange={form.handlePowerTag3ScratchedChange}
       />
       <TextInput
         leading={<WeaknessTagLeading />}
-        value={weaknessTag}
-        onChange={handleWeaknessTagChange}
+        value={form.weaknessTag}
+        onChange={form.handleWeaknessTagChange}
         placeholder="Weakness tag"
       />
-        <label className="label-style">QUEST</label>
-        <TextAreaInput
-          lines={3}
-          placeholder="quest"
-          value={quests}
-          onChange={(e) => handleQuestsChange((e.target as HTMLTextAreaElement).value)}
+      <label className="label-style">QUEST</label>
+      <TextAreaInput
+        lines={3}
+        placeholder="quest"
+        value={form.quests}
+        onChange={(e) => form.handleQuestsChange((e.target as HTMLTextAreaElement).value)}
+      />
+      <div className="advancement-container">
+        <AdvancementSection
+          type="abandon"
+          checkboxes={form.abandonAdvancements}
+          onCheckboxChange={form.handleAbandonChange}
         />
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-          <div style={{ flex: 1 }}>
-            <Advancement
-              checkboxes={abandonAdvancements}
-              label="Abandon"
-              onCheckboxChange={handleAbandonChange}
-              labelStyle={{
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-                color: '#52281a',
-                textAlign: 'center',
-              }}
-              checkboxAriaLabels={['Abandon 1', 'Abandon 2', 'Abandon 3']}
-              containerStyle={{ marginBottom: '1rem' }}
-            />
-          </div>
-          <div style={{ flex: 1 }}>
-            <Advancement
-              checkboxes={improveAdvancements}
-              label="Improve"
-              onCheckboxChange={handleImproveChange}
-              labelStyle={{
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-                color: '#52281a',
-                textAlign: 'center',
-              }}
-              checkboxAriaLabels={['Improve 1', 'Improve 2', 'Improve 3']}
-              containerStyle={{ marginBottom: '1rem' }}
-            />
-          </div>
-          <div style={{ flex: 1 }}>
-            <Advancement
-              checkboxes={milestoneAdvancements}
-              label="Milestone"
-              onCheckboxChange={handleMilestoneChange}
-              labelStyle={{
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-                color: '#52281a',
-                textAlign: 'center',
-              }}
-              checkboxAriaLabels={['Milestone 1', 'Milestone 2', 'Milestone 3']}
-              containerStyle={{ marginBottom: '1rem' }}
-            />
-          </div>
-        </div>
-     </div>
-   )
- }
- 
- export default ThemeCard
+        <AdvancementSection
+          type="improve"
+          checkboxes={form.improveAdvancements}
+          onCheckboxChange={form.handleImproveChange}
+        />
+        <AdvancementSection
+          type="milestone"
+          checkboxes={form.milestoneAdvancements}
+          onCheckboxChange={form.handleMilestoneChange}
+        />
+      </div>
+    </div>
+  )
+}
+
+export default ThemeCard

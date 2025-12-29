@@ -378,10 +378,21 @@ td {
 }
 
 .spinner {
-  width: 80px;
-  height: 80px;
-  border: 4px solid #dec1a2;
-  border-top: 4px solid #52281a;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+   width: 80px;
+   height: 80px;
+   border: 4px solid #dec1a2;
+   border-top: 4px solid #52281a;
+   border-radius: 50%;
+   animation: spin 1s linear infinite;
+}
+
+/* Theme card advancement sections */
+.advancement-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.power-tag-large {
+  font-size: 1.2em;
 }
