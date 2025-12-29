@@ -1,0 +1,44 @@
+{
+  "tab.heroCard": "Tarjeta del Héroe",
+  "tab.backpack": "Mochila",
+  "tab.fellowshipThemeCard": "Tarjeta Temática de la Hermandad",
+  "tab.fellowshipSpecialImprovements": "Mejoras Especiales de la Hermandad",
+  "tab.themeCard1": "Tarjeta Temática 1",
+  "tab.themeCard2": "Tarjeta Temática 2",
+  "tab.themeCard3": "Tarjeta Temática 3",
+  "tab.themeCard4": "Tarjeta Temática 4",
+  "tab.configurations": "Configuraciones",
+  
+  "heroCard.characterName": "Nombre del Personaje",
+  "heroCard.playerName": "Nombre del Jugador",
+  "heroCard.enterPlayerName": "Ingrese el nombre del jugador",
+  "heroCard.fellowshipRelationship": "RELACIÓN DE LA HERMANDAD",
+  "heroCard.companion": "Compañero",
+  "heroCard.relationshipTag": "Etiqueta de Relación",
+  "heroCard.promise": "Promesa",
+  "heroCard.quintessences": "Quintaesencias",
+  "heroCard.tag": "Etiqueta",
+  "heroCard.quintessence": "Quintaesencia",
+  
+  "backpack.label": "Mochila",
+  "backpack.notes": "Notas",
+  "backpack.item": "Objeto",
+  
+  "themeCard.type": "Tipo:",
+  "themeCard.weaknessTag": "Etiqueta de Debilidad",
+  "themeCard.quest": "MISIÓN",
+  "themeCard.powerTag": "Etiqueta de Poder",
+  "themeCard.abandon": "Abandonar",
+  "themeCard.improve": "Mejorar",
+  "themeCard.milestone": "Hito",
+  
+  "mightOptions.origin": "Origen",
+  "mightOptions.adventure": "Aventura",
+  "mightOptions.greatness": "Grandeza",
+  
+  "app.loading": "Cargando personaje...",
+  "config.selectLanguage": "Seleccione el Idioma:",
+  "config.english": "English",
+  "config.portuguese": "Português (Brasil)",
+  "config.spanish": "Español"
+}

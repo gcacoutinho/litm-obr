@@ -1,0 +1,44 @@
+{
+  "tab.heroCard": "Cartão do Herói",
+  "tab.backpack": "Mochila",
+  "tab.fellowshipThemeCard": "Cartão Temático da Irmandade",
+  "tab.fellowshipSpecialImprovements": "Melhorias Especiais da Irmandade",
+  "tab.themeCard1": "Cartão Temático 1",
+  "tab.themeCard2": "Cartão Temático 2",
+  "tab.themeCard3": "Cartão Temático 3",
+  "tab.themeCard4": "Cartão Temático 4",
+  "tab.configurations": "Configurações",
+  
+  "heroCard.characterName": "Nome do Personagem",
+  "heroCard.playerName": "Nome do Jogador",
+  "heroCard.enterPlayerName": "Digite o nome do jogador",
+  "heroCard.fellowshipRelationship": "RELACIONAMENTO DA IRMANDADE",
+  "heroCard.companion": "Companheiro",
+  "heroCard.relationshipTag": "Etiqueta de Relacionamento",
+  "heroCard.promise": "Promessa",
+  "heroCard.quintessences": "Quintessências",
+  "heroCard.tag": "Etiqueta",
+  "heroCard.quintessence": "Quintessência",
+  
+  "backpack.label": "Mochila",
+  "backpack.notes": "Notas",
+  "backpack.item": "Item",
+  
+  "themeCard.type": "Tipo:",
+  "themeCard.weaknessTag": "Etiqueta de Fraqueza",
+  "themeCard.quest": "MISSÃO",
+  "themeCard.powerTag": "Etiqueta de Poder",
+  "themeCard.abandon": "Abandonar",
+  "themeCard.improve": "Melhorar",
+  "themeCard.milestone": "Marco",
+  
+  "mightOptions.origin": "Origem",
+  "mightOptions.adventure": "Aventura",
+  "mightOptions.greatness": "Grandeza",
+  
+  "app.loading": "Carregando personagem...",
+  "config.selectLanguage": "Selecione o Idioma:",
+  "config.english": "English",
+  "config.portuguese": "Português (Brasil)",
+  "config.spanish": "Español"
+}

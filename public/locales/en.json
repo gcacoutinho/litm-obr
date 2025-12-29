@@ -1,0 +1,44 @@
+{
+  "tab.heroCard": "Hero Card",
+  "tab.backpack": "Backpack",
+  "tab.fellowshipThemeCard": "Fellowship Theme Card",
+  "tab.fellowshipSpecialImprovements": "Fellowship Special Improvements",
+  "tab.themeCard1": "Theme Card 1",
+  "tab.themeCard2": "Theme Card 2",
+  "tab.themeCard3": "Theme Card 3",
+  "tab.themeCard4": "Theme Card 4",
+  "tab.configurations": "Configurations",
+  
+  "heroCard.characterName": "Character Name",
+  "heroCard.playerName": "Player Name",
+  "heroCard.enterPlayerName": "Enter player name",
+  "heroCard.fellowshipRelationship": "FELLOWSHIP RELATIONSHIP",
+  "heroCard.companion": "Companion",
+  "heroCard.relationshipTag": "Relationship Tag",
+  "heroCard.promise": "Promise",
+  "heroCard.quintessences": "Quintessences",
+  "heroCard.tag": "Tag",
+  "heroCard.quintessence": "Quintessence",
+  
+  "backpack.label": "Backpack",
+  "backpack.notes": "Notes",
+  "backpack.item": "Item",
+  
+  "themeCard.type": "Type:",
+  "themeCard.weaknessTag": "Weakness tag",
+  "themeCard.quest": "QUEST",
+  "themeCard.powerTag": "Power Tag",
+  "themeCard.abandon": "Abandon",
+  "themeCard.improve": "Improve",
+  "themeCard.milestone": "Milestone",
+  
+  "mightOptions.origin": "Origin",
+  "mightOptions.adventure": "Adventure",
+  "mightOptions.greatness": "Greatness",
+  
+  "app.loading": "Loading character...",
+  "config.selectLanguage": "Select Language:",
+  "config.english": "English",
+  "config.portuguese": "Português (Brasil)",
+  "config.spanish": "Español"
+}
