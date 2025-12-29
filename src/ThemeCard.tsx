@@ -4,6 +4,7 @@ import TextInput from './components/TextInput'
 import TextAreaInput from './components/TextAreaInput'
 import ScratchCheckbox from './components/ScratchCheckbox'
 import WeaknessTagLeading from './components/WeaknessTagLeading'
+import Advancement from './components/Advancement'
 import { Character, ThemeMight } from './obrd/types'
 import { useDebouncedCallback } from './hooks/useDebouncedCallback'
 
@@ -27,6 +28,9 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
   const [powerTag3Scratched, setPowerTag3Scratched] = useState(themeCardData.powerTags.tag3.scratched)
   const [weaknessTag, setWeaknessTag] = useState(themeCardData.weaknessTag)
   const [quests, setQuests] = useState(themeCardData.quests)
+  const [abandonAdvancements, setAbandonAdvancements] = useState<[boolean, boolean, boolean]>(themeCardData.advancements.abandon)
+  const [improveAdvancements, setImproveAdvancements] = useState<[boolean, boolean, boolean]>(themeCardData.advancements.improve)
+  const [milestoneAdvancements, setMilestoneAdvancements] = useState<[boolean, boolean, boolean]>(themeCardData.advancements.milestone)
 
   // Sync with character prop changes
   useEffect(() => {
@@ -41,6 +45,9 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
     setPowerTag3Scratched(data.powerTags.tag3.scratched)
     setWeaknessTag(data.weaknessTag)
     setQuests(data.quests)
+    setAbandonAdvancements(data.advancements.abandon)
+    setImproveAdvancements(data.advancements.improve)
+    setMilestoneAdvancements(data.advancements.milestone)
   }, [character, themeCardKey])
 
   const updateThemeCard = (updates: Partial<typeof themeCardData>) => {
@@ -141,6 +148,42 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
     debouncedSaveQuests(value)
   }
 
+  const handleAbandonChange = (index: 0 | 1 | 2, checked: boolean) => {
+    const updated = [...abandonAdvancements] as [boolean, boolean, boolean]
+    updated[index] = checked
+    setAbandonAdvancements(updated)
+    updateThemeCard({
+      advancements: {
+        ...themeCardData.advancements,
+        abandon: updated
+      }
+    })
+  }
+
+  const handleImproveChange = (index: 0 | 1 | 2, checked: boolean) => {
+    const updated = [...improveAdvancements] as [boolean, boolean, boolean]
+    updated[index] = checked
+    setImproveAdvancements(updated)
+    updateThemeCard({
+      advancements: {
+        ...themeCardData.advancements,
+        improve: updated
+      }
+    })
+  }
+
+  const handleMilestoneChange = (index: 0 | 1 | 2, checked: boolean) => {
+    const updated = [...milestoneAdvancements] as [boolean, boolean, boolean]
+    updated[index] = checked
+    setMilestoneAdvancements(updated)
+    updateThemeCard({
+      advancements: {
+        ...themeCardData.advancements,
+        milestone: updated
+      }
+    })
+  }
+
   const mightOptions = ['origin', 'adventure', 'greatness'] as const
 
   return (
@@ -187,15 +230,62 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
         onChange={handleWeaknessTagChange}
         placeholder="Weakness tag"
       />
-       <label className="label-style">QUEST</label>
-       <TextAreaInput
-         lines={3}
-         placeholder="quest"
-         value={quests}
-         onChange={(e) => handleQuestsChange((e.target as HTMLTextAreaElement).value)}
-       />
-    </div>
-  )
-}
-
-export default ThemeCard
+        <label className="label-style">QUEST</label>
+        <TextAreaInput
+          lines={3}
+          placeholder="quest"
+          value={quests}
+          onChange={(e) => handleQuestsChange((e.target as HTMLTextAreaElement).value)}
+        />
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+          <div style={{ flex: 1 }}>
+            <Advancement
+              checkboxes={abandonAdvancements}
+              label="Abandon"
+              onCheckboxChange={handleAbandonChange}
+              labelStyle={{
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                color: '#52281a',
+                textAlign: 'center',
+              }}
+              checkboxAriaLabels={['Abandon 1', 'Abandon 2', 'Abandon 3']}
+              containerStyle={{ marginBottom: '1rem' }}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <Advancement
+              checkboxes={improveAdvancements}
+              label="Improve"
+              onCheckboxChange={handleImproveChange}
+              labelStyle={{
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                color: '#52281a',
+                textAlign: 'center',
+              }}
+              checkboxAriaLabels={['Improve 1', 'Improve 2', 'Improve 3']}
+              containerStyle={{ marginBottom: '1rem' }}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <Advancement
+              checkboxes={milestoneAdvancements}
+              label="Milestone"
+              onCheckboxChange={handleMilestoneChange}
+              labelStyle={{
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                color: '#52281a',
+                textAlign: 'center',
+              }}
+              checkboxAriaLabels={['Milestone 1', 'Milestone 2', 'Milestone 3']}
+              containerStyle={{ marginBottom: '1rem' }}
+            />
+          </div>
+        </div>
+     </div>
+   )
+ }
+ 
+ export default ThemeCard

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Character, createEmptyCharacter } from '../obrd/types'
+import { Character, createEmptyCharacter, migrateCharacter } from '../obrd/types'
 import { getMyCharacter, saveMyCharacter } from '../obrd/playerMetadata'
 
 export function useCharacterStorage() {
@@ -12,7 +12,7 @@ export function useCharacterStorage() {
     const loadCharacter = async () => {
       try {
         const data = await getMyCharacter()
-        setCharacter(data || createEmptyCharacter())
+        setCharacter(migrateCharacter(data))
       } catch (error) {
         console.error('[litm-obr] Failed to load character:', error)
         setCharacter(createEmptyCharacter())
