@@ -1,11 +1,15 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import en from '../../public/locales/en.json'
+import ptBR from '../../public/locales/pt-BR.json'
+import es from '../../public/locales/es.json'
 
 /**
  * i18next configuration for LITM-OBR application
  * Supports English, Brazilian Portuguese, and Spanish
  * Auto-detects browser language and persists user selection to localStorage
+ * Uses static resource loading (translations bundled at build time)
  */
 
 i18n
@@ -18,10 +22,18 @@ i18n
     
     // Supported languages
     supportedLngs: ['en', 'pt-BR', 'es'],
-    
-    // Load translations from public/locales/*.json
-    backend: {
-      loadPath: '/locales/{{lng}}.json',
+
+    // Static resources loaded at build time
+    resources: {
+      en: {
+        translation: en,
+      },
+      'pt-BR': {
+        translation: ptBR,
+      },
+      es: {
+        translation: es,
+      },
     },
 
     // Language detector options
@@ -40,9 +52,6 @@ i18n
 
     // Debug mode (set to true during development if needed)
     debug: false,
-
-    // Load translations synchronously from public folder
-    resources: undefined, // Will be loaded from /public/locales/*.json
   })
 
 export default i18n
