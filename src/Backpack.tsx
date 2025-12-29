@@ -10,6 +10,13 @@ interface BackpackProps {
   onUpdate: (updates: Partial<Character>) => void
 }
 
+/**
+ * Renders the backpack section with 10 item slots and notes area.
+ * Uses debounced saves to avoid excessive updates.
+ *
+ * @param character - Current character data
+ * @param onUpdate - Callback when backpack data changes
+ */
 const Backpack = ({ character, onUpdate }: BackpackProps) => {
   const [items, setItems] = useState(character.backpack.items);
   const [notes, setNotes] = useState(character.backpack.notes);

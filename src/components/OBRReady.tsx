@@ -5,6 +5,17 @@ interface OBRReadyProps {
   children: ReactNode
 }
 
+/**
+ * Wrapper component that waits for the Owlbear Rodeo SDK to initialize.
+ * Shows a loading spinner until OBR.onReady callback fires.
+ *
+ * @param children - Content to render once OBR is ready
+ *
+ * @example
+ * <OBRReady>
+ *   <App />
+ * </OBRReady>
+ */
 export function OBRReady({ children }: OBRReadyProps) {
   const [isReady, setIsReady] = useState(false)
 

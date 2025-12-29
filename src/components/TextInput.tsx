@@ -5,6 +5,22 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   trailing?: React.ReactNode;
 }
 
+/**
+ * Flexible text input component with optional leading and trailing elements.
+ * Automatically adjusts layout based on whether leading/trailing slots are used.
+ *
+ * @param leading - Optional element to display before the input (e.g., icon or label)
+ * @param trailing - Optional element to display after the input (e.g., checkbox or button)
+ * @param props - Standard HTML input element props
+ * @param ref - Reference to the underlying input element
+ *
+ * @example
+ * <TextInput
+ *   leading={<label>Name:</label>}
+ *   trailing={<ScratchCheckbox />}
+ *   placeholder="Enter name"
+ * />
+ */
 const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(({ className, style, leading, trailing, ...props }, ref) => {
   const defaultClass = 'input-base';
   const combinedClass = className ? `${defaultClass} ${className}`.trim() : defaultClass;

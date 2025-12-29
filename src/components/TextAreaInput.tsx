@@ -5,6 +5,22 @@ interface TextAreaInputProps extends React.TextareaHTMLAttributes<HTMLTextAreaEl
   lines: number;
 }
 
+/**
+ * Multi-line text input with line-count visualization.
+ * Displays horizontal lines in the background to show available lines.
+ *
+ * @param lines - Number of lines to display
+ * @param props - Standard HTML textarea element props
+ * @param ref - Reference to the underlying textarea element
+ *
+ * @example
+ * <TextAreaInput
+ *   lines={4}
+ *   placeholder="Enter notes"
+ *   value={notes}
+ *   onChange={handleChange}
+ * />
+ */
 const TextAreaInput = React.forwardRef<HTMLTextAreaElement, TextAreaInputProps>(
   ({ className, style, lines, value: propValue, ...props }, ref) => {
     const defaultClass = 'input-base';

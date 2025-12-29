@@ -2,6 +2,18 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { Character, createEmptyCharacter, migrateCharacter } from '../obrd/types'
 import { getMyCharacter, saveMyCharacter } from '../obrd/playerMetadata'
 
+/**
+ * Hook for managing character data storage with debounced saves.
+ * Loads character on mount and provides update function with 500ms debounce.
+ *
+ * @returns Object with character, isLoading, and updateCharacter callback
+ *
+ * @example
+ * const { character, isLoading, updateCharacter } = useCharacterStorage()
+ *
+ * // Update character and it will save after 500ms of inactivity
+ * updateCharacter({ characterName: 'New Name' })
+ */
 export function useCharacterStorage() {
   const [character, setCharacter] = useState<Character | null>(null)
   const [isLoading, setIsLoading] = useState(true)

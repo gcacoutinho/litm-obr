@@ -9,6 +9,10 @@ import FellowshipSpecialImprovements from './FellowshipSpecialImprovements'
 import ThemeCard from './ThemeCard'
 import Configurations from './Configurations'
 
+/**
+ * Main application component with tabbed interface for character management.
+ * Manages navigation between hero card, backpack, theme cards, and other sections.
+ */
 function App() {
   const { character, isLoading, updateCharacter } = useCharacterStorage()
   const [activeTab, setActiveTab] = useState<string>('hero-card')
