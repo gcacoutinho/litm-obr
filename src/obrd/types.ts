@@ -17,6 +17,21 @@ export interface ThemeCardData {
   }
 }
 
+export interface FellowshipThemeCardData {
+  powerTags: {
+    tag1: { text: string; scratched: boolean }
+    tag2: { text: string; scratched: boolean }
+    tag3: { text: string; scratched: boolean }
+  }
+  weaknessTag: string
+  quests: string
+  advancements: {
+    abandon: [boolean, boolean, boolean]
+    improve: [boolean, boolean, boolean]
+    milestone: [boolean, boolean, boolean]
+  }
+}
+
 export interface Character {
   // Hero Card
   characterName: string
@@ -45,6 +60,23 @@ export function createEmptyThemeCard(): ThemeCardData {
   return {
     might: 'origin',
     type: '',
+    powerTags: {
+      tag1: { text: '', scratched: false },
+      tag2: { text: '', scratched: false },
+      tag3: { text: '', scratched: false }
+    },
+    weaknessTag: '',
+    quests: '',
+    advancements: {
+      abandon: [false, false, false],
+      improve: [false, false, false],
+      milestone: [false, false, false]
+    }
+  }
+}
+
+export function createEmptyFellowshipThemeCard(): FellowshipThemeCardData {
+  return {
     powerTags: {
       tag1: { text: '', scratched: false },
       tag2: { text: '', scratched: false },

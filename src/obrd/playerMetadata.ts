@@ -1,5 +1,5 @@
-import { Character, createEmptyCharacter } from './types'
-import { loadCharacter, saveCharacter } from './localStore'
+import { Character, FellowshipThemeCardData, createEmptyCharacter } from './types'
+import { loadCharacter, saveCharacter, loadFellowshipThemeCard, saveFellowshipThemeCard } from './localStore'
 
 export async function getMyCharacter(): Promise<Character | null> {
   return loadCharacter()
@@ -7,6 +7,14 @@ export async function getMyCharacter(): Promise<Character | null> {
 
 export async function saveMyCharacter(character: Character): Promise<void> {
   saveCharacter(character)
+}
+
+export async function getMyFellowshipThemeCard(): Promise<FellowshipThemeCardData | null> {
+  return loadFellowshipThemeCard()
+}
+
+export async function saveMyFellowshipThemeCard(data: FellowshipThemeCardData): Promise<void> {
+  saveFellowshipThemeCard(data)
 }
 
 export { createEmptyCharacter }
