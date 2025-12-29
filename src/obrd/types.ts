@@ -41,9 +41,10 @@ export interface Character {
     relationshipTag: string
   }> // Length: 5
   promises: boolean[] // Length: 5
-  quintessences: string[] // Length: 5
-  
-  // Backpack
+   quintessences: string[] // Length: 5
+   specialImprovements: string[] // Length: 10
+
+   // Backpack
   backpack: {
     items: string[] // Length: 10
     notes: string
@@ -102,6 +103,7 @@ export function createEmptyCharacter(): Character {
     })),
     promises: Array(5).fill(false),
     quintessences: Array(5).fill(''),
+    specialImprovements: Array(10).fill(''),
     backpack: {
       items: Array(10).fill(''),
       notes: ''
@@ -216,6 +218,7 @@ export function migrateCharacter(data: unknown): Character {
     })),
     promises: Array.isArray(obj.promises) ? obj.promises : Array(5).fill(false),
     quintessences: Array.isArray(obj.quintessences) ? obj.quintessences : Array(5).fill(''),
+    specialImprovements: Array.isArray(obj.specialImprovements) ? obj.specialImprovements : Array(10).fill(''),
     backpack: isBackpack(obj.backpack) ? obj.backpack : {
       items: Array(10).fill(''),
       notes: ''
