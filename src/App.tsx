@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { TAB_LABELS } from './constants'
-import { useCharacterStorage } from './hooks/useCharacterStorage'
+import { useCharacterStorage } from './hooks'
 import HeroCard from './HeroCard'
 import Backpack from './Backpack'
 import FellowshipThemeCard from './FellowshipThemeCard'

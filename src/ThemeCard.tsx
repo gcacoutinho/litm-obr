@@ -1,10 +1,6 @@
 import { Character } from './obrd/types'
-import TextInput from './components/TextInput'
-import TextAreaInput from './components/TextAreaInput'
-import WeaknessTagLeading from './components/WeaknessTagLeading'
-import { PowerTagInput } from './components/PowerTagInput'
-import { AdvancementSection } from './components/AdvancementSection'
-import { useThemeCardForm } from './hooks/useThemeCardForm'
+import { TextInput, TextAreaInput, WeaknessTagLeading, PowerTagInput, AdvancementSection } from './components'
+import { useThemeCardForm } from './hooks'
 
 interface ThemeCardProps {
   cardNumber: 1 | 2 | 3 | 4

@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { BACKPACK_LABELS, ITEM_PLACEHOLDERS } from './constants';
-import TextInput from './components/TextInput';
-import TextAreaInput from './components/TextAreaInput';
+import { TextInput, TextAreaInput } from './components';
 import { Character } from './obrd/types';
-import { useDebouncedCallback } from './hooks/useDebouncedCallback';
+import { useDebouncedCallback } from './hooks';
 
 interface BackpackProps {
   character: Character

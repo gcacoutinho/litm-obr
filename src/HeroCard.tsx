@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import TextInput from './components/TextInput';
-import InputCheckbox from './components/InputCheckbox';
+import { TextInput, InputCheckbox } from './components';
 import {
   HERO_CARD_LABELS,
   COMPANION_PLACEHOLDERS,
