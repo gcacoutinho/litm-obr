@@ -63,7 +63,7 @@ function App() {
 
   const renderContent = () => {
     if (isLoading || !character) {
-      return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading character...</div>
+      return <div className="app-loading">Loading character...</div>
     }
 
     switch (activeTab) {

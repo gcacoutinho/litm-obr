@@ -94,7 +94,7 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
         {/* Header Row */}
         <div className="hero-card-section-label">
           <div className="hero-card-section-header">{t['Companion']}</div>
-          <div className="hero-card-section-header" style={{ borderRight: 'none' }}>{t['Relationship Tag']}</div>
+          <div className="hero-card-section-header hero-card-section-header-last">{t['Relationship Tag']}</div>
         </div>
         {/* Data Rows */}
         {Array.from({ length: 5 }, (_, i) => (
@@ -102,7 +102,7 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
             <div className="hero-card-row-cell">
               <TextInput type="text" placeholder={t[`Companion ${i + 1}`]} value={fellowshipRelationships[i].companion} onChange={(e) => handleCompanionChange(i, e.target.value)} />
             </div>
-            <div className="hero-card-row-cell" style={{ borderRight: 'none' }}>
+            <div className="hero-card-row-cell hero-card-row-cell-last">
               <TextInput type="text" placeholder={t[`Tag ${i + 1}`]} value={fellowshipRelationships[i].relationshipTag} onChange={(e) => handleRelationshipTagChange(i, e.target.value)} />
             </div>
           </div>
@@ -111,14 +111,14 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
       <div className="hero-promises-container">
         <span className="hero-promises-label">{t['Promise']}:</span>
         {Array.from({ length: 5 }, (_, i) => (
-          <InputCheckbox key={i} className="promise-checkbox" style={{ marginRight: '0.5rem' }} checked={promises[i]} onChange={(e) => handlePromiseChange(i, e.target.checked)} />
+          <InputCheckbox key={i} className="promise-checkbox hero-promise-checkbox" checked={promises[i]} onChange={(e) => handlePromiseChange(i, e.target.checked)} />
         ))}
       </div>
       <div>
         <label className="label-style">{t['Quintessences']}</label>
         {Array.from({ length: 5 }, (_, i) => (
           <div key={i} className="hero-card-row">
-            <div className="hero-card-row-cell" style={{ borderRight: 'none' }}>
+            <div className="hero-card-row-cell hero-card-row-cell-last">
               <TextInput type="text" placeholder={t[`Quintessece ${i + 1}`]} value={quintessences[i]} onChange={(e) => handleQuintessenceChange(i, e.target.value)} />
             </div>
           </div>

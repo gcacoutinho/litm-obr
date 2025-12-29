@@ -15,7 +15,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(({ classNam
   // If no leading or trailing slots, use current behavior
   if (!leading && !trailing) {
     return (
-      <div style={{ padding: '8px' }}>
+      <div className="input-wrapper">
         {input}
       </div>
     );
@@ -23,9 +23,9 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(({ classNam
   
   // With leading/trailing slots, use flex layout
   return (
-    <div style={{ padding: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+    <div className="input-wrapper input-wrapper-flex">
       {leading && <span className="input-leading">{leading}</span>}
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div className="input-content">
         {input}
       </div>
       {trailing && <span className="input-trailing">{trailing}</span>}

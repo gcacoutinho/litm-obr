@@ -45,7 +45,7 @@ const Backpack = ({ character, onUpdate }: BackpackProps) => {
   return (
     <div>
       <label className="label-style">{t['Backpack']}</label>
-      <div className="flex-item-container" style={{ marginBottom: '1rem', width: '100%' }}>
+      <div className="flex-item-container backpack-items-container">
         {Array.from({ length: 10 }, (_, i) => (
           <div key={i}>
             <TextInput type="text" placeholder={t[`Item ${i + 1}`]} value={items[i]} onChange={(e) => handleItemChange(i, e.target.value)} />

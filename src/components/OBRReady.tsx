@@ -16,9 +16,9 @@ export function OBRReady({ children }: OBRReadyProps) {
 
   if (!isReady) {
     return (
-      <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      <div className="obr-loading-container">
         <div className="spinner"></div>
-        <p style={{ marginTop: '2rem', fontSize: '1.2rem' }}>Initializing Misty Rodeo</p>
+        <p className="obr-loading-text">Initializing Misty Rodeo</p>
       </div>
     )
   }

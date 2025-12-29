@@ -29,7 +29,7 @@ export const AdvancementSection: React.FC<AdvancementSectionProps> = ({
   }
 
   return (
-    <div style={{ flex: 1 }}>
+    <div className="advancement-section">
       <Advancement
         checkboxes={checkboxes}
         label={labels[type]}

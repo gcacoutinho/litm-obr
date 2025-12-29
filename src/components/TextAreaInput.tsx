@@ -31,7 +31,7 @@ const TextAreaInput = React.forwardRef<HTMLTextAreaElement, TextAreaInputProps>(
     };
 
     return (
-      <div style={{ padding: '8px' }}>
+      <div className="input-wrapper">
         <textarea
           ref={ref ? (el) => {
             textareaRef.current = el;

@@ -471,3 +471,61 @@ td {
   font-weight: 700;
   text-transform: uppercase;
 }
+
+.hero-card-section-header-last {
+  border-right: none;
+}
+
+.hero-card-row-cell-last {
+  border-right: none;
+}
+
+.hero-promise-checkbox {
+  margin-right: 0.5rem;
+}
+
+.advancement-section {
+  flex: 1;
+}
+
+/* App loading state */
+.app-loading {
+  padding: 2rem;
+  text-align: center;
+}
+
+/* OBR loading */
+.obr-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.obr-loading-text {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+}
+
+/* Input wrapper styles */
+.input-wrapper {
+  padding: 8px;
+}
+
+.input-wrapper-flex {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.input-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Backpack styles */
+.backpack-items-container {
+  margin-bottom: 1rem;
+  width: 100%;
+}
