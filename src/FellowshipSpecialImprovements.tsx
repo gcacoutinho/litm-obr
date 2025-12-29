@@ -1,5 +1,13 @@
+import { TextInput } from './components';
+
 const FellowshipSpecialImprovements = () => {
-  return <h1>Fellowship Special Improvements</h1>;
+  return (
+    <div className="improvement-inputs">
+      {Array.from({ length: 10 }, (_, i) => (
+        <TextInput key={i} />
+      ))}
+    </div>
+  );
 };
 
 export default FellowshipSpecialImprovements;
