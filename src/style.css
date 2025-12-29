@@ -396,3 +396,78 @@ td {
 .power-tag-large {
   font-size: 1.2em;
 }
+
+/* Hero Card Styles */
+.hero-card-name-wrapper {
+  margin: 1rem;
+  margin-top: 8px;
+  position: relative;
+}
+
+.hero-card-name-input {
+  font-size: 1.5em;
+  width: 100%;
+  resize: none;
+  text-align: center;
+}
+
+.hero-card-name-divider {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #e4d2c1;
+}
+
+.hero-card-section {
+  margin-bottom: 1rem;
+}
+
+.hero-card-section-label {
+  display: flex;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+
+.hero-card-section-header {
+  flex: 1;
+  padding: 8px;
+  color: #52281a;
+  font-weight: bold;
+  text-align: center;
+  background-color: #fef8ef;
+  border-right: 1px solid #e4d2c1;
+}
+
+.hero-card-section-header:last-child {
+  border-right: none;
+}
+
+.hero-card-row {
+  display: flex;
+}
+
+.hero-card-row-cell {
+  flex: 1;
+  border-right: 1px solid #e4d2c1;
+}
+
+.hero-card-row-cell:last-child {
+  border-right: none;
+}
+
+.hero-promises-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.hero-promises-label {
+  margin-right: 1rem;
+  color: #52281a;
+  font-weight: 700;
+  text-transform: uppercase;
+}
