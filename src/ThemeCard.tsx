@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Character } from './obrd/types'
 import { TextInput, TextAreaInput, WeaknessTagLeading, PowerTagInput, AdvancementSection } from './components'
 import { useThemeCardForm } from './hooks'
@@ -17,6 +18,7 @@ interface ThemeCardProps {
  * @param onUpdate - Callback when theme card data changes
  */
 const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
+  const { t } = useTranslation()
   const form = useThemeCardForm({ cardNumber, character, onUpdate })
 
   const mightOptions = ['origin', 'adventure', 'greatness'] as const
@@ -30,15 +32,15 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
             className={`might-option ${form.might === option ? 'active' : ''}`}
             onClick={() => form.handleMightChange(option)}
           >
-            {option.charAt(0).toUpperCase() + option.slice(1)}
+            {t(`mightOptions.${option}`)}
           </button>
         ))}
       </div>
       <TextInput
-        leading={<label>Type: </label>}
+        leading={<label>{t('themeCard.type')}</label>}
         value={form.type}
         onChange={form.handleTypeChange}
-        placeholder="theme type"
+        placeholder={t('themeCard.type')}
       />
       <PowerTagInput
         tagNumber={1}
@@ -46,6 +48,7 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
         scratched={form.powerTag1Scratched}
         onTextChange={form.handlePowerTag1Change}
         onScratchedChange={form.handlePowerTag1ScratchedChange}
+        placeholder={`${t('themeCard.powerTag')} 1`}
       />
       <PowerTagInput
         tagNumber={2}
@@ -53,6 +56,7 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
         scratched={form.powerTag2Scratched}
         onTextChange={form.handlePowerTag2Change}
         onScratchedChange={form.handlePowerTag2ScratchedChange}
+        placeholder={`${t('themeCard.powerTag')} 2`}
       />
       <PowerTagInput
         tagNumber={3}
@@ -60,17 +64,18 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
         scratched={form.powerTag3Scratched}
         onTextChange={form.handlePowerTag3Change}
         onScratchedChange={form.handlePowerTag3ScratchedChange}
+        placeholder={`${t('themeCard.powerTag')} 3`}
       />
       <TextInput
         leading={<WeaknessTagLeading />}
         value={form.weaknessTag}
         onChange={form.handleWeaknessTagChange}
-        placeholder="Weakness tag"
+        placeholder={t('themeCard.weaknessTag')}
       />
-      <label className="label-style">QUEST</label>
+      <label className="label-style">{t('themeCard.quest')}</label>
       <TextAreaInput
         lines={3}
-        placeholder="quest"
+        placeholder={t('themeCard.quest')}
         value={form.quests}
         onChange={(e) => form.handleQuestsChange((e.target as HTMLTextAreaElement).value)}
       />

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import './App.css'
-import { TAB_LABELS } from './constants'
 import { useCharacterStorage } from './hooks'
 import HeroCard from './HeroCard'
 import Backpack from './Backpack'
@@ -12,22 +12,24 @@ import Configurations from './Configurations'
 /**
  * Main application component with tabbed interface for character management.
  * Manages navigation between hero card, backpack, theme cards, and other sections.
+ * Includes language selection and persistence.
  */
 function App() {
+  const { t } = useTranslation()
   const { character, isLoading, updateCharacter } = useCharacterStorage()
   const [activeTab, setActiveTab] = useState<string>('hero-card')
   const tabContentRef = useRef<HTMLDivElement>(null)
 
   const tabs = [
-    { id: 'hero-card', label: TAB_LABELS.HERO_CARD },
-    { id: 'backpack', label: TAB_LABELS.BACKPACK },
-    { id: 'fellowship-theme-card', label: TAB_LABELS.FELLOWSHIP_THEME_CARD },
-    { id: 'fellowship-special-improvements', label: TAB_LABELS.FELLOWSHIP_SPECIAL_IMPROVEMENTS },
-    { id: 'theme-card-1', label: TAB_LABELS.THEME_CARD_1 },
-    { id: 'theme-card-2', label: TAB_LABELS.THEME_CARD_2 },
-    { id: 'theme-card-3', label: TAB_LABELS.THEME_CARD_3 },
-    { id: 'theme-card-4', label: TAB_LABELS.THEME_CARD_4 },
-    { id: 'configurations', label: TAB_LABELS.CONFIGURATIONS }
+    { id: 'hero-card', label: t('tab.heroCard') },
+    { id: 'backpack', label: t('tab.backpack') },
+    { id: 'fellowship-theme-card', label: t('tab.fellowshipThemeCard') },
+    { id: 'fellowship-special-improvements', label: t('tab.fellowshipSpecialImprovements') },
+    { id: 'theme-card-1', label: t('tab.themeCard1') },
+    { id: 'theme-card-2', label: t('tab.themeCard2') },
+    { id: 'theme-card-3', label: t('tab.themeCard3') },
+    { id: 'theme-card-4', label: t('tab.themeCard4') },
+    { id: 'configurations', label: t('tab.configurations') }
   ]
 
   const currentIndex = tabs.findIndex(tab => tab.id === activeTab)
@@ -67,7 +69,7 @@ function App() {
 
   const renderContent = () => {
     if (isLoading || !character) {
-      return <div className="app-loading">Loading character...</div>
+      return <div className="app-loading">{t('app.loading')}</div>
     }
 
     switch (activeTab) {

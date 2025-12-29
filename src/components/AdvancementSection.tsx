@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import Advancement from './Advancement'
 
 interface AdvancementSectionProps {
@@ -16,23 +17,19 @@ export const AdvancementSection: React.FC<AdvancementSectionProps> = ({
   checkboxes,
   onCheckboxChange,
 }) => {
-  const labels = {
-    abandon: 'Abandon',
-    improve: 'Improve',
-    milestone: 'Milestone',
-  }
+  const { t } = useTranslation()
 
   const ariaLabels: Record<'abandon' | 'improve' | 'milestone', [string, string, string]> = {
-    abandon: ['Abandon 1', 'Abandon 2', 'Abandon 3'],
-    improve: ['Improve 1', 'Improve 2', 'Improve 3'],
-    milestone: ['Milestone 1', 'Milestone 2', 'Milestone 3'],
+    abandon: [`${t('themeCard.abandon')} 1`, `${t('themeCard.abandon')} 2`, `${t('themeCard.abandon')} 3`],
+    improve: [`${t('themeCard.improve')} 1`, `${t('themeCard.improve')} 2`, `${t('themeCard.improve')} 3`],
+    milestone: [`${t('themeCard.milestone')} 1`, `${t('themeCard.milestone')} 2`, `${t('themeCard.milestone')} 3`],
   }
 
   return (
     <div className="advancement-section">
       <Advancement
         checkboxes={checkboxes}
-        label={labels[type]}
+        label={t(`themeCard.${type}`)}
         onCheckboxChange={onCheckboxChange}
         labelStyle={{
           fontWeight: 'bold',

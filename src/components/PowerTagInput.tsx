@@ -8,6 +8,7 @@ interface PowerTagInputProps {
   scratched: boolean
   onTextChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onScratchedChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  placeholder?: string
 }
 
 /**
@@ -20,13 +21,14 @@ export const PowerTagInput: React.FC<PowerTagInputProps> = ({
   scratched,
   onTextChange,
   onScratchedChange,
+  placeholder = `Power Tag ${tagNumber}`,
 }) => {
   return (
     <TextInput
       className={tagNumber === 1 ? 'power-tag-large' : ''}
       value={text}
       onChange={onTextChange}
-      placeholder={`Power Tag ${tagNumber}`}
+      placeholder={placeholder}
       trailing={<ScratchCheckbox checked={scratched} onChange={onScratchedChange} />}
     />
   )

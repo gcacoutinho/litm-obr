@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TextInput, InputCheckbox } from './components';
-import {
-  HERO_CARD_LABELS,
-  COMPANION_PLACEHOLDERS,
-  TAG_PLACEHOLDERS,
-  QUINTESSENCE_PLACEHOLDERS,
-} from './constants';
 import { Character } from './obrd/types';
 
 interface HeroCardProps {
@@ -18,6 +13,7 @@ interface HeroCardProps {
  * Uses controlled component pattern with synchronization to parent character prop.
  */
 const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
+  const { t } = useTranslation()
   // Display values derived from character + pending changes
   const [characterName, setCharacterName] = useState(character.characterName)
   const [playerName, setPlayerName] = useState(character.playerName)
@@ -81,7 +77,7 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
     <div>
       <div className="hero-card-name-wrapper">
         <textarea
-          placeholder={HERO_CARD_LABELS.CHARACTER_NAME}
+          placeholder={t('heroCard.characterName')}
           rows={2}
           value={characterName}
           onChange={handleCharacterNameChange}
@@ -90,40 +86,40 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
         <div className="hero-card-name-divider"></div>
       </div>
       <div className="hero-card-section">
-        <label className="label-style">{HERO_CARD_LABELS.PLAYER_NAME}</label>
-        <TextInput type="text" placeholder={HERO_CARD_LABELS.ENTER_PLAYER_NAME} value={playerName} onChange={handlePlayerNameChange} />
+        <label className="label-style">{t('heroCard.playerName')}</label>
+        <TextInput type="text" placeholder={t('heroCard.enterPlayerName')} value={playerName} onChange={handlePlayerNameChange} />
       </div>
-      <label className="label-style">{HERO_CARD_LABELS.FELLOWSHIP_RELATIONSHIP}</label>
+      <label className="label-style">{t('heroCard.fellowshipRelationship')}</label>
       <div className="hero-card-section">
         {/* Header Row */}
         <div className="hero-card-section-label">
-          <div className="hero-card-section-header">{HERO_CARD_LABELS.COMPANION}</div>
-          <div className="hero-card-section-header hero-card-section-header-last">{HERO_CARD_LABELS.RELATIONSHIP_TAG}</div>
+          <div className="hero-card-section-header">{t('heroCard.companion')}</div>
+          <div className="hero-card-section-header hero-card-section-header-last">{t('heroCard.relationshipTag')}</div>
         </div>
         {/* Data Rows */}
         {Array.from({ length: 5 }, (_, i) => (
           <div key={i} className="hero-card-row">
             <div className="hero-card-row-cell">
-              <TextInput type="text" placeholder={COMPANION_PLACEHOLDERS[i]} value={fellowshipRelationships[i].companion} onChange={(e) => handleCompanionChange(i, e.target.value)} />
+              <TextInput type="text" placeholder={`${t('heroCard.companion')} ${i + 1}`} value={fellowshipRelationships[i].companion} onChange={(e) => handleCompanionChange(i, e.target.value)} />
             </div>
             <div className="hero-card-row-cell hero-card-row-cell-last">
-              <TextInput type="text" placeholder={TAG_PLACEHOLDERS[i]} value={fellowshipRelationships[i].relationshipTag} onChange={(e) => handleRelationshipTagChange(i, e.target.value)} />
+              <TextInput type="text" placeholder={`${t('heroCard.tag')} ${i + 1}`} value={fellowshipRelationships[i].relationshipTag} onChange={(e) => handleRelationshipTagChange(i, e.target.value)} />
             </div>
           </div>
         ))}
       </div>
       <div className="hero-promises-container">
-        <span className="hero-promises-label">{HERO_CARD_LABELS.PROMISE}:</span>
+        <span className="hero-promises-label">{t('heroCard.promise')}:</span>
         {Array.from({ length: 5 }, (_, i) => (
           <InputCheckbox key={i} className="promise-checkbox hero-promise-checkbox" checked={promises[i]} onChange={(e) => handlePromiseChange(i, e.target.checked)} />
         ))}
       </div>
       <div>
-        <label className="label-style">{HERO_CARD_LABELS.QUINTESSENCES}</label>
+        <label className="label-style">{t('heroCard.quintessences')}</label>
         {Array.from({ length: 5 }, (_, i) => (
           <div key={i} className="hero-card-row">
             <div className="hero-card-row-cell hero-card-row-cell-last">
-              <TextInput type="text" placeholder={QUINTESSENCE_PLACEHOLDERS[i]} value={quintessences[i]} onChange={(e) => handleQuintessenceChange(i, e.target.value)} />
+              <TextInput type="text" placeholder={`${t('heroCard.quintessence')} ${i + 1}`} value={quintessences[i]} onChange={(e) => handleQuintessenceChange(i, e.target.value)} />
             </div>
           </div>
         ))}

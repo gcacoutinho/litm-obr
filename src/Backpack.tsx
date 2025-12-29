@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BACKPACK_LABELS, ITEM_PLACEHOLDERS } from './constants';
+import { useTranslation } from 'react-i18next';
 import { TextInput, TextAreaInput } from './components';
 import { Character } from './obrd/types';
 import { useDebouncedCallback } from './hooks';
@@ -17,6 +17,7 @@ interface BackpackProps {
  * @param onUpdate - Callback when backpack data changes
  */
 const Backpack = ({ character, onUpdate }: BackpackProps) => {
+  const { t } = useTranslation();
   const [items, setItems] = useState(character.backpack.items);
   const [notes, setNotes] = useState(character.backpack.notes);
 
@@ -50,18 +51,18 @@ const Backpack = ({ character, onUpdate }: BackpackProps) => {
 
   return (
     <div>
-      <label className="label-style">{BACKPACK_LABELS.BACKPACK}</label>
+      <label className="label-style">{t('backpack.label')}</label>
       <div className="flex-item-container backpack-items-container">
         {Array.from({ length: 10 }, (_, i) => (
           <div key={i}>
-            <TextInput type="text" placeholder={ITEM_PLACEHOLDERS[i]} value={items[i]} onChange={(e) => handleItemChange(i, e.target.value)} />
+            <TextInput type="text" placeholder={`${t('backpack.item')} ${i + 1}`} value={items[i]} onChange={(e) => handleItemChange(i, e.target.value)} />
           </div>
         ))}
       </div>
-      <label className="label-style">{BACKPACK_LABELS.NOTES}</label>
+      <label className="label-style">{t('backpack.notes')}</label>
       <TextAreaInput
         lines={4}
-        placeholder={BACKPACK_LABELS.NOTES}
+        placeholder={t('backpack.notes')}
         value={notes}
         onChange={(e) => handleNotesChange(e.target.value)}
       />
