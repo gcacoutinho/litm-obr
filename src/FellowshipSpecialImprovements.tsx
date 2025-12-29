@@ -1,7 +1,5 @@
-import { translations as t } from './translations';
-
 const FellowshipSpecialImprovements = () => {
-  return <h1>{t['Fellowship Special Improvements Content']}</h1>;
+  return <h1>Fellowship Special Improvements</h1>;
 };
 
 export default FellowshipSpecialImprovements;

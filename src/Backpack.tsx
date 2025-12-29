@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { translations as t } from './translations';
+import { BACKPACK_LABELS, ITEM_PLACEHOLDERS } from './constants';
 import TextInput from './components/TextInput';
 import TextAreaInput from './components/TextAreaInput';
 import { Character } from './obrd/types';
@@ -51,21 +51,21 @@ const Backpack = ({ character, onUpdate }: BackpackProps) => {
 
   return (
     <div>
-      <label className="label-style">{t['Backpack']}</label>
+      <label className="label-style">{BACKPACK_LABELS.BACKPACK}</label>
       <div className="flex-item-container backpack-items-container">
         {Array.from({ length: 10 }, (_, i) => (
           <div key={i}>
-            <TextInput type="text" placeholder={t[`Item ${i + 1}`]} value={items[i]} onChange={(e) => handleItemChange(i, e.target.value)} />
+            <TextInput type="text" placeholder={ITEM_PLACEHOLDERS[i]} value={items[i]} onChange={(e) => handleItemChange(i, e.target.value)} />
           </div>
         ))}
       </div>
-       <label className="label-style">{t['Notes']}</label>
-        <TextAreaInput
-          lines={4}
-          placeholder={t['Notes']}
-          value={notes}
-          onChange={(e) => handleNotesChange(e.target.value)}
-        />
+      <label className="label-style">{BACKPACK_LABELS.NOTES}</label>
+      <TextAreaInput
+        lines={4}
+        placeholder={BACKPACK_LABELS.NOTES}
+        value={notes}
+        onChange={(e) => handleNotesChange(e.target.value)}
+      />
     </div>
   );
 };

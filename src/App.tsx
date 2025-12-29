@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
-import { translations as t } from './translations'
+import { TAB_LABELS } from './constants'
 import { useCharacterStorage } from './hooks/useCharacterStorage'
 import HeroCard from './HeroCard'
 import Backpack from './Backpack'
@@ -19,15 +19,15 @@ function App() {
   const tabContentRef = useRef<HTMLDivElement>(null)
 
   const tabs = [
-    { id: 'hero-card', label: t['Hero Card'] },
-    { id: 'backpack', label: t['Backpack'] },
-    { id: 'fellowship-theme-card', label: t['Fellowship Theme Card'] },
-    { id: 'fellowship-special-improvements', label: t['Fellowship Special Improvements'] },
-    { id: 'theme-card-1', label: t['Theme Card 1'] },
-    { id: 'theme-card-2', label: t['Theme Card 2'] },
-    { id: 'theme-card-3', label: t['Theme Card 3'] },
-    { id: 'theme-card-4', label: t['Theme Card 4'] },
-    { id: 'configurations', label: t['⚙️'] }
+    { id: 'hero-card', label: TAB_LABELS.HERO_CARD },
+    { id: 'backpack', label: TAB_LABELS.BACKPACK },
+    { id: 'fellowship-theme-card', label: TAB_LABELS.FELLOWSHIP_THEME_CARD },
+    { id: 'fellowship-special-improvements', label: TAB_LABELS.FELLOWSHIP_SPECIAL_IMPROVEMENTS },
+    { id: 'theme-card-1', label: TAB_LABELS.THEME_CARD_1 },
+    { id: 'theme-card-2', label: TAB_LABELS.THEME_CARD_2 },
+    { id: 'theme-card-3', label: TAB_LABELS.THEME_CARD_3 },
+    { id: 'theme-card-4', label: TAB_LABELS.THEME_CARD_4 },
+    { id: 'configurations', label: TAB_LABELS.CONFIGURATIONS }
   ]
 
   const currentIndex = tabs.findIndex(tab => tab.id === activeTab)
