@@ -6,10 +6,7 @@ import HeroCard from './HeroCard'
 import Backpack from './Backpack'
 import FellowshipThemeCard from './FellowshipThemeCard'
 import FellowshipSpecialImprovements from './FellowshipSpecialImprovements'
-import ThemeCard1 from './ThemeCard1'
-import ThemeCard2 from './ThemeCard2'
-import ThemeCard3 from './ThemeCard3'
-import ThemeCard4 from './ThemeCard4'
+import ThemeCard from './ThemeCard'
 import Configurations from './Configurations'
 
 function App() {
@@ -79,13 +76,13 @@ function App() {
       case 'fellowship-special-improvements':
         return <FellowshipSpecialImprovements />
       case 'theme-card-1':
-        return <ThemeCard1 character={character} onUpdate={updateCharacter} />
+        return <ThemeCard cardNumber={1} character={character} onUpdate={updateCharacter} />
       case 'theme-card-2':
-        return <ThemeCard2 character={character} onUpdate={updateCharacter} />
+        return <ThemeCard cardNumber={2} character={character} onUpdate={updateCharacter} />
       case 'theme-card-3':
-        return <ThemeCard3 character={character} onUpdate={updateCharacter} />
+        return <ThemeCard cardNumber={3} character={character} onUpdate={updateCharacter} />
       case 'theme-card-4':
-        return <ThemeCard4 character={character} onUpdate={updateCharacter} />
+        return <ThemeCard cardNumber={4} character={character} onUpdate={updateCharacter} />
       case 'configurations':
         return <Configurations />
       default:
