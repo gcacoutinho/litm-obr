@@ -22,12 +22,9 @@ export interface ThemeCardData {
 }
 
 export interface FellowshipThemeCardData {
-  powerTags: {
-    tag1: { text: string; scratched: boolean }
-    tag2: { text: string; scratched: boolean }
-    tag3: { text: string; scratched: boolean }
-  }
-  weaknessTag: string
+  theme: PowerTag
+  powerTags: PowerTag[]
+  weaknessTags: WeaknessTag[]
   quests: string
   advancements: {
     abandon: [boolean, boolean, boolean]
@@ -82,12 +79,12 @@ export function createEmptyThemeCard(): ThemeCardData {
 
 export function createEmptyFellowshipThemeCard(): FellowshipThemeCardData {
   return {
-    powerTags: {
-      tag1: { text: '', scratched: false },
-      tag2: { text: '', scratched: false },
-      tag3: { text: '', scratched: false }
-    },
-    weaknessTag: '',
+    theme: { text: '', isScratched: false },
+    powerTags: Array(7).fill(null).map(() => ({
+      text: '',
+      isScratched: false
+    })),
+    weaknessTags: ['', ''],
     quests: '',
     advancements: {
       abandon: [false, false, false],

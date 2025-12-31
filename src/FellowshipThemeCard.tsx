@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { TextInput, TextAreaInput, WeaknessTagLeading, PowerTagInput, AdvancementSection } from './components'
+import { TextInput, TextAreaInput, WeaknessTagLeading, ThemeTagInput, PowerTagInput, AdvancementSection } from './components'
 import { useFellowshipThemeCardForm } from './hooks/useFellowshipThemeCardForm'
 
 /**
@@ -12,33 +12,32 @@ const FellowshipThemeCard = () => {
 
   return (
     <div>
-      <PowerTagInput
-        text={form.powerTag1}
-        isScratched={form.powerTag1Scratched}
-        onTextChange={form.handlePowerTag1Change}
-        onScratchedChange={form.handlePowerTag1ScratchedChange}
-        placeholder={`${t('themeCard.powerTag')} 1`}
+      <ThemeTagInput
+        text={form.theme.text}
+        isScratched={form.theme.isScratched}
+        onTextChange={form.handleThemeChange}
+        onScratchedChange={form.handleThemeScratchedChange}
+        placeholder={t('themeCard.powerTag')}
       />
-      <PowerTagInput
-        text={form.powerTag2}
-        isScratched={form.powerTag2Scratched}
-        onTextChange={form.handlePowerTag2Change}
-        onScratchedChange={form.handlePowerTag2ScratchedChange}
-        placeholder={`${t('themeCard.powerTag')} 2`}
-      />
-      <PowerTagInput
-        text={form.powerTag3}
-        isScratched={form.powerTag3Scratched}
-        onTextChange={form.handlePowerTag3Change}
-        onScratchedChange={form.handlePowerTag3ScratchedChange}
-        placeholder={`${t('themeCard.powerTag')} 3`}
-      />
-      <TextInput
-        leading={<WeaknessTagLeading />}
-        value={form.weaknessTag}
-        onChange={form.handleWeaknessTagChange}
-        placeholder={t('themeCard.weaknessTag')}
-      />
+      {form.powerTags.map((powerTag, index) => (
+        <PowerTagInput
+          key={`power-tag-${index}`}
+          text={powerTag.text}
+          isScratched={powerTag.isScratched}
+          onTextChange={(e) => form.handlePowerTagChange(index, { ...powerTag, text: e.currentTarget.value })}
+          onScratchedChange={(e) => form.handlePowerTagChange(index, { ...powerTag, isScratched: e.target.checked })}
+          placeholder={`${t('themeCard.powerTag')} ${index + 1}`}
+        />
+      ))}
+      {form.weaknessTags.map((weaknessTag, index) => (
+        <TextInput
+          key={`weakness-tag-${index}`}
+          leading={<WeaknessTagLeading />}
+          value={weaknessTag}
+          onChange={(e) => form.handleWeaknessTagChange(index, e.currentTarget.value)}
+          placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
+        />
+      ))}
       <label className="label-style">{t('themeCard.quest')}</label>
       <TextAreaInput
         lines={3}
