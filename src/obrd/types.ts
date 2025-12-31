@@ -1,14 +1,18 @@
 export type ThemeMight = 'origin' | 'adventure' | 'greatness'
 
+export type PowerTag = {
+  text: string
+  isScratched: boolean
+}
+
+export type WeaknessTag = string
+
 export interface ThemeCardData {
   might: ThemeMight
   type: string
-  powerTags: {
-    tag1: { text: string; scratched: boolean }
-    tag2: { text: string; scratched: boolean }
-    tag3: { text: string; scratched: boolean }
-  }
-  weaknessTag: string
+  theme: PowerTag
+  powerTags: PowerTag[]
+  weaknessTags: WeaknessTag[]
   quests: string
   advancements: {
     abandon: [boolean, boolean, boolean]
@@ -61,12 +65,12 @@ export function createEmptyThemeCard(): ThemeCardData {
   return {
     might: 'origin',
     type: '',
-    powerTags: {
-      tag1: { text: '', scratched: false },
-      tag2: { text: '', scratched: false },
-      tag3: { text: '', scratched: false }
-    },
-    weaknessTag: '',
+    theme: { text: '', isScratched: false },
+    powerTags: Array(6).fill(null).map(() => ({
+      text: '',
+      isScratched: false
+    })),
+    weaknessTags: ['', ''],
     quests: '',
     advancements: {
       abandon: [false, false, false],
@@ -116,22 +120,34 @@ export function createEmptyCharacter(): Character {
 }
 
 /**
- * Type guard to validate PowerTags structure
+ * Type guard to validate a single PowerTag
  */
-function isPowerTags(obj: unknown): obj is ThemeCardData['powerTags'] {
+function isPowerTag(obj: unknown): obj is PowerTag {
   if (!obj || typeof obj !== 'object') return false
-  const tags = obj as Record<string, unknown>
-  
+  const tag = obj as Record<string, unknown>
   return (
-    'tag1' in tags && typeof tags.tag1 === 'object' && tags.tag1 !== null &&
-    'tag2' in tags && typeof tags.tag2 === 'object' && tags.tag2 !== null &&
-    'tag3' in tags && typeof tags.tag3 === 'object' && tags.tag3 !== null &&
-    typeof (tags.tag1 as Record<string, unknown>).text === 'string' &&
-    typeof (tags.tag1 as Record<string, unknown>).scratched === 'boolean' &&
-    typeof (tags.tag2 as Record<string, unknown>).text === 'string' &&
-    typeof (tags.tag2 as Record<string, unknown>).scratched === 'boolean' &&
-    typeof (tags.tag3 as Record<string, unknown>).text === 'string' &&
-    typeof (tags.tag3 as Record<string, unknown>).scratched === 'boolean'
+    typeof tag.text === 'string' &&
+    typeof tag.isScratched === 'boolean'
+  )
+}
+
+/**
+ * Type guard to validate PowerTag array
+ */
+function isPowerTagArray(obj: unknown): obj is PowerTag[] {
+  return (
+    Array.isArray(obj) &&
+    obj.every(tag => isPowerTag(tag))
+  )
+}
+
+/**
+ * Type guard to validate WeaknessTag array (array of strings)
+ */
+function isWeaknessTagArray(obj: unknown): obj is WeaknessTag[] {
+  return (
+    Array.isArray(obj) &&
+    obj.every(tag => typeof tag === 'string')
   )
 }
 
@@ -185,12 +201,17 @@ export function migrateCharacter(data: unknown): Character {
     
     const tc = themeCard as Record<string, unknown>
     
-    // Validate powerTags, fallback to empty if invalid
-    const powerTags = isPowerTags(tc.powerTags) ? tc.powerTags : {
-      tag1: { text: '', scratched: false },
-      tag2: { text: '', scratched: false },
-      tag3: { text: '', scratched: false }
+    // Validate theme, fallback to empty if invalid
+    const theme: PowerTag = isPowerTag(tc.theme) ? (tc.theme as PowerTag) : {
+      text: '',
+      isScratched: false
     }
+    
+    // Validate powerTags array, fallback to empty if invalid
+    const powerTags: PowerTag[] = isPowerTagArray(tc.powerTags) ? (tc.powerTags as PowerTag[]) : []
+    
+    // Validate weaknessTags array, fallback to empty if invalid
+    const weaknessTags: WeaknessTag[] = isWeaknessTagArray(tc.weaknessTags) ? (tc.weaknessTags as WeaknessTag[]) : []
     
     // Validate advancements, fallback to empty if invalid
     const advancements: ThemeCardData['advancements'] = isAdvancements(tc.advancements) ? tc.advancements : {
@@ -202,8 +223,9 @@ export function migrateCharacter(data: unknown): Character {
     return {
       might: (tc.might as ThemeMight) || 'origin',
       type: (tc.type as string) || '',
+      theme,
       powerTags,
-      weaknessTag: (tc.weaknessTag as string) || '',
+      weaknessTags,
       quests: (tc.quests as string) || '',
       advancements
     }

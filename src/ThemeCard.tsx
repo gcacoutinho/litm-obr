@@ -36,42 +36,40 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
           </button>
         ))}
       </div>
-      <TextInput
-        leading={<label>{t('themeCard.type')}</label>}
-        value={form.type}
-        onChange={form.handleTypeChange}
-        placeholder={t('themeCard.type')}
-      />
-      <PowerTagInput
-        tagNumber={1}
-        text={form.powerTag1}
-        scratched={form.powerTag1Scratched}
-        onTextChange={form.handlePowerTag1Change}
-        onScratchedChange={form.handlePowerTag1ScratchedChange}
-        placeholder={`${t('themeCard.powerTag')} 1`}
-      />
-      <PowerTagInput
-        tagNumber={2}
-        text={form.powerTag2}
-        scratched={form.powerTag2Scratched}
-        onTextChange={form.handlePowerTag2Change}
-        onScratchedChange={form.handlePowerTag2ScratchedChange}
-        placeholder={`${t('themeCard.powerTag')} 2`}
-      />
-      <PowerTagInput
-        tagNumber={3}
-        text={form.powerTag3}
-        scratched={form.powerTag3Scratched}
-        onTextChange={form.handlePowerTag3Change}
-        onScratchedChange={form.handlePowerTag3ScratchedChange}
-        placeholder={`${t('themeCard.powerTag')} 3`}
-      />
-      <TextInput
-        leading={<WeaknessTagLeading />}
-        value={form.weaknessTag}
-        onChange={form.handleWeaknessTagChange}
-        placeholder={t('themeCard.weaknessTag')}
-      />
+       <TextInput
+         leading={<label>{t('themeCard.type')}</label>}
+         value={form.type}
+         onChange={form.handleTypeChange}
+         placeholder={t('themeCard.type')}
+       />
+       <PowerTagInput
+         tagNumber={1}
+         text={form.theme.text}
+         scratched={form.theme.isScratched}
+         onTextChange={form.handleThemeChange}
+         onScratchedChange={form.handleThemeScratchedChange}
+         placeholder={t('themeCard.powerTag')}
+       />
+       {form.powerTags.map((powerTag, index) => (
+         <PowerTagInput
+           key={`power-tag-${index}`}
+           tagNumber={(index === 0 ? 2 : 3) as 2 | 3}
+           text={powerTag.text}
+           scratched={powerTag.isScratched}
+           onTextChange={(e) => form.handlePowerTagChange(index, { ...powerTag, text: e.currentTarget.value })}
+           onScratchedChange={(e) => form.handlePowerTagChange(index, { ...powerTag, isScratched: e.target.checked })}
+           placeholder={`${t('themeCard.powerTag')} ${index + 2}`}
+         />
+       ))}
+       {form.weaknessTags.map((weaknessTag, index) => (
+         <TextInput
+           key={`weakness-tag-${index}`}
+           leading={<WeaknessTagLeading />}
+           value={weaknessTag}
+           onChange={(e) => form.handleWeaknessTagChange(index, e.currentTarget.value)}
+           placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
+         />
+       ))}
       <label className="label-style">{t('themeCard.quest')}</label>
       <TextAreaInput
         lines={3}

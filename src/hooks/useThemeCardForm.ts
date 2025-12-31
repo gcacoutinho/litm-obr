@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Character, ThemeCardData, ThemeMight } from '../obrd/types'
+import { Character, ThemeCardData, ThemeMight, PowerTag, WeaknessTag } from '../obrd/types'
 import { useDebouncedCallback } from './useDebouncedCallback'
 
 interface UseThemeCardFormProps {
@@ -11,13 +11,9 @@ interface UseThemeCardFormProps {
 interface ThemeCardFormState {
   might: ThemeMight
   type: string
-  powerTag1: string
-  powerTag1Scratched: boolean
-  powerTag2: string
-  powerTag2Scratched: boolean
-  powerTag3: string
-  powerTag3Scratched: boolean
-  weaknessTag: string
+  theme: PowerTag
+  powerTags: PowerTag[]
+  weaknessTags: WeaknessTag[]
   quests: string
   abandonAdvancements: [boolean, boolean, boolean]
   improveAdvancements: [boolean, boolean, boolean]
@@ -41,13 +37,9 @@ export function useThemeCardForm({ cardNumber, character, onUpdate }: UseThemeCa
   const [formState, setFormState] = useState<ThemeCardFormState>({
     might: themeCardData.might,
     type: themeCardData.type,
-    powerTag1: themeCardData.powerTags.tag1.text,
-    powerTag1Scratched: themeCardData.powerTags.tag1.scratched,
-    powerTag2: themeCardData.powerTags.tag2.text,
-    powerTag2Scratched: themeCardData.powerTags.tag2.scratched,
-    powerTag3: themeCardData.powerTags.tag3.text,
-    powerTag3Scratched: themeCardData.powerTags.tag3.scratched,
-    weaknessTag: themeCardData.weaknessTag,
+    theme: themeCardData.theme,
+    powerTags: themeCardData.powerTags,
+    weaknessTags: themeCardData.weaknessTags,
     quests: themeCardData.quests,
     abandonAdvancements: themeCardData.advancements.abandon,
     improveAdvancements: themeCardData.advancements.improve,
@@ -58,13 +50,9 @@ export function useThemeCardForm({ cardNumber, character, onUpdate }: UseThemeCa
   const {
     might,
     type,
-    powerTag1,
-    powerTag1Scratched,
-    powerTag2,
-    powerTag2Scratched,
-    powerTag3,
-    powerTag3Scratched,
-    weaknessTag,
+    theme,
+    powerTags,
+    weaknessTags,
     quests,
     abandonAdvancements,
     improveAdvancements,
@@ -77,13 +65,9 @@ export function useThemeCardForm({ cardNumber, character, onUpdate }: UseThemeCa
     setFormState({
       might: data.might,
       type: data.type,
-      powerTag1: data.powerTags.tag1.text,
-      powerTag1Scratched: data.powerTags.tag1.scratched,
-      powerTag2: data.powerTags.tag2.text,
-      powerTag2Scratched: data.powerTags.tag2.scratched,
-      powerTag3: data.powerTags.tag3.text,
-      powerTag3Scratched: data.powerTags.tag3.scratched,
-      weaknessTag: data.weaknessTag,
+      theme: data.theme,
+      powerTags: data.powerTags,
+      weaknessTags: data.weaknessTags,
       quests: data.quests,
       abandonAdvancements: data.advancements.abandon,
       improveAdvancements: data.advancements.improve,
@@ -114,76 +98,32 @@ export function useThemeCardForm({ cardNumber, character, onUpdate }: UseThemeCa
     updateThemeCard({ type: value })
   }
 
-  const handlePowerTag1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleThemeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value
-    setFormState(prev => ({ ...prev, powerTag1: value }))
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag1: { text: value, scratched: formState.powerTag1Scratched },
-      },
-    })
+    const updatedTheme = { ...formState.theme, text: value }
+    setFormState(prev => ({ ...prev, theme: updatedTheme }))
+    updateThemeCard({ theme: updatedTheme })
   }
 
-  const handlePowerTag1ScratchedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleThemeScratchedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked
-    setFormState(prev => ({ ...prev, powerTag1Scratched: checked }))
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag1: { text: formState.powerTag1, scratched: checked },
-      },
-    })
+    const updatedTheme = { ...formState.theme, isScratched: checked }
+    setFormState(prev => ({ ...prev, theme: updatedTheme }))
+    updateThemeCard({ theme: updatedTheme })
   }
 
-  const handlePowerTag2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setFormState(prev => ({ ...prev, powerTag2: value }))
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag2: { text: value, scratched: formState.powerTag2Scratched },
-      },
-    })
+  const handlePowerTagChange = (index: number, updatedTag: PowerTag) => {
+    const updated = [...formState.powerTags]
+    updated[index] = updatedTag
+    setFormState(prev => ({ ...prev, powerTags: updated }))
+    updateThemeCard({ powerTags: updated })
   }
 
-  const handlePowerTag2ScratchedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked
-    setFormState(prev => ({ ...prev, powerTag2Scratched: checked }))
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag2: { text: formState.powerTag2, scratched: checked },
-      },
-    })
-  }
-
-  const handlePowerTag3Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setFormState(prev => ({ ...prev, powerTag3: value }))
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag3: { text: value, scratched: formState.powerTag3Scratched },
-      },
-    })
-  }
-
-  const handlePowerTag3ScratchedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked
-    setFormState(prev => ({ ...prev, powerTag3Scratched: checked }))
-    updateThemeCard({
-      powerTags: {
-        ...themeCardData.powerTags,
-        tag3: { text: formState.powerTag3, scratched: checked },
-      },
-    })
-  }
-
-  const handleWeaknessTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setFormState(prev => ({ ...prev, weaknessTag: value }))
-    updateThemeCard({ weaknessTag: value })
+  const handleWeaknessTagChange = (index: number, value: string) => {
+    const updated = [...formState.weaknessTags]
+    updated[index] = value
+    setFormState(prev => ({ ...prev, weaknessTags: updated }))
+    updateThemeCard({ weaknessTags: updated })
   }
 
   const handleQuestsChange = (value: string) => {
@@ -230,25 +170,18 @@ export function useThemeCardForm({ cardNumber, character, onUpdate }: UseThemeCa
   return {
     might,
     type,
-    powerTag1,
-    powerTag1Scratched,
-    powerTag2,
-    powerTag2Scratched,
-    powerTag3,
-    powerTag3Scratched,
-    weaknessTag,
+    theme,
+    powerTags,
+    weaknessTags,
     quests,
     abandonAdvancements,
     improveAdvancements,
     milestoneAdvancements,
     handleMightChange,
     handleTypeChange,
-    handlePowerTag1Change,
-    handlePowerTag1ScratchedChange,
-    handlePowerTag2Change,
-    handlePowerTag2ScratchedChange,
-    handlePowerTag3Change,
-    handlePowerTag3ScratchedChange,
+    handleThemeChange,
+    handleThemeScratchedChange,
+    handlePowerTagChange,
     handleWeaknessTagChange,
     handleQuestsChange,
     handleAbandonChange,
