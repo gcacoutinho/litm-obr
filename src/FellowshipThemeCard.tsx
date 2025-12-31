@@ -13,25 +13,22 @@ const FellowshipThemeCard = () => {
   return (
     <div>
       <PowerTagInput
-        tagNumber={1}
         text={form.powerTag1}
-        scratched={form.powerTag1Scratched}
+        isScratched={form.powerTag1Scratched}
         onTextChange={form.handlePowerTag1Change}
         onScratchedChange={form.handlePowerTag1ScratchedChange}
         placeholder={`${t('themeCard.powerTag')} 1`}
       />
       <PowerTagInput
-        tagNumber={2}
         text={form.powerTag2}
-        scratched={form.powerTag2Scratched}
+        isScratched={form.powerTag2Scratched}
         onTextChange={form.handlePowerTag2Change}
         onScratchedChange={form.handlePowerTag2ScratchedChange}
         placeholder={`${t('themeCard.powerTag')} 2`}
       />
       <PowerTagInput
-        tagNumber={3}
         text={form.powerTag3}
-        scratched={form.powerTag3Scratched}
+        isScratched={form.powerTag3Scratched}
         onTextChange={form.handlePowerTag3Change}
         onScratchedChange={form.handlePowerTag3ScratchedChange}
         placeholder={`${t('themeCard.powerTag')} 3`}

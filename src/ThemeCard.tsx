@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Character } from './obrd/types'
-import { TextInput, TextAreaInput, WeaknessTagLeading, PowerTagInput, AdvancementSection } from './components'
+import { TextInput, TextAreaInput, WeaknessTagLeading, ThemeTagInput, PowerTagInput, AdvancementSection } from './components'
 import { useThemeCardForm } from './hooks'
 
 interface ThemeCardProps {
@@ -42,10 +42,9 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
          onChange={form.handleTypeChange}
          placeholder={t('themeCard.type')}
        />
-       <PowerTagInput
-         tagNumber={1}
+       <ThemeTagInput
          text={form.theme.text}
-         scratched={form.theme.isScratched}
+         isScratched={form.theme.isScratched}
          onTextChange={form.handleThemeChange}
          onScratchedChange={form.handleThemeScratchedChange}
          placeholder={t('themeCard.powerTag')}
@@ -53,12 +52,11 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
        {form.powerTags.map((powerTag, index) => (
          <PowerTagInput
            key={`power-tag-${index}`}
-           tagNumber={(index === 0 ? 2 : 3) as 2 | 3}
            text={powerTag.text}
-           scratched={powerTag.isScratched}
+           isScratched={powerTag.isScratched}
            onTextChange={(e) => form.handlePowerTagChange(index, { ...powerTag, text: e.currentTarget.value })}
            onScratchedChange={(e) => form.handlePowerTagChange(index, { ...powerTag, isScratched: e.target.checked })}
-           placeholder={`${t('themeCard.powerTag')} ${index + 2}`}
+           placeholder={`${t('themeCard.powerTag')} ${index + 1}`}
          />
        ))}
        {form.weaknessTags.map((weaknessTag, index) => (
