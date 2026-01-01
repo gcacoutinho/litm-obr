@@ -1,5 +1,5 @@
 import React from 'react';
-import scratchesSvg from '@public/scratches.svg?raw';
+import scratchesSvg from '../assets/scratches.svg?raw';
 
 interface ScratchCheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 

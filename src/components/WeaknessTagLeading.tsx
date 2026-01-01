@@ -1,4 +1,4 @@
-import weaknessTagSvg from '@public/weakness-tag.svg?raw';
+import weaknessTagSvg from '../assets/weakness-tag.svg?raw';
 
 const WeaknessTagLeading = () => {
   return (
