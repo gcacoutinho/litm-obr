@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput, TextAreaInput } from './components';
-import { Character } from './obrd/types';
-import { useDebouncedCallback } from './hooks';
+import { TextInput, TextAreaInput } from '../components';
+import { Character } from '../obrd/types';
+import { useDebouncedCallback } from '../hooks';
 
 interface BackpackProps {
   character: Character

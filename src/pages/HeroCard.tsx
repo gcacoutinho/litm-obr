@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput, InputCheckbox } from './components';
-import { Character } from './obrd/types';
+import { TextInput, InputCheckbox } from '../components';
+import { Character } from '../obrd/types';
 
 interface HeroCardProps {
   character: Character
@@ -30,6 +30,14 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
     setQuintessences(character.quintessences)
   }, [character])
 
+  // Helper to update array items and sync state
+  const updateArrayItem = <T,>(array: T[], index: number, updater: (item: T) => T, setState: (arr: T[]) => void, updateKey: keyof Character) => {
+    const updated = [...array]
+    updated[index] = updater(updated[index])
+    setState(updated)
+    onUpdate({ [updateKey]: updated } as Partial<Character>)
+  }
+
   const handleCharacterNameChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value
     const lines = value.split('\n')
@@ -46,31 +54,19 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
   }
 
   const handleCompanionChange = (index: number, value: string) => {
-    const updated = [...fellowshipRelationships]
-    updated[index] = { ...updated[index], companion: value }
-    setFellowshipRelationships(updated)
-    onUpdate({ fellowshipRelationships: updated })
+    updateArrayItem(fellowshipRelationships, index, item => ({ ...item, companion: value }), setFellowshipRelationships, 'fellowshipRelationships')
   }
 
   const handleRelationshipTagChange = (index: number, value: string) => {
-    const updated = [...fellowshipRelationships]
-    updated[index] = { ...updated[index], relationshipTag: value }
-    setFellowshipRelationships(updated)
-    onUpdate({ fellowshipRelationships: updated })
+    updateArrayItem(fellowshipRelationships, index, item => ({ ...item, relationshipTag: value }), setFellowshipRelationships, 'fellowshipRelationships')
   }
 
   const handlePromiseChange = (index: number, checked: boolean) => {
-    const updated = [...promises]
-    updated[index] = checked
-    setPromises(updated)
-    onUpdate({ promises: updated })
+    updateArrayItem(promises, index, (_item) => checked, setPromises, 'promises')
   }
 
   const handleQuintessenceChange = (index: number, value: string) => {
-    const updated = [...quintessences]
-    updated[index] = value
-    setQuintessences(updated)
-    onUpdate({ quintessences: updated })
+    updateArrayItem(quintessences, index, (_item) => value, setQuintessences, 'quintessences')
   }
 
   return (

@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import './App.css'
 import { useCharacterStorage } from './hooks'
-import HeroCard from './HeroCard'
-import Backpack from './Backpack'
-import FellowshipThemeCard from './FellowshipThemeCard'
-import FellowshipSpecialImprovements from './FellowshipSpecialImprovements'
-import ThemeCard from './ThemeCard'
-import Configurations from './Configurations'
+import HeroCard from './pages/HeroCard'
+import Backpack from './pages/Backpack'
+import FellowshipThemeCard from './pages/FellowshipThemeCard'
+import FellowshipSpecialImprovements from './pages/FellowshipSpecialImprovements'
+import ThemeCard from './pages/ThemeCard'
+import Configurations from './pages/Configurations'
 
 /**
  * Main application component with tabbed interface for character management.

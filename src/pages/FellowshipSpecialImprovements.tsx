@@ -1,5 +1,5 @@
-import { TextInput } from './components';
-import { useSpecialImprovementsForm } from './hooks/useSpecialImprovementsForm';
+import { TextInput } from '../components';
+import { useSpecialImprovementsForm } from '../hooks/useSpecialImprovementsForm';
 
 const FellowshipSpecialImprovements = () => {
   const { improvements, handleImprovementChange } = useSpecialImprovementsForm();

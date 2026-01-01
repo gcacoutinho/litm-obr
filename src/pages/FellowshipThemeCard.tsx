@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { TextInput, TextAreaInput, WeaknessTagLeading, ThemeTagInput, PowerTagInput, AdvancementSection } from './components'
-import { useFellowshipThemeCardForm } from './hooks/useFellowshipThemeCardForm'
+import { TextInput, TextAreaInput, WeaknessTagLeading, ThemeTagInput, PowerTagInput, AdvancementSection } from '../components'
+import { useFellowshipThemeCardForm } from '../hooks/useFellowshipThemeCardForm'
 
 /**
  * Renders the fellowship theme card with power tags, advancements, and quest tracking.

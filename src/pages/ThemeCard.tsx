@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import { Character } from './obrd/types'
-import { TextInput, TextAreaInput, WeaknessTagLeading, ThemeTagInput, PowerTagInput, AdvancementSection } from './components'
-import { useThemeCardForm } from './hooks'
+import { Character } from '../obrd/types'
+import { TextInput, TextAreaInput, WeaknessTagLeading, ThemeTagInput, PowerTagInput, AdvancementSection } from '../components'
+import { useThemeCardForm } from '../hooks'
 
 interface ThemeCardProps {
   cardNumber: 1 | 2 | 3 | 4
