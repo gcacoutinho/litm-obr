@@ -37,8 +37,9 @@
   "mightOptions.greatness": "Greatness",
   
   "app.loading": "Loading character...",
-  "config.selectLanguage": "Select Language:",
-  "config.english": "English",
-  "config.portuguese": "Português (Brasil)",
-  "config.spanish": "Español"
+   "config.selectLanguage": "Select Language:",
+   "config.english": "English",
+   "config.portuguese": "Português (Brasil)",
+   "config.spanish": "Español",
+   "config.reportIssues": "Report issues"
 }
