@@ -36,6 +36,14 @@ export function useFellowshipThemeCardStorage() {
     loadFellowshipData()
   }, [])
 
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+    }
+  }, [])
+
   // Debounced save (500ms)
   const updateFellowshipData = useCallback((updates: Partial<FellowshipThemeCardData>) => {
     setFellowshipData((prevData) => {
