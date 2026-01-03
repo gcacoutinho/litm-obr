@@ -296,12 +296,6 @@ td {
   margin: 0;
 }
 
-.checkbox-group-output {
-  font-weight: 600;
-  color: #52281a;
-  font-family: 'Cormorant Unicase', serif;
-}
-
 .might-selector {
   display: flex;
   gap: 1rem;

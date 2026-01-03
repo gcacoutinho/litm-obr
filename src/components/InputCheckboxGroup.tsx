@@ -11,7 +11,6 @@ interface InputCheckboxGroupProps {
   disabled?: boolean
   className?: string
   checkboxClassName?: string
-  outputClassName?: string
   onChange?: (value: number) => void
   getAriaLabel?: (index: number) => string
 }
@@ -31,7 +30,6 @@ const InputCheckboxGroup = ({
   disabled = false,
   className,
   checkboxClassName,
-  outputClassName,
   onChange,
   getAriaLabel,
 }: InputCheckboxGroupProps) => {
@@ -78,9 +76,6 @@ const InputCheckboxGroup = ({
           />
         ))}
       </div>
-      <output className={outputClassName || 'checkbox-group-output'}>
-        {currentValue}
-      </output>
     </div>
   )
 }

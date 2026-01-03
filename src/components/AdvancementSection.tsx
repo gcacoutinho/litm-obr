@@ -4,8 +4,8 @@ import Advancement from './Advancement'
 
 interface AdvancementSectionProps {
   type: 'abandon' | 'improve' | 'milestone'
-  checkboxes: [boolean, boolean, boolean]
-  onCheckboxChange: (index: 0 | 1 | 2, checked: boolean) => void
+  value: number
+  onCheckboxChange: (value: number) => void
 }
 
 /**
@@ -14,7 +14,7 @@ interface AdvancementSectionProps {
  */
 export const AdvancementSection: React.FC<AdvancementSectionProps> = ({
   type,
-  checkboxes,
+  value,
   onCheckboxChange,
 }) => {
   const { t } = useTranslation()
@@ -28,7 +28,7 @@ export const AdvancementSection: React.FC<AdvancementSectionProps> = ({
   return (
     <div className="advancement-section">
       <Advancement
-        checkboxes={checkboxes}
+        value={value}
         label={t(`themeCard.${type}`)}
         onCheckboxChange={onCheckboxChange}
         labelStyle={{

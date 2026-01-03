@@ -78,17 +78,17 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
       <div className="advancement-container">
         <AdvancementSection
           type="abandon"
-          checkboxes={form.abandonAdvancements}
+          value={form.abandonAdvancements}
           onCheckboxChange={form.handleAbandonChange}
         />
         <AdvancementSection
           type="improve"
-          checkboxes={form.improveAdvancements}
+          value={form.improveAdvancements}
           onCheckboxChange={form.handleImproveChange}
         />
         <AdvancementSection
           type="milestone"
-          checkboxes={form.milestoneAdvancements}
+          value={form.milestoneAdvancements}
           onCheckboxChange={form.handleMilestoneChange}
         />
       </div>

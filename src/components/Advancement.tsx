@@ -1,10 +1,10 @@
 import React from 'react';
-import InputCheckbox from './InputCheckbox';
+import InputCheckboxGroup from './InputCheckboxGroup';
 
 interface AdvancementProps {
-  checkboxes: [boolean, boolean, boolean];
+  value: number;
   label: string;
-  onCheckboxChange: (index: 0 | 1 | 2, checked: boolean) => void;
+  onCheckboxChange: (value: number) => void;
   containerStyle?: React.CSSProperties;
   labelStyle?: React.CSSProperties;
   checkboxClassName?: string;
@@ -12,7 +12,7 @@ interface AdvancementProps {
 }
 
 const Advancement = ({
-  checkboxes,
+  value,
   label,
   onCheckboxChange,
   containerStyle,
@@ -29,35 +29,19 @@ const Advancement = ({
   const defaultLabelStyle: React.CSSProperties = {
     ...labelStyle,
   };
-
-  const checkboxesContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  };
-
-  const defaultCheckboxStyle: React.CSSProperties = {
-    marginRight: '0.5rem',
-  };
+  const getAriaLabel = checkboxAriaLabels
+    ? (index: number) => checkboxAriaLabels[index]
+    : undefined;
 
   return (
     <div style={defaultContainerStyle}>
-      <div style={checkboxesContainerStyle}>
-        {checkboxes.map((checked, index) => (
-          <InputCheckbox
-            key={index}
-            className={checkboxClassName || 'promise-checkbox'}
-            style={defaultCheckboxStyle}
-            checked={checked}
-            onChange={(e) =>
-              onCheckboxChange(index as 0 | 1 | 2, e.target.checked)
-            }
-            aria-label={
-              checkboxAriaLabels ? checkboxAriaLabels[index] : undefined
-            }
-          />
-        ))}
-      </div>
+      <InputCheckboxGroup
+        count={3}
+        value={value}
+        onChange={onCheckboxChange}
+        checkboxClassName={checkboxClassName || 'promise-checkbox'}
+        getAriaLabel={getAriaLabel}
+      />
       <div style={defaultLabelStyle}>{label}</div>
     </div>
   );

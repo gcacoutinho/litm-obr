@@ -8,9 +8,9 @@ interface FellowshipThemeCardFormState {
   powerTags: PowerTag[]
   weaknessTags: WeaknessTag[]
   quests: string
-  abandonAdvancements: [boolean, boolean, boolean]
-  improveAdvancements: [boolean, boolean, boolean]
-  milestoneAdvancements: [boolean, boolean, boolean]
+  abandonAdvancements: number
+  improveAdvancements: number
+  milestoneAdvancements: number
 }
 
 /**
@@ -28,9 +28,9 @@ export function useFellowshipThemeCardForm() {
     powerTags: fellowshipData?.powerTags || [],
     weaknessTags: fellowshipData?.weaknessTags || [],
     quests: fellowshipData?.quests || '',
-    abandonAdvancements: fellowshipData?.advancements.abandon || [false, false, false],
-    improveAdvancements: fellowshipData?.advancements.improve || [false, false, false],
-    milestoneAdvancements: fellowshipData?.advancements.milestone || [false, false, false],
+    abandonAdvancements: fellowshipData?.advancements.abandon ?? 0,
+    improveAdvancements: fellowshipData?.advancements.improve ?? 0,
+    milestoneAdvancements: fellowshipData?.advancements.milestone ?? 0,
   })
 
   // Destructure for easier access
@@ -103,38 +103,32 @@ export function useFellowshipThemeCardForm() {
     debouncedSaveQuests(value)
   }
 
-  const handleAbandonChange = (index: 0 | 1 | 2, checked: boolean) => {
-    const updated = [...formState.abandonAdvancements] as [boolean, boolean, boolean]
-    updated[index] = checked
-    setFormState(prev => ({ ...prev, abandonAdvancements: updated }))
+  const handleAbandonChange = (value: number) => {
+    setFormState(prev => ({ ...prev, abandonAdvancements: value }))
     updateFellowshipCard({
       advancements: {
         ...fellowshipData!.advancements,
-        abandon: updated,
+        abandon: value,
       },
     })
   }
 
-  const handleImproveChange = (index: 0 | 1 | 2, checked: boolean) => {
-    const updated = [...formState.improveAdvancements] as [boolean, boolean, boolean]
-    updated[index] = checked
-    setFormState(prev => ({ ...prev, improveAdvancements: updated }))
+  const handleImproveChange = (value: number) => {
+    setFormState(prev => ({ ...prev, improveAdvancements: value }))
     updateFellowshipCard({
       advancements: {
         ...fellowshipData!.advancements,
-        improve: updated,
+        improve: value,
       },
     })
   }
 
-  const handleMilestoneChange = (index: 0 | 1 | 2, checked: boolean) => {
-    const updated = [...formState.milestoneAdvancements] as [boolean, boolean, boolean]
-    updated[index] = checked
-    setFormState(prev => ({ ...prev, milestoneAdvancements: updated }))
+  const handleMilestoneChange = (value: number) => {
+    setFormState(prev => ({ ...prev, milestoneAdvancements: value }))
     updateFellowshipCard({
       advancements: {
         ...fellowshipData!.advancements,
-        milestone: updated,
+        milestone: value,
       },
     })
   }
