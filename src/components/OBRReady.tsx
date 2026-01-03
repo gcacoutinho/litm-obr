@@ -18,11 +18,21 @@ interface OBRReadyProps {
  */
 export function OBRReady({ children }: OBRReadyProps) {
   const [isReady, setIsReady] = useState(false)
+  const [showBypass, setShowBypass] = useState(false)
 
   useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setShowBypass(true)
+    }, 5000)
+
     OBR.onReady(() => {
+      window.clearTimeout(timeoutId)
       setIsReady(true)
     })
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
   }, [])
 
   if (!isReady) {
@@ -30,6 +40,11 @@ export function OBRReady({ children }: OBRReadyProps) {
       <div className="obr-loading-container">
         <div className="spinner"></div>
         <p className="obr-loading-text">Initializing Misty Rodeo</p>
+        {showBypass ? (
+          <button type="button" onClick={() => setIsReady(true)}>
+            Continue without OBR
+          </button>
+        ) : null}
       </div>
     )
   }
