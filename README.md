@@ -47,10 +47,13 @@ litm-obr/
 │   ├── App.tsx         # Main application shell
 │   ├── App.css         # Component styles
 │   ├── style.css       # Global styles
-│   ├── hooks/          # Custom React hooks
-│   ├── obrd/           # Owlbear SDK wrappers / adapters
+│   ├── assets/         # Static assets
 │   ├── components/     # UI components
-│   └── translations.ts # Translation data
+│   ├── hooks/          # Custom React hooks
+│   ├── i18n/           # i18next configuration
+│   ├── locales/        # Translation JSON files
+│   ├── obrd/           # Owlbear SDK wrappers / adapters
+│   └── pages/          # Page-level views
 ├── public/             # Static assets
 ├── index.html          # HTML template
 ├── vite.config.js      # Vite configuration
