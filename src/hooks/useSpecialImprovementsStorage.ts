@@ -37,6 +37,14 @@ export function useSpecialImprovementsStorage() {
     loadSpecialImprovements()
   }, [])
 
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+    }
+  }, [])
+
   // Debounced save (500ms)
   const updateSpecialImprovements = useCallback((updates: string[]) => {
     setSpecialImprovements(updates)

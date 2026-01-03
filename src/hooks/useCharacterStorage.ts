@@ -35,6 +35,14 @@ export function useCharacterStorage() {
     
     loadCharacter()
   }, [])
+
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+    }
+  }, [])
   
   // Debounced save (500ms)
   const updateCharacter = useCallback((updates: Partial<Character>) => {
