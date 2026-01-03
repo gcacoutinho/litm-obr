@@ -272,6 +272,36 @@ td {
     background-color: #52281a;
 }
 
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.checkbox-group-horizontal {
+  align-items: center;
+}
+
+.checkbox-group-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.checkbox-group-horizontal .checkbox-group-row {
+  flex-direction: row;
+}
+
+.checkbox-group-checkbox {
+  margin: 0;
+}
+
+.checkbox-group-output {
+  font-weight: 600;
+  color: #52281a;
+  font-family: 'Cormorant Unicase', serif;
+}
+
 .might-selector {
   display: flex;
   gap: 1rem;
