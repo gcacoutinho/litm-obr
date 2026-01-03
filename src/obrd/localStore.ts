@@ -111,6 +111,22 @@ export function loadCharacter(): Character | null {
 }
 
 /**
+ * Clear character data from localStorage with error handling.
+ * Emits StorageErrorEvent if clear fails.
+ */
+export function clearCharacter(): void {
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+  } catch (error) {
+    emitError(
+      'save_failed',
+      'Failed to clear character data.',
+      error
+    )
+  }
+}
+
+/**
  * Save fellowship theme card data to localStorage with error handling.
  * Emits StorageErrorEvent if save fails.
  */

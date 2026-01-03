@@ -37,9 +37,11 @@
   "mightOptions.greatness": "Grandeza",
   
   "app.loading": "Carregando personagem...",
-   "config.selectLanguage": "Selecione o Idioma:",
-   "config.english": "English",
-   "config.portuguese": "Português (Brasil)",
-   "config.spanish": "Español",
-   "config.reportIssues": "Reportar problemas"
+  "config.selectLanguage": "Selecione o Idioma:",
+  "config.english": "English",
+  "config.portuguese": "Português (Brasil)",
+  "config.spanish": "Español",
+  "config.clearCharacterData": "Limpar dados do personagem",
+  "config.clearCharacterConfirm": "Limpar os dados do personagem salvos localmente? Isso não pode ser desfeito.",
+  "config.reportIssues": "Reportar problemas"
 }

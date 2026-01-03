@@ -37,9 +37,11 @@
   "mightOptions.greatness": "Greatness",
   
   "app.loading": "Loading character...",
-   "config.selectLanguage": "Select Language:",
-   "config.english": "English",
-   "config.portuguese": "Português (Brasil)",
-   "config.spanish": "Español",
-   "config.reportIssues": "Report issues"
+  "config.selectLanguage": "Select Language:",
+  "config.english": "English",
+  "config.portuguese": "Português (Brasil)",
+  "config.spanish": "Español",
+  "config.clearCharacterData": "Clear character data",
+  "config.clearCharacterConfirm": "Clear locally saved character data? This cannot be undone.",
+  "config.reportIssues": "Report issues"
 }
