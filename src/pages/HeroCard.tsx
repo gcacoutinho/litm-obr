@@ -72,7 +72,7 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
 
   return (
     <div>
-      <div className="hero-card-name-wrapper">
+      <div className="hero-card-name-wrapper input-wrapper">
         <textarea
           placeholder={t('heroCard.characterName')}
           rows={2}
