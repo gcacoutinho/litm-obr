@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput, InputCheckbox } from '../components';
+import { TextInput, InputCheckboxGroup } from '../components';
 import { Character } from '../obrd/types';
 
 interface HeroCardProps {
@@ -61,8 +61,9 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
     updateArrayItem(fellowshipRelationships, index, item => ({ ...item, relationshipTag: value }), setFellowshipRelationships, 'fellowshipRelationships')
   }
 
-  const handlePromiseChange = (index: number, checked: boolean) => {
-    updateArrayItem(promises, index, (_item) => checked, setPromises, 'promises')
+  const handlePromiseChange = (value: number) => {
+    setPromises(value)
+    onUpdate({ promises: value })
   }
 
   const handleQuintessenceChange = (index: number, value: string) => {
@@ -106,9 +107,12 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
       </div>
       <div className="hero-promises-container">
         <span className="hero-promises-label">{t('heroCard.promise')}:</span>
-        {Array.from({ length: 5 }, (_, i) => (
-          <InputCheckbox key={i} className="promise-checkbox hero-promise-checkbox" checked={promises[i]} onChange={(e) => handlePromiseChange(i, e.target.checked)} />
-        ))}
+        <InputCheckboxGroup
+          count={5}
+          value={promises}
+          onChange={handlePromiseChange}
+          checkboxClassName="promise-checkbox hero-promise-checkbox"
+        />
       </div>
       <div>
         <label className="label-style">{t('heroCard.quintessences')}</label>

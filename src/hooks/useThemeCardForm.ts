@@ -15,9 +15,9 @@ interface ThemeCardFormState {
   powerTags: PowerTag[]
   weaknessTags: WeaknessTag[]
   quests: string
-  abandonAdvancements: [boolean, boolean, boolean]
-  improveAdvancements: [boolean, boolean, boolean]
-  milestoneAdvancements: [boolean, boolean, boolean]
+  abandonAdvancements: number
+  improveAdvancements: number
+  milestoneAdvancements: number
 }
 
 /**
@@ -131,38 +131,32 @@ export function useThemeCardForm({ cardNumber, character, onUpdate }: UseThemeCa
     debouncedSaveQuests(value)
   }
 
-  const handleAbandonChange = (index: 0 | 1 | 2, checked: boolean) => {
-    const updated = [...formState.abandonAdvancements] as [boolean, boolean, boolean]
-    updated[index] = checked
-    setFormState(prev => ({ ...prev, abandonAdvancements: updated }))
+  const handleAbandonChange = (value: number) => {
+    setFormState(prev => ({ ...prev, abandonAdvancements: value }))
     updateThemeCard({
       advancements: {
         ...themeCardData.advancements,
-        abandon: updated,
+        abandon: value,
       },
     })
   }
 
-  const handleImproveChange = (index: 0 | 1 | 2, checked: boolean) => {
-    const updated = [...formState.improveAdvancements] as [boolean, boolean, boolean]
-    updated[index] = checked
-    setFormState(prev => ({ ...prev, improveAdvancements: updated }))
+  const handleImproveChange = (value: number) => {
+    setFormState(prev => ({ ...prev, improveAdvancements: value }))
     updateThemeCard({
       advancements: {
         ...themeCardData.advancements,
-        improve: updated,
+        improve: value,
       },
     })
   }
 
-  const handleMilestoneChange = (index: 0 | 1 | 2, checked: boolean) => {
-    const updated = [...formState.milestoneAdvancements] as [boolean, boolean, boolean]
-    updated[index] = checked
-    setFormState(prev => ({ ...prev, milestoneAdvancements: updated }))
+  const handleMilestoneChange = (value: number) => {
+    setFormState(prev => ({ ...prev, milestoneAdvancements: value }))
     updateThemeCard({
       advancements: {
         ...themeCardData.advancements,
-        milestone: updated,
+        milestone: value,
       },
     })
   }

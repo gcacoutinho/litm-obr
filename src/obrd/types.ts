@@ -15,9 +15,9 @@ export interface ThemeCardData {
   weaknessTags: WeaknessTag[]
   quests: string
   advancements: {
-    abandon: [boolean, boolean, boolean]
-    improve: [boolean, boolean, boolean]
-    milestone: [boolean, boolean, boolean]
+    abandon: number
+    improve: number
+    milestone: number
   }
 }
 
@@ -27,9 +27,9 @@ export interface FellowshipThemeCardData {
   weaknessTags: WeaknessTag[]
   quests: string
   advancements: {
-    abandon: [boolean, boolean, boolean]
-    improve: [boolean, boolean, boolean]
-    milestone: [boolean, boolean, boolean]
+    abandon: number
+    improve: number
+    milestone: number
   }
 }
 
@@ -41,7 +41,7 @@ export interface Character {
     companion: string
     relationshipTag: string
   }> // Length: 5
-  promises: boolean[] // Length: 5
+  promises: number // 0-5
    quintessences: string[] // Length: 5
    specialImprovements: string[] // Length: 10
 
@@ -70,9 +70,9 @@ export function createEmptyThemeCard(): ThemeCardData {
     weaknessTags: ['', ''],
     quests: '',
     advancements: {
-      abandon: [false, false, false],
-      improve: [false, false, false],
-      milestone: [false, false, false]
+      abandon: 0,
+      improve: 0,
+      milestone: 0
     }
   }
 }
@@ -87,9 +87,9 @@ export function createEmptyFellowshipThemeCard(): FellowshipThemeCardData {
     weaknessTags: ['', ''],
     quests: '',
     advancements: {
-      abandon: [false, false, false],
-      improve: [false, false, false],
-      milestone: [false, false, false]
+      abandon: 0,
+      improve: 0,
+      milestone: 0
     }
   }
 }
@@ -102,7 +102,7 @@ export function createEmptyCharacter(): Character {
       companion: '',
       relationshipTag: ''
     })),
-    promises: Array(5).fill(false),
+    promises: 0,
     quintessences: Array(5).fill(''),
     specialImprovements: Array(10).fill(''),
     backpack: {
@@ -149,27 +149,6 @@ function isWeaknessTagArray(obj: unknown): obj is WeaknessTag[] {
 }
 
 /**
- * Type guard to validate Advancements structure
- */
-function isAdvancements(obj: unknown): obj is ThemeCardData['advancements'] {
-  if (!obj || typeof obj !== 'object') return false
-  const adv = obj as Record<string, unknown>
-  
-  const isProgressArray = (val: unknown): val is [boolean, boolean, boolean] => {
-    return (
-      Array.isArray(val) && val.length === 3 &&
-      val.every(v => typeof v === 'boolean')
-    )
-  }
-  
-  return (
-    'abandon' in adv && isProgressArray(adv.abandon) &&
-    'improve' in adv && isProgressArray(adv.improve) &&
-    'milestone' in adv && isProgressArray(adv.milestone)
-  )
-}
-
-/**
  * Type guard to validate Backpack structure
  */
 function isBackpack(obj: unknown): obj is Character['backpack'] {
@@ -189,6 +168,19 @@ export function migrateCharacter(data: unknown): Character {
   }
 
   const obj = data as Record<string, unknown>
+
+  const clampNumber = (value: number, max: number) =>
+    Math.min(Math.max(value, 0), max)
+
+  const countTruthy = (value: unknown, max: number) => {
+    if (Array.isArray(value)) {
+      return clampNumber(value.filter(Boolean).length, max)
+    }
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return clampNumber(value, max)
+    }
+    return 0
+  }
   
   // Helper to ensure theme card has all required fields
   const ensureThemeCardAdvancements = (themeCard: unknown): ThemeCardData => {
@@ -210,11 +202,14 @@ export function migrateCharacter(data: unknown): Character {
     // Validate weaknessTags array, fallback to empty if invalid
     const weaknessTags: WeaknessTag[] = isWeaknessTagArray(tc.weaknessTags) ? (tc.weaknessTags as WeaknessTag[]) : []
     
-    // Validate advancements, fallback to empty if invalid
-    const advancements: ThemeCardData['advancements'] = isAdvancements(tc.advancements) ? tc.advancements : {
-      abandon: [false, false, false],
-      improve: [false, false, false],
-      milestone: [false, false, false]
+    const rawAdvancements =
+      tc.advancements && typeof tc.advancements === 'object'
+        ? (tc.advancements as Record<string, unknown>)
+        : {}
+    const advancements: ThemeCardData['advancements'] = {
+      abandon: countTruthy(rawAdvancements.abandon, 3),
+      improve: countTruthy(rawAdvancements.improve, 3),
+      milestone: countTruthy(rawAdvancements.milestone, 3)
     }
     
     return {
@@ -235,7 +230,7 @@ export function migrateCharacter(data: unknown): Character {
       companion: '',
       relationshipTag: ''
     })),
-    promises: Array.isArray(obj.promises) ? obj.promises : Array(5).fill(false),
+    promises: countTruthy(obj.promises, 5),
     quintessences: Array.isArray(obj.quintessences) ? obj.quintessences : Array(5).fill(''),
     specialImprovements: Array.isArray(obj.specialImprovements) ? obj.specialImprovements : Array(10).fill(''),
     backpack: isBackpack(obj.backpack) ? obj.backpack : {
