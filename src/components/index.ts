@@ -5,6 +5,7 @@
 
 export { default as Advancement } from './Advancement'
 export { default as InputCheckbox } from './InputCheckbox'
+export { default as InputCheckboxGroup } from './InputCheckboxGroup'
 export { default as TextAreaInput } from './TextAreaInput'
 export { default as TextInput } from './TextInput'
 export { default as ScratchCheckbox } from './ScratchCheckbox'
