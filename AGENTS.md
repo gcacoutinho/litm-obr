@@ -45,11 +45,13 @@ This project uses **Nix devShells**.
 - Always assume work happens inside the devShell.
 - Do not suggest global installs.
 - If tooling is missing, update the Nix configuration instead.
+- Use npm consistently with the existing `package-lock.json`.
+- Prefix commands with `nix develop -c` to run inside the devShell.
 
-Expected entry command:
+Expected entry command format:
 
 ```bash
-nix develop
+nix develop -c <command>
 ```
 
 ---
@@ -68,9 +70,9 @@ nix develop
 
 ### After making changes
 1. Validate the changes by running (if possible):
-   - `npm run typecheck` or `tsc -p .`
-   - `npm run lint` (if available)
-   - `npm run build`
+   - `nix develop -c npm run typecheck` or `nix develop -c tsc -p .`
+   - `nix develop -c npm run lint` (if available)
+   - `nix develop -c npm run build`
    
    If you cannot run commands, state clearly what should be run.
 
