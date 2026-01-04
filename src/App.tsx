@@ -16,7 +16,7 @@ import Configurations from './pages/Configurations'
  */
 function App() {
   const { t } = useTranslation()
-  const { character, isLoading, updateCharacter } = useCharacterStorage()
+  const { character, isLoading, updateCharacter, clearCharacter } = useCharacterStorage()
   const [activeTab, setActiveTab] = useState<string>('hero-card')
   const tabContentRef = useRef<HTMLDivElement>(null)
 
@@ -90,7 +90,7 @@ function App() {
       case 'theme-card-4':
         return <ThemeCard cardNumber={4} character={character} onUpdate={updateCharacter} />
       case 'configurations':
-        return <Configurations />
+        return <Configurations onClearCharacter={clearCharacter} />
       default:
         return null
     }

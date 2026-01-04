@@ -1,9 +1,12 @@
 import { useTranslation } from 'react-i18next'
+type ConfigurationsProps = {
+  onClearCharacter: () => void
+}
 
 /**
  * Configurations page with settings for language selection.
  */
-const Configurations = () => {
+const Configurations = ({ onClearCharacter }: ConfigurationsProps) => {
   const { t, i18n } = useTranslation()
 
   const languages = [
@@ -14,6 +17,14 @@ const Configurations = () => {
 
   const handleLanguageChange = (languageCode: string) => {
     i18n.changeLanguage(languageCode)
+  }
+
+  const handleClearCharacterData = () => {
+    const shouldClear = window.confirm(t('config.clearCharacterConfirm'))
+    if (!shouldClear) {
+      return
+    }
+    onClearCharacter()
   }
 
   return (
@@ -40,6 +51,24 @@ const Configurations = () => {
             </button>
           ))}
         </div>
+      </div>
+      <div style={{ marginBottom: '2rem' }}>
+        <button
+          onClick={handleClearCharacterData}
+          className="might-option"
+          style={{
+            marginLeft: '1rem',
+            padding: '0.6em 1.2em',
+            borderRadius: '8px',
+            border: '1px solid #b0482c',
+            backgroundColor: '#f9d6d0',
+            color: '#52281a',
+            fontWeight: 'normal',
+            cursor: 'pointer',
+          }}
+        >
+          {t('config.clearCharacterData')}
+        </button>
       </div>
       <div style={{ marginBottom: '2rem' }}>
         <button
