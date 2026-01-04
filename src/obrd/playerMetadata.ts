@@ -8,15 +8,15 @@ import {
 } from './localStore'
 
 export async function getMyCharacter(): Promise<Character | null> {
-  return loadCharacter()
+  return await loadCharacter()
 }
 
 export async function saveMyCharacter(character: Character): Promise<void> {
-  saveCharacter(character)
+  await saveCharacter(character)
 }
 
 export async function clearMyCharacter(): Promise<void> {
-  clearCharacter()
+  await clearCharacter()
 }
 
 export async function getMyFellowshipThemeCard(): Promise<FellowshipThemeCardData | null> {
