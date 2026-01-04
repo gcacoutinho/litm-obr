@@ -17,10 +17,15 @@ interface OBRReadyProps {
  * </OBRReady>
  */
 export function OBRReady({ children }: OBRReadyProps) {
+  const isAvailable = OBR.isAvailable
   const [isReady, setIsReady] = useState(false)
   const [showBypass, setShowBypass] = useState(false)
 
   useEffect(() => {
+    if (!isAvailable) {
+      return
+    }
+
     const timeoutId = window.setTimeout(() => {
       setShowBypass(true)
     }, 5000)
@@ -33,7 +38,11 @@ export function OBRReady({ children }: OBRReadyProps) {
     return () => {
       window.clearTimeout(timeoutId)
     }
-  }, [])
+  }, [isAvailable])
+
+  if (!isAvailable) {
+    return <>{children}</>
+  }
 
   if (!isReady) {
     return (
