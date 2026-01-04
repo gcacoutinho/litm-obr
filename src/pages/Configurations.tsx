@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { clearMyCharacter } from '../obrd/playerMetadata'
+type ConfigurationsProps = {
+  onClearCharacter: () => void
+}
 
 /**
  * Configurations page with settings for language selection.
  */
-const Configurations = () => {
+const Configurations = ({ onClearCharacter }: ConfigurationsProps) => {
   const { t, i18n } = useTranslation()
 
   const languages = [
@@ -22,7 +24,7 @@ const Configurations = () => {
     if (!shouldClear) {
       return
     }
-    void clearMyCharacter()
+    onClearCharacter()
   }
 
   return (

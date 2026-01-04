@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Character, createEmptyCharacter, migrateCharacter } from '../obrd/types'
-import { getMyCharacter, saveMyCharacter } from '../obrd/playerMetadata'
+import { clearMyCharacter, getMyCharacter, saveMyCharacter } from '../obrd/playerMetadata'
 
 /**
  * Hook for managing character data storage with debounced saves.
@@ -66,6 +66,14 @@ export function useCharacterStorage() {
       return updated
     })
   }, [])
+
+  const clearCharacter = useCallback(() => {
+    setCharacter(createEmptyCharacter())
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current)
+    }
+    void clearMyCharacter()
+  }, [])
   
-  return { character, isLoading, updateCharacter }
+  return { character, isLoading, updateCharacter, clearCharacter }
 }
