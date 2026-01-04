@@ -102,7 +102,7 @@ async function getRoomStorageKey(): Promise<string> {
   }
 
   try {
-    return await OBR.room.getId()
+    return OBR.room.id
   } catch (error) {
     console.warn('[litm-obr] Failed to resolve room ID, using default key.', error)
     return DEFAULT_ROOM_KEY
