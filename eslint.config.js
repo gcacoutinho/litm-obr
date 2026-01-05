@@ -31,4 +31,15 @@ export default tseslint.config(
       'react-hooks/exhaustive-deps': 'error',
     },
   },
+  {
+    files: [
+      'src/hooks/useCharacterStorage.ts',
+      'src/hooks/useFellowshipThemeCardStorage.ts',
+      'src/hooks/useSpecialImprovementsStorage.ts',
+      'src/obrd/localStore.ts',
+    ],
+    rules: {
+      'no-console': 'off',
+    },
+  },
 );

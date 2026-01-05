@@ -67,7 +67,7 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
   }
 
   const handleQuintessenceChange = (index: number, value: string) => {
-    updateArrayItem(quintessences, index, (_item) => value, setQuintessences, 'quintessences')
+    updateArrayItem(quintessences, index, () => value, setQuintessences, 'quintessences')
   }
 
   return (

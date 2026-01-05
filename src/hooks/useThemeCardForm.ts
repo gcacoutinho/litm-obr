@@ -1,23 +1,9 @@
-import { useState, useEffect } from 'react'
-import { Character, ThemeCardData, ThemeMight, PowerTag, WeaknessTag } from '../obrd/types'
-import { useDebouncedCallback } from './useDebouncedCallback'
+import { Character, ThemeCardData, ThemeMight, PowerTag } from '../obrd/types'
 
 interface UseThemeCardFormProps {
   cardNumber: 1 | 2 | 3 | 4
   character: Character
   onUpdate: (updates: Partial<Character>) => void
-}
-
-interface ThemeCardFormState {
-  might: ThemeMight
-  type: string
-  theme: PowerTag
-  powerTags: PowerTag[]
-  weaknessTags: WeaknessTag[]
-  quests: string
-  abandonAdvancements: number
-  improveAdvancements: number
-  milestoneAdvancements: number
 }
 
 /**
@@ -33,20 +19,6 @@ export function useThemeCardForm({ cardNumber, character, onUpdate }: UseThemeCa
   const themeCardKey = `themeCard${cardNumber}` as `themeCard${1 | 2 | 3 | 4}`
   const themeCardData = character[themeCardKey]
 
-  // Consolidated form state
-  const [formState, setFormState] = useState<ThemeCardFormState>({
-    might: themeCardData.might,
-    type: themeCardData.type,
-    theme: themeCardData.theme,
-    powerTags: themeCardData.powerTags,
-    weaknessTags: themeCardData.weaknessTags,
-    quests: themeCardData.quests,
-    abandonAdvancements: themeCardData.advancements.abandon,
-    improveAdvancements: themeCardData.advancements.improve,
-    milestoneAdvancements: themeCardData.advancements.milestone,
-  })
-
-  // Destructure for easier access
   const {
     might,
     type,
@@ -54,26 +26,8 @@ export function useThemeCardForm({ cardNumber, character, onUpdate }: UseThemeCa
     powerTags,
     weaknessTags,
     quests,
-    abandonAdvancements,
-    improveAdvancements,
-    milestoneAdvancements,
-  } = formState
-
-  // Sync with character prop changes
-  useEffect(() => {
-    const data = character[themeCardKey]
-    setFormState({
-      might: data.might,
-      type: data.type,
-      theme: data.theme,
-      powerTags: data.powerTags,
-      weaknessTags: data.weaknessTags,
-      quests: data.quests,
-      abandonAdvancements: data.advancements.abandon,
-      improveAdvancements: data.advancements.improve,
-      milestoneAdvancements: data.advancements.milestone,
-    })
-  }, [character, themeCardKey])
+    advancements,
+  } = themeCardData
 
   // Core update function
   const updateThemeCard = (updates: Partial<ThemeCardData>) => {
@@ -81,81 +35,66 @@ export function useThemeCardForm({ cardNumber, character, onUpdate }: UseThemeCa
     onUpdate({ [themeCardKey]: updated })
   }
 
-  // Debounced callback for saving quests
-  const debouncedSaveQuests = useDebouncedCallback((updatedQuests: string) => {
-    updateThemeCard({ quests: updatedQuests })
-  }, 500)
-
   // Handlers
   const handleMightChange = (newMight: ThemeMight) => {
-    setFormState(prev => ({ ...prev, might: newMight }))
     updateThemeCard({ might: newMight })
   }
 
   const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value
-    setFormState(prev => ({ ...prev, type: value }))
     updateThemeCard({ type: value })
   }
 
   const handleThemeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value
-    const updatedTheme = { ...formState.theme, text: value }
-    setFormState(prev => ({ ...prev, theme: updatedTheme }))
+    const updatedTheme = { ...themeCardData.theme, text: value }
     updateThemeCard({ theme: updatedTheme })
   }
 
   const handleThemeScratchedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked
-    const updatedTheme = { ...formState.theme, isScratched: checked }
-    setFormState(prev => ({ ...prev, theme: updatedTheme }))
+    const updatedTheme = { ...themeCardData.theme, isScratched: checked }
     updateThemeCard({ theme: updatedTheme })
   }
 
   const handlePowerTagChange = (index: number, updatedTag: PowerTag) => {
-    const updated = [...formState.powerTags]
+    const updated = [...themeCardData.powerTags]
     updated[index] = updatedTag
-    setFormState(prev => ({ ...prev, powerTags: updated }))
     updateThemeCard({ powerTags: updated })
   }
 
   const handleWeaknessTagChange = (index: number, value: string) => {
-    const updated = [...formState.weaknessTags]
+    const updated = [...themeCardData.weaknessTags]
     updated[index] = value
-    setFormState(prev => ({ ...prev, weaknessTags: updated }))
     updateThemeCard({ weaknessTags: updated })
   }
 
   const handleQuestsChange = (value: string) => {
-    setFormState(prev => ({ ...prev, quests: value }))
-    debouncedSaveQuests(value)
+    updateThemeCard({ quests: value })
   }
 
   const handleAbandonChange = (value: number) => {
-    setFormState(prev => ({ ...prev, abandonAdvancements: value }))
     updateThemeCard({
       advancements: {
-        ...themeCardData.advancements,
+        ...advancements,
         abandon: value,
       },
     })
   }
 
   const handleImproveChange = (value: number) => {
-    setFormState(prev => ({ ...prev, improveAdvancements: value }))
     updateThemeCard({
       advancements: {
-        ...themeCardData.advancements,
+        ...advancements,
         improve: value,
       },
     })
   }
 
   const handleMilestoneChange = (value: number) => {
-    setFormState(prev => ({ ...prev, milestoneAdvancements: value }))
     updateThemeCard({
       advancements: {
-        ...themeCardData.advancements,
+        ...advancements,
         milestone: value,
       },
     })
@@ -168,9 +107,9 @@ export function useThemeCardForm({ cardNumber, character, onUpdate }: UseThemeCa
     powerTags,
     weaknessTags,
     quests,
-    abandonAdvancements,
-    improveAdvancements,
-    milestoneAdvancements,
+    abandonAdvancements: advancements.abandon,
+    improveAdvancements: advancements.improve,
+    milestoneAdvancements: advancements.milestone,
     handleMightChange,
     handleTypeChange,
     handleThemeChange,

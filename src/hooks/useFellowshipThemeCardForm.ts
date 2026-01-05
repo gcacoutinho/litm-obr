@@ -1,17 +1,5 @@
-import { useState, useEffect } from 'react'
-import { FellowshipThemeCardData, PowerTag, WeaknessTag } from '../obrd/types'
+import { FellowshipThemeCardData, PowerTag, createEmptyFellowshipThemeCard } from '../obrd/types'
 import { useFellowshipThemeCardStorage } from './useFellowshipThemeCardStorage'
-import { useDebouncedCallback } from './useDebouncedCallback'
-
-interface FellowshipThemeCardFormState {
-  theme: PowerTag
-  powerTags: PowerTag[]
-  weaknessTags: WeaknessTag[]
-  quests: string
-  abandonAdvancements: number
-  improveAdvancements: number
-  milestoneAdvancements: number
-}
 
 /**
  * Manages form state for the fellowship theme card, including power tags, advancements, and quests.
@@ -22,112 +10,71 @@ interface FellowshipThemeCardFormState {
 export function useFellowshipThemeCardForm() {
   const { fellowshipData, updateFellowshipData } = useFellowshipThemeCardStorage()
 
-  // Consolidated form state
-  const [formState, setFormState] = useState<FellowshipThemeCardFormState>({
-    theme: fellowshipData?.theme || { text: '', isScratched: false },
-    powerTags: fellowshipData?.powerTags || [],
-    weaknessTags: fellowshipData?.weaknessTags || [],
-    quests: fellowshipData?.quests || '',
-    abandonAdvancements: fellowshipData?.advancements.abandon ?? 0,
-    improveAdvancements: fellowshipData?.advancements.improve ?? 0,
-    milestoneAdvancements: fellowshipData?.advancements.milestone ?? 0,
-  })
-
-  // Destructure for easier access
+  const current = fellowshipData ?? createEmptyFellowshipThemeCard()
   const {
     theme,
     powerTags,
     weaknessTags,
     quests,
-    abandonAdvancements,
-    improveAdvancements,
-    milestoneAdvancements,
-  } = formState
-
-  // Sync with fellowship data prop changes
-  useEffect(() => {
-    if (fellowshipData) {
-      setFormState({
-        theme: fellowshipData.theme,
-        powerTags: fellowshipData.powerTags,
-        weaknessTags: fellowshipData.weaknessTags,
-        quests: fellowshipData.quests,
-        abandonAdvancements: fellowshipData.advancements.abandon,
-        improveAdvancements: fellowshipData.advancements.improve,
-        milestoneAdvancements: fellowshipData.advancements.milestone,
-      })
-    }
-  }, [fellowshipData])
+    advancements,
+  } = current
 
   // Core update function
   const updateFellowshipCard = (updates: Partial<FellowshipThemeCardData>) => {
     updateFellowshipData(updates)
   }
 
-  // Debounced callback for saving quests
-  const debouncedSaveQuests = useDebouncedCallback((updatedQuests: string) => {
-    updateFellowshipCard({ quests: updatedQuests })
-  }, 500)
-
   // Handlers
   const handleThemeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value
-    const updatedTheme = { ...formState.theme, text: value }
-    setFormState(prev => ({ ...prev, theme: updatedTheme }))
+    const updatedTheme = { ...current.theme, text: value }
     updateFellowshipCard({ theme: updatedTheme })
   }
 
   const handleThemeScratchedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked
-    const updatedTheme = { ...formState.theme, isScratched: checked }
-    setFormState(prev => ({ ...prev, theme: updatedTheme }))
+    const updatedTheme = { ...current.theme, isScratched: checked }
     updateFellowshipCard({ theme: updatedTheme })
   }
 
   const handlePowerTagChange = (index: number, updatedTag: PowerTag) => {
-    const updated = [...formState.powerTags]
+    const updated = [...current.powerTags]
     updated[index] = updatedTag
-    setFormState(prev => ({ ...prev, powerTags: updated }))
     updateFellowshipCard({ powerTags: updated })
   }
 
   const handleWeaknessTagChange = (index: number, value: string) => {
-    const updated = [...formState.weaknessTags]
+    const updated = [...current.weaknessTags]
     updated[index] = value
-    setFormState(prev => ({ ...prev, weaknessTags: updated }))
     updateFellowshipCard({ weaknessTags: updated })
   }
 
   const handleQuestsChange = (value: string) => {
-    setFormState(prev => ({ ...prev, quests: value }))
-    debouncedSaveQuests(value)
+    updateFellowshipCard({ quests: value })
   }
 
   const handleAbandonChange = (value: number) => {
-    setFormState(prev => ({ ...prev, abandonAdvancements: value }))
     updateFellowshipCard({
       advancements: {
-        ...fellowshipData!.advancements,
+        ...advancements,
         abandon: value,
       },
     })
   }
 
   const handleImproveChange = (value: number) => {
-    setFormState(prev => ({ ...prev, improveAdvancements: value }))
     updateFellowshipCard({
       advancements: {
-        ...fellowshipData!.advancements,
+        ...advancements,
         improve: value,
       },
     })
   }
 
   const handleMilestoneChange = (value: number) => {
-    setFormState(prev => ({ ...prev, milestoneAdvancements: value }))
     updateFellowshipCard({
       advancements: {
-        ...fellowshipData!.advancements,
+        ...advancements,
         milestone: value,
       },
     })
@@ -138,9 +85,9 @@ export function useFellowshipThemeCardForm() {
     powerTags,
     weaknessTags,
     quests,
-    abandonAdvancements,
-    improveAdvancements,
-    milestoneAdvancements,
+    abandonAdvancements: advancements.abandon,
+    improveAdvancements: advancements.improve,
+    milestoneAdvancements: advancements.milestone,
     handleThemeChange,
     handleThemeScratchedChange,
     handlePowerTagChange,

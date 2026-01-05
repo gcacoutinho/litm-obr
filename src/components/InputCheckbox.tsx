@@ -1,10 +1,11 @@
 import React from 'react';
 
-interface InputCheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+type InputCheckboxProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 const InputCheckbox = React.forwardRef<HTMLInputElement, InputCheckboxProps>(
   ({ type, ...props }, ref) => {
-    return <input ref={ref} type="checkbox" {...props} />;
+    const resolvedType = type ?? 'checkbox';
+    return <input ref={ref} type={resolvedType} {...props} />;
   }
 );
 
