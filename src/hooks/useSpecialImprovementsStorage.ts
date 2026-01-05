@@ -1,10 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { migrateCharacter } from '../obrd/types'
-import { getMyCharacter, saveMyCharacter } from '../obrd/playerMetadata'
+import {
+  loadFellowshipImprovementsPayload,
+  onFellowshipImprovementsChange,
+  saveFellowshipImprovements
+} from '../obrd/fellowshipImprovementsRoom'
 
 /**
  * Hook for managing special improvements data storage with debounced saves.
- * Loads character on mount, extracts specialImprovements, and provides update function with 500ms debounce.
+ * Loads shared fellowship improvements from room metadata when available.
  *
  * @returns Object with specialImprovements, isLoading, and updateSpecialImprovements callback
  *
@@ -18,14 +21,19 @@ export function useSpecialImprovementsStorage() {
   const [specialImprovements, setSpecialImprovements] = useState<string[]>(Array(10).fill(''))
   const [isLoading, setIsLoading] = useState(true)
   const saveTimeoutRef = useRef<number | undefined>(undefined)
+  const versionRef = useRef(0)
 
-  // Load character on mount and extract specialImprovements
+  // Load fellowship improvements on mount
   useEffect(() => {
     const loadSpecialImprovements = async () => {
       try {
-        const data = await getMyCharacter()
-        const character = migrateCharacter(data)
-        setSpecialImprovements(character.specialImprovements)
+        const payload = await loadFellowshipImprovementsPayload()
+        if (payload) {
+          versionRef.current = payload.version
+          setSpecialImprovements(payload.data)
+        } else {
+          setSpecialImprovements(Array(10).fill(''))
+        }
       } catch (error) {
         console.error('[litm-obr] Failed to load special improvements:', error)
         setSpecialImprovements(Array(10).fill(''))
@@ -35,6 +43,23 @@ export function useSpecialImprovementsStorage() {
     }
 
     loadSpecialImprovements()
+  }, [])
+
+  useEffect(() => {
+    const unsubscribe = onFellowshipImprovementsChange((payload) => {
+      if (!payload) {
+        return
+      }
+
+      if (payload.version <= versionRef.current) {
+        return
+      }
+
+      versionRef.current = payload.version
+      setSpecialImprovements(payload.data)
+    })
+
+    return unsubscribe
   }, [])
 
   useEffect(() => {
@@ -57,10 +82,8 @@ export function useSpecialImprovementsStorage() {
     // Schedule save
     saveTimeoutRef.current = window.setTimeout(async () => {
       try {
-        const data = await getMyCharacter()
-        const character = migrateCharacter(data)
-        const updatedCharacter = { ...character, specialImprovements: updates }
-        await saveMyCharacter(updatedCharacter)
+        const payload = await saveFellowshipImprovements(updates)
+        versionRef.current = payload.version
       } catch (error) {
         console.error('[litm-obr] Failed to save special improvements:', error)
       }
