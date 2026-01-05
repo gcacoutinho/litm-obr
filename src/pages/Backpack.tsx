@@ -1,8 +1,6 @@
-import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TextInput, TextAreaInput } from '../components';
 import { Character } from '../obrd/types';
-import { useDebouncedCallback } from '../hooks';
 
 interface BackpackProps {
   character: Character
@@ -18,35 +16,17 @@ interface BackpackProps {
  */
 const Backpack = ({ character, onUpdate }: BackpackProps) => {
   const { t } = useTranslation();
-  const [items, setItems] = useState(character.backpack.items);
-  const [notes, setNotes] = useState(character.backpack.notes);
-
-  // Sync with character prop changes
-  useEffect(() => {
-    setItems(character.backpack.items);
-    setNotes(character.backpack.notes);
-  }, [character.backpack]);
-
-  // Debounced callback for saving items
-  const debouncedSaveItems = useDebouncedCallback((updatedItems: string[]) => {
-    onUpdate({ backpack: { items: updatedItems, notes } });
-  }, 500);
-
-  // Debounced callback for saving notes
-  const debouncedSaveNotes = useDebouncedCallback((updatedNotes: string) => {
-    onUpdate({ backpack: { items, notes: updatedNotes } });
-  }, 500);
+  const items = character.backpack.items;
+  const notes = character.backpack.notes;
 
   const handleItemChange = (index: number, value: string) => {
     const updated = [...items];
     updated[index] = value;
-    setItems(updated);
-    debouncedSaveItems(updated);
+    onUpdate({ backpack: { items: updated, notes } });
   };
 
   const handleNotesChange = (value: string) => {
-    setNotes(value);
-    debouncedSaveNotes(value);
+    onUpdate({ backpack: { items, notes: value } });
   };
 
   return (

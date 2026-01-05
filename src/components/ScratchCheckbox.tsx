@@ -1,12 +1,15 @@
 import React from 'react';
 import scratchesSvg from '../assets/scratches.svg?raw';
 
-interface ScratchCheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+type ScratchCheckboxProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 const ScratchCheckbox = React.forwardRef<HTMLInputElement, ScratchCheckboxProps>(
   ({ className, ...props }, ref) => {
+    const wrapperClassName = ['scratch-checkbox-wrapper', className]
+      .filter(Boolean)
+      .join(' ');
     return (
-      <label className="scratch-checkbox-wrapper">
+      <label className={wrapperClassName}>
         <input
           ref={ref}
           type="checkbox"
