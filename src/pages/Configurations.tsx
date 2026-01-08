@@ -1,10 +1,9 @@
 import type { ChangeEvent, ReactElement } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Character } from '../obrd/types'
 import type { ImportCharacterResult } from '../hooks/useCharacterStorage'
 import type { PlayerRole } from '../hooks/useObrPlayerRole'
-import TextAreaInput from '../components/TextAreaInput'
 
 type LanguageCode = 'en' | 'pt-BR' | 'es'
 
@@ -32,15 +31,41 @@ type StatusMessage = {
  */
 const Configurations = ({ onClearCharacter, onImportCharacter, character, role }: ConfigurationsProps): ReactElement => {
   const { t, i18n } = useTranslation()
-  const [importText, setImportText] = useState<string>('')
   const [status, setStatus] = useState<StatusMessage | null>(null)
   const [isImporting, setIsImporting] = useState<boolean>(false)
+  const [statusVisible, setStatusVisible] = useState<boolean>(false)
 
   const languages: LanguageOption[] = [
     { code: 'en', label: t('config.english') },
     { code: 'pt-BR', label: t('config.portuguese') },
     { code: 'es', label: t('config.spanish') },
   ]
+
+  useEffect(() => {
+    if (status) {
+      setStatusVisible(true)
+    } else {
+      setStatusVisible(false)
+    }
+  }, [status])
+
+  useEffect(() => {
+    if (!status || status.tone !== 'success') {
+      return
+    }
+
+    const fadeTimeoutId: number = window.setTimeout(() => {
+      setStatusVisible(false)
+    }, 2500)
+    const clearTimeoutId: number = window.setTimeout(() => {
+      setStatus(null)
+    }, 3000)
+
+    return () => {
+      window.clearTimeout(fadeTimeoutId)
+      window.clearTimeout(clearTimeoutId)
+    }
+  }, [status])
 
   const handleLanguageChange = (languageCode: LanguageCode): void => {
     i18n.changeLanguage(languageCode)
@@ -80,22 +105,6 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
     window.URL.revokeObjectURL(url)
   }
 
-  const handleExportCopy = async (): Promise<void> => {
-    const payload: string = JSON.stringify(character)
-    if (!navigator.clipboard?.writeText) {
-      setStatus({ tone: 'error', text: t('config.exportCopyUnsupported') })
-      return
-    }
-
-    try {
-      await navigator.clipboard.writeText(payload)
-      setStatus({ tone: 'success', text: t('config.exportCopySuccess') })
-    } catch (error: unknown) {
-      console.warn('[litm-obr] Failed to copy character JSON.', error)
-      setStatus({ tone: 'error', text: t('config.exportCopyError') })
-    }
-  }
-
   const handleImportFile = async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file: File | undefined = event.target.files?.[0]
     if (!file) {
@@ -104,47 +113,42 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
 
     try {
       const text: string = await file.text()
-      setImportText(text)
+      if (!text.trim()) {
+        setStatus({ tone: 'error', text: t('config.importEmpty') })
+        return
+      }
+
+      const shouldImport: boolean = window.confirm(t('config.importConfirm'))
+      if (!shouldImport) {
+        return
+      }
+
+      setIsImporting(true)
+      const result: ImportCharacterResult = await onImportCharacter(text)
+      setIsImporting(false)
+
+      switch (result.status) {
+        case 'success':
+          setStatus({ tone: 'success', text: t('config.importSuccess') })
+          break
+        case 'invalid_json':
+          setStatus({ tone: 'error', text: t('config.importInvalidJson') })
+          break
+        case 'invalid_data':
+          setStatus({ tone: 'error', text: t('config.importInvalidData') })
+          break
+        case 'save_failed':
+          setStatus({ tone: 'error', text: t('config.importSaveError') })
+          break
+        default:
+          break
+      }
     } catch (error: unknown) {
       console.warn('[litm-obr] Failed to read import file.', error)
       setStatus({ tone: 'error', text: t('config.importFileError') })
-    } finally {
-      event.target.value = ''
-    }
-  }
-
-  const handleImportApply = async (): Promise<void> => {
-    if (!importText.trim()) {
-      setStatus({ tone: 'error', text: t('config.importEmpty') })
-      return
     }
 
-    const shouldImport: boolean = window.confirm(t('config.importConfirm'))
-    if (!shouldImport) {
-      return
-    }
-
-    setIsImporting(true)
-    const result: ImportCharacterResult = await onImportCharacter(importText)
-    setIsImporting(false)
-
-    switch (result.status) {
-      case 'success':
-        setImportText('')
-        setStatus({ tone: 'success', text: t('config.importSuccess') })
-        break
-      case 'invalid_json':
-        setStatus({ tone: 'error', text: t('config.importInvalidJson') })
-        break
-      case 'invalid_data':
-        setStatus({ tone: 'error', text: t('config.importInvalidData') })
-        break
-      case 'save_failed':
-        setStatus({ tone: 'error', text: t('config.importSaveError') })
-        break
-      default:
-        break
-    }
+    event.target.value = ''
   }
 
   return (
@@ -174,7 +178,9 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
       </div>
       {role === 'PLAYER' ? (
         <div style={{ marginBottom: '2rem' }}>
-          <label className="label-style">{t('config.characterImportExport')}</label>
+          <div>
+            <span className="label-style">{t('config.characterImportExport')}</span>
+          </div>
           <div style={{ margin: '1rem 1rem 0 1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
               <button
@@ -188,12 +194,19 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
                   color: '#52281a',
                   fontWeight: 'normal',
                   cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 {t('config.exportDownload')}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '0.5rem' }}>
+                  <path d="M12 3v12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <polyline points="7,10 12,15 17,10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M5 21h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </button>
-              <button
-                onClick={handleExportCopy}
+              <label
                 className="might-option"
                 style={{
                   padding: '0.6em 1.2em',
@@ -202,43 +215,27 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
                   backgroundColor: '#f4e5d2',
                   color: '#52281a',
                   fontWeight: 'normal',
-                  cursor: 'pointer',
-                }}
-              >
-                {t('config.exportCopy')}
-              </button>
-            </div>
-            <div>
-              <label className="label-style">{t('config.importLabel')}</label>
-              <div style={{ margin: '0.5rem 0 0.75rem 0' }}>
-                <input type="file" accept="application/json" onChange={handleImportFile} />
-              </div>
-              <TextAreaInput
-                lines={6}
-                value={importText}
-                placeholder={t('config.importPlaceholder')}
-                onChange={(event) => setImportText(event.target.value)}
-                style={{ overflow: 'auto' }}
-                spellCheck={false}
-              />
-              <button
-                onClick={handleImportApply}
-                className="might-option"
-                disabled={isImporting}
-                style={{
-                  marginTop: '0.75rem',
-                  padding: '0.6em 1.2em',
-                  borderRadius: '8px',
-                  border: '1px solid #b0482c',
-                  backgroundColor: '#f9d6d0',
-                  color: '#52281a',
-                  fontWeight: 'normal',
-                  cursor: 'pointer',
+                  cursor: isImporting ? 'not-allowed' : 'pointer',
                   opacity: isImporting ? 0.7 : 1,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                {t('config.importApply')}
-              </button>
+                {t('config.importLabel')}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '0.5rem' }}>
+                  <path d="M12 21V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <polyline points="7,14 12,9 17,14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M5 3h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <input
+                  type="file"
+                  accept="application/json"
+                  onChange={handleImportFile}
+                  style={{ display: 'none' }}
+                  disabled={isImporting}
+                />
+              </label>
             </div>
             {status ? (
               <div
@@ -246,9 +243,23 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
                 style={{
                   padding: '0.6rem 0.8rem',
                   borderRadius: '6px',
-                  border: status.tone === 'error' ? '1px solid #b0482c' : '1px solid #e4d2c1',
-                  backgroundColor: status.tone === 'error' ? '#f9d6d0' : '#f4e5d2',
+                  border:
+                    status.tone === 'error'
+                      ? '1px solid #b0482c'
+                      : status.tone === 'success'
+                        ? '1px solid #c29a2b'
+                        : '1px solid #e4d2c1',
+                  backgroundColor:
+                    status.tone === 'error'
+                      ? '#f9d6d0'
+                      : status.tone === 'success'
+                        ? '#fff4c2'
+                        : '#f4e5d2',
                   color: '#52281a',
+                  opacity: statusVisible ? 1 : 0,
+                  transform: statusVisible ? 'translateY(0)' : 'translateY(-6px)',
+                  transition: 'opacity 200ms ease, transform 200ms ease',
+                  pointerEvents: statusVisible ? 'auto' : 'none',
                 }}
               >
                 {status.text}
