@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import './App.css'
-import { useCharacterStorage } from './hooks'
+import { useCharacterStorage, useGmSyncPlayer, useObrPlayerRole } from './hooks'
 import HeroCard from './pages/HeroCard'
 import Backpack from './pages/Backpack'
 import FellowshipThemeCard from './pages/FellowshipThemeCard'
 import FellowshipSpecialImprovements from './pages/FellowshipSpecialImprovements'
 import ThemeCard from './pages/ThemeCard'
 import Configurations from './pages/Configurations'
+import GmOverview from './pages/GmOverview'
 
 /**
  * Main application component with tabbed interface for character management.
@@ -17,20 +18,28 @@ import Configurations from './pages/Configurations'
 function App() {
   const { t } = useTranslation()
   const { character, isLoading, updateCharacter, clearCharacter } = useCharacterStorage()
+  const role = useObrPlayerRole()
   const [activeTab, setActiveTab] = useState<string>('hero-card')
   const tabContentRef = useRef<HTMLDivElement>(null)
 
-  const tabs = [
-    { id: 'hero-card', label: t('tab.heroCard') },
-    { id: 'backpack', label: t('tab.backpack') },
-    { id: 'fellowship-theme-card', label: t('tab.fellowshipThemeCard') },
-    { id: 'fellowship-special-improvements', label: t('tab.fellowshipSpecialImprovements') },
-    { id: 'theme-card-1', label: t('tab.themeCard1') },
-    { id: 'theme-card-2', label: t('tab.themeCard2') },
-    { id: 'theme-card-3', label: t('tab.themeCard3') },
-    { id: 'theme-card-4', label: t('tab.themeCard4') },
-    { id: 'configurations', label: t('tab.configurations') }
-  ]
+  useGmSyncPlayer(character, role)
+
+  const tabs = role === 'GM'
+    ? [
+      { id: 'gm-overview', label: t('tab.gmOverview') },
+      { id: 'configurations', label: t('tab.configurations') }
+    ]
+    : [
+      { id: 'hero-card', label: t('tab.heroCard') },
+      { id: 'backpack', label: t('tab.backpack') },
+      { id: 'fellowship-theme-card', label: t('tab.fellowshipThemeCard') },
+      { id: 'fellowship-special-improvements', label: t('tab.fellowshipSpecialImprovements') },
+      { id: 'theme-card-1', label: t('tab.themeCard1') },
+      { id: 'theme-card-2', label: t('tab.themeCard2') },
+      { id: 'theme-card-3', label: t('tab.themeCard3') },
+      { id: 'theme-card-4', label: t('tab.themeCard4') },
+      { id: 'configurations', label: t('tab.configurations') }
+    ]
 
   const currentIndex = tabs.findIndex(tab => tab.id === activeTab)
   const isFirstTab = currentIndex === 0
@@ -67,6 +76,19 @@ function App() {
     }
   }, [activeTab])
 
+  useEffect(() => {
+    if (role === 'GM') {
+      if (activeTab !== 'gm-overview' && activeTab !== 'configurations') {
+        setActiveTab('gm-overview')
+      }
+      return
+    }
+
+    if (activeTab === 'gm-overview') {
+      setActiveTab('hero-card')
+    }
+  }, [activeTab, role])
+
   const renderContent = () => {
     if (isLoading || !character) {
       return <div className="app-loading">{t('app.loading')}</div>
@@ -89,6 +111,8 @@ function App() {
         return <ThemeCard cardNumber={3} character={character} onUpdate={updateCharacter} />
       case 'theme-card-4':
         return <ThemeCard cardNumber={4} character={character} onUpdate={updateCharacter} />
+      case 'gm-overview':
+        return <GmOverview role={role} />
       case 'configurations':
         return <Configurations onClearCharacter={clearCharacter} />
       default:
