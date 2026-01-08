@@ -1,19 +1,21 @@
+import type { ReactElement } from 'react'
 import { useMemo } from 'react'
 import { useGmCharacterSync } from '../hooks'
 import { PlayerRole } from '../hooks/useObrPlayerRole'
+import type { GmCharacterPayload } from '../obrd/gmTypes'
 import { PowerTag, ThemeCardData } from '../obrd/types'
 
 type GmOverviewProps = {
   role: PlayerRole
 }
 
-const placeholder = '—'
+const placeholder: string = '—'
 
 function displayValue(value: string): string {
   return value.trim() === '' ? placeholder : value
 }
 
-function formatPowerTag(tag: PowerTag, index: number) {
+function formatPowerTag(tag: PowerTag, index: number): ReactElement | null {
   if (tag.text.trim() === '') {
     return null
   }
@@ -28,11 +30,11 @@ function formatPowerTag(tag: PowerTag, index: number) {
   )
 }
 
-function renderThemeCard(card: ThemeCardData) {
-  const powerTags = card.powerTags
-    .map((tag, index) => formatPowerTag(tag, index))
-    .filter((tag): tag is JSX.Element => tag !== null)
-  const weaknessTags = card.weaknessTags.filter((tag) => tag.trim() !== '')
+function renderThemeCard(card: ThemeCardData): ReactElement {
+  const powerTags: ReactElement[] = card.powerTags
+    .map((tag: PowerTag, index: number) => formatPowerTag(tag, index))
+    .filter((tag): tag is ReactElement => tag !== null)
+  const weaknessTags: string[] = card.weaknessTags.filter((tag: string) => tag.trim() !== '')
 
   return (
     <div className="gm-theme-card">
@@ -45,7 +47,7 @@ function renderThemeCard(card: ThemeCardData) {
           <div className="gm-label">Weakness Tags</div>
           <div className="gm-tags">
             {weaknessTags.length > 0
-              ? weaknessTags.map((tag, index) => (
+              ? weaknessTags.map((tag: string, index: number) => (
                 <span key={`weakness-${index}`} className="gm-tag">
                   {index + 1}. {displayValue(tag)}
                 </span>
@@ -58,11 +60,11 @@ function renderThemeCard(card: ThemeCardData) {
   )
 }
 
-export default function GmOverview({ role }: GmOverviewProps) {
-  const characters = useGmCharacterSync(role)
+export default function GmOverview({ role }: GmOverviewProps): ReactElement {
+  const characters: GmCharacterPayload[] = useGmCharacterSync(role)
 
-  const cards = useMemo(() => {
-    return characters.map((entry) => {
+  const cards = useMemo<ReactElement[]>(() => {
+    return characters.map((entry: GmCharacterPayload) => {
       const { character } = entry
       return (
         <details key={entry.playerId} className="gm-character-card">

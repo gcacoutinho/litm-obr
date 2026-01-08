@@ -1,13 +1,17 @@
 import { useEffect } from 'react'
 import { Character } from '../obrd/types'
+import type { GmSyncMessage } from '../obrd/gmBroadcast'
 import { onGmSyncMessage, sendCharacterUpdate } from '../obrd/gmBroadcast'
 import { useDebouncedCallback } from './useDebouncedCallback'
 import { PlayerRole } from './useObrPlayerRole'
 
 export function useGmSyncPlayer(character: Character | null, role: PlayerRole): void {
-  const debouncedSend = useDebouncedCallback((next: Character) => {
+  const debouncedSend: (next: Character) => void = useDebouncedCallback(
+    (next: Character): void => {
     void sendCharacterUpdate(next)
-  }, 500)
+    },
+    500
+  )
 
   useEffect(() => {
     if (role !== 'PLAYER' || !character) {
@@ -22,7 +26,7 @@ export function useGmSyncPlayer(character: Character | null, role: PlayerRole): 
       return
     }
 
-    return onGmSyncMessage((message) => {
+    return onGmSyncMessage((message: GmSyncMessage, _connectionId: string) => {
       if (message.type !== 'resend-request') {
         return
       }

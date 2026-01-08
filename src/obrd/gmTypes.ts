@@ -17,10 +17,10 @@ export function normalizeGmCharacterPayload(value: unknown): GmCharacterPayload 
     return null
   }
 
-  const playerId = value.playerId
-  const playerName = value.playerName
-  const updatedAt = value.updatedAt
-  const version = value.version
+  const playerId: unknown = value.playerId
+  const playerName: unknown = value.playerName
+  const updatedAt: unknown = value.updatedAt
+  const version: unknown = value.version
 
   if (
     typeof playerId !== 'string' ||
