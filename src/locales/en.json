@@ -44,5 +44,15 @@
   "config.spanish": "Español",
   "config.clearCharacterData": "Clear character data",
   "config.clearCharacterConfirm": "Clear locally saved character data? This cannot be undone.",
-  "config.reportIssues": "Report issues"
+  "config.reportIssues": "Report issues",
+  "config.characterImportExport": "Character import/export",
+  "config.exportDownload": "Download JSON",
+  "config.importLabel": "Import JSON",
+  "config.importConfirm": "Importing will overwrite your current character. Continue?",
+  "config.importEmpty": "Paste or upload character JSON first.",
+  "config.importInvalidJson": "Invalid JSON.",
+  "config.importInvalidData": "JSON does not look like character data.",
+  "config.importFileError": "Failed to read the selected file.",
+  "config.importSaveError": "Failed to save imported character.",
+  "config.importSuccess": "Character imported."
 }

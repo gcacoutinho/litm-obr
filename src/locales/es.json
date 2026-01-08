@@ -44,5 +44,15 @@
   "config.spanish": "Español",
   "config.clearCharacterData": "Borrar datos del personaje",
   "config.clearCharacterConfirm": "¿Borrar los datos del personaje guardados localmente? Esto no se puede deshacer.",
-  "config.reportIssues": "Reportar problemas"
+  "config.reportIssues": "Reportar problemas",
+  "config.characterImportExport": "Importación/exportación del personaje",
+  "config.exportDownload": "Descargar JSON",
+  "config.importLabel": "Importar JSON",
+  "config.importConfirm": "La importación sobrescribirá tu personaje actual. ¿Continuar?",
+  "config.importEmpty": "Pegue o cargue primero el JSON del personaje.",
+  "config.importInvalidJson": "JSON inválido.",
+  "config.importInvalidData": "El JSON no parece ser datos del personaje.",
+  "config.importFileError": "No se pudo leer el archivo seleccionado.",
+  "config.importSaveError": "No se pudo guardar el personaje importado.",
+  "config.importSuccess": "Personaje importado."
 }

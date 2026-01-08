@@ -1,5 +1,9 @@
-import type { ReactElement } from 'react'
+import type { ChangeEvent, ReactElement } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { Character } from '../obrd/types'
+import type { ImportCharacterResult } from '../hooks/useCharacterStorage'
+import type { PlayerRole } from '../hooks/useObrPlayerRole'
 
 type LanguageCode = 'en' | 'pt-BR' | 'es'
 
@@ -10,19 +14,58 @@ type LanguageOption = {
 
 type ConfigurationsProps = {
   onClearCharacter: () => void
+  onImportCharacter: (raw: string) => Promise<ImportCharacterResult>
+  character: Character
+  role: PlayerRole
+}
+
+type StatusTone = 'success' | 'error' | 'info'
+
+type StatusMessage = {
+  tone: StatusTone
+  text: string
 }
 
 /**
- * Configurations page with settings for language selection.
+ * Configurations page with settings for language selection and import/export tools.
  */
-const Configurations = ({ onClearCharacter }: ConfigurationsProps): ReactElement => {
+const Configurations = ({ onClearCharacter, onImportCharacter, character, role }: ConfigurationsProps): ReactElement => {
   const { t, i18n } = useTranslation()
+  const [status, setStatus] = useState<StatusMessage | null>(null)
+  const [isImporting, setIsImporting] = useState<boolean>(false)
+  const [statusVisible, setStatusVisible] = useState<boolean>(false)
 
   const languages: LanguageOption[] = [
     { code: 'en', label: t('config.english') },
     { code: 'pt-BR', label: t('config.portuguese') },
     { code: 'es', label: t('config.spanish') },
   ]
+
+  useEffect(() => {
+    if (status) {
+      setStatusVisible(true)
+    } else {
+      setStatusVisible(false)
+    }
+  }, [status])
+
+  useEffect(() => {
+    if (!status || status.tone !== 'success') {
+      return
+    }
+
+    const fadeTimeoutId: number = window.setTimeout(() => {
+      setStatusVisible(false)
+    }, 2500)
+    const clearTimeoutId: number = window.setTimeout(() => {
+      setStatus(null)
+    }, 3000)
+
+    return () => {
+      window.clearTimeout(fadeTimeoutId)
+      window.clearTimeout(clearTimeoutId)
+    }
+  }, [status])
 
   const handleLanguageChange = (languageCode: LanguageCode): void => {
     i18n.changeLanguage(languageCode)
@@ -38,6 +81,74 @@ const Configurations = ({ onClearCharacter }: ConfigurationsProps): ReactElement
 
   const handleReportIssues = (): void => {
     window.open('https://github.com/gcacoutinho/litm-obr/issues/new', '_blank')
+  }
+
+  const sanitizeFileName = (value: string): string => {
+    const trimmed: string = value.trim()
+    const safe: string = trimmed.replace(/[^a-z0-9-_]+/gi, '_').replace(/^_+|_+$/g, '')
+    return safe || 'character'
+  }
+
+  const buildExportFileName = (): string => {
+    const baseName: string = sanitizeFileName(character.characterName)
+    return `${baseName}_${Date.now()}.json`
+  }
+
+  const handleExportDownload = (): void => {
+    const payload: string = JSON.stringify(character)
+    const blob: Blob = new Blob([payload], { type: 'application/json' })
+    const url: string = window.URL.createObjectURL(blob)
+    const anchor: HTMLAnchorElement = document.createElement('a')
+    anchor.href = url
+    anchor.download = buildExportFileName()
+    anchor.click()
+    window.URL.revokeObjectURL(url)
+  }
+
+  const handleImportFile = async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
+    const file: File | undefined = event.target.files?.[0]
+    if (!file) {
+      return
+    }
+
+    try {
+      const text: string = await file.text()
+      if (!text.trim()) {
+        setStatus({ tone: 'error', text: t('config.importEmpty') })
+        return
+      }
+
+      const shouldImport: boolean = window.confirm(t('config.importConfirm'))
+      if (!shouldImport) {
+        return
+      }
+
+      setIsImporting(true)
+      const result: ImportCharacterResult = await onImportCharacter(text)
+      setIsImporting(false)
+
+      switch (result.status) {
+        case 'success':
+          setStatus({ tone: 'success', text: t('config.importSuccess') })
+          break
+        case 'invalid_json':
+          setStatus({ tone: 'error', text: t('config.importInvalidJson') })
+          break
+        case 'invalid_data':
+          setStatus({ tone: 'error', text: t('config.importInvalidData') })
+          break
+        case 'save_failed':
+          setStatus({ tone: 'error', text: t('config.importSaveError') })
+          break
+        default:
+          break
+      }
+    } catch (error: unknown) {
+      console.warn('[litm-obr] Failed to read import file.', error)
+      setStatus({ tone: 'error', text: t('config.importFileError') })
+    }
+
+    event.target.value = ''
   }
 
   return (
@@ -65,6 +176,98 @@ const Configurations = ({ onClearCharacter }: ConfigurationsProps): ReactElement
           ))}
         </div>
       </div>
+      {role === 'PLAYER' ? (
+        <div style={{ marginBottom: '2rem' }}>
+          <div>
+            <span className="label-style">{t('config.characterImportExport')}</span>
+          </div>
+          <div style={{ margin: '1rem 1rem 0 1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <button
+                onClick={handleExportDownload}
+                className="might-option"
+                style={{
+                  padding: '0.6em 1.2em',
+                  borderRadius: '8px',
+                  border: '1px solid #e4d2c1',
+                  backgroundColor: '#f4e5d2',
+                  color: '#52281a',
+                  fontWeight: 'normal',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {t('config.exportDownload')}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '0.5rem' }}>
+                  <path d="M12 3v12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <polyline points="7,10 12,15 17,10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M5 21h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <label
+                className="might-option"
+                style={{
+                  padding: '0.6em 1.2em',
+                  borderRadius: '8px',
+                  border: '1px solid #e4d2c1',
+                  backgroundColor: '#f4e5d2',
+                  color: '#52281a',
+                  fontWeight: 'normal',
+                  cursor: isImporting ? 'not-allowed' : 'pointer',
+                  opacity: isImporting ? 0.7 : 1,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {t('config.importLabel')}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '0.5rem' }}>
+                  <path d="M12 21V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <polyline points="7,14 12,9 17,14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M5 3h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <input
+                  type="file"
+                  accept="application/json"
+                  onChange={handleImportFile}
+                  style={{ display: 'none' }}
+                  disabled={isImporting}
+                />
+              </label>
+            </div>
+            {status ? (
+              <div
+                role="status"
+                style={{
+                  padding: '0.6rem 0.8rem',
+                  borderRadius: '6px',
+                  border:
+                    status.tone === 'error'
+                      ? '1px solid #b0482c'
+                      : status.tone === 'success'
+                        ? '1px solid #c29a2b'
+                        : '1px solid #e4d2c1',
+                  backgroundColor:
+                    status.tone === 'error'
+                      ? '#f9d6d0'
+                      : status.tone === 'success'
+                        ? '#fff4c2'
+                        : '#f4e5d2',
+                  color: '#52281a',
+                  opacity: statusVisible ? 1 : 0,
+                  transform: statusVisible ? 'translateY(0)' : 'translateY(-6px)',
+                  transition: 'opacity 200ms ease, transform 200ms ease',
+                  pointerEvents: statusVisible ? 'auto' : 'none',
+                }}
+              >
+                {status.text}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
       <div style={{ marginBottom: '2rem' }}>
         <button
           onClick={handleClearCharacterData}
