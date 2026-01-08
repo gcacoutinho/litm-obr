@@ -3,9 +3,12 @@ import scratchesSvg from '../assets/scratches.svg?raw';
 
 type ScratchCheckboxProps = React.InputHTMLAttributes<HTMLInputElement>;
 
-const ScratchCheckbox = React.forwardRef<HTMLInputElement, ScratchCheckboxProps>(
-  ({ className, ...props }, ref) => {
-    const wrapperClassName = ['scratch-checkbox-wrapper', className]
+const ScratchCheckbox: React.ForwardRefExoticComponent<
+  ScratchCheckboxProps & React.RefAttributes<HTMLInputElement>
+> = React.forwardRef<HTMLInputElement, ScratchCheckboxProps>(
+  ({ className, ...props }, ref): React.ReactElement => {
+    const svgMarkup: string = scratchesSvg;
+    const wrapperClassName: string = ['scratch-checkbox-wrapper', className]
       .filter(Boolean)
       .join(' ');
     return (
@@ -18,7 +21,7 @@ const ScratchCheckbox = React.forwardRef<HTMLInputElement, ScratchCheckboxProps>
         />
         <div
           className="scratch-checkbox-icon"
-          dangerouslySetInnerHTML={{ __html: scratchesSvg }}
+          dangerouslySetInnerHTML={{ __html: svgMarkup }}
         />
       </label>
     );

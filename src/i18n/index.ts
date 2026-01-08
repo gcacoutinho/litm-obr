@@ -5,6 +5,10 @@ import en from '../locales/en.json'
 import ptBR from '../locales/pt-BR.json'
 import es from '../locales/es.json'
 
+type LanguageCode = 'en' | 'pt-BR' | 'es'
+type TranslationResource = typeof en
+type ResourceMap = Record<LanguageCode, { translation: TranslationResource }>
+
 /**
  * i18next configuration for LITM-OBR application
  * Supports English, Brazilian Portuguese, and Spanish
@@ -21,7 +25,7 @@ i18n
     ns: ['translation'],
     
     // Supported languages
-    supportedLngs: ['en', 'pt-BR', 'es'],
+    supportedLngs: ['en', 'pt-BR', 'es'] as LanguageCode[],
 
     // Static resources loaded at build time
     resources: {
@@ -34,7 +38,7 @@ i18n
       es: {
         translation: es,
       },
-    },
+    } as ResourceMap,
 
     // Language detector options
     detection: {

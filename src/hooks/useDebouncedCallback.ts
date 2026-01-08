@@ -24,7 +24,7 @@ export function useDebouncedCallback<Args extends unknown[], R>(
   delay: number = 500
 ): (...args: Args) => void {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-  const callbackRef = useRef(callback)
+  const callbackRef = useRef<(...args: Args) => R>(callback)
 
   // Update callback ref when it changes
   useEffect(() => {
@@ -41,7 +41,7 @@ export function useDebouncedCallback<Args extends unknown[], R>(
   }, [])
 
   // Return memoized debounced function
-  return useMemo(() => {
+  return useMemo<(...args: Args) => void>(() => {
     return (...args: Args): void => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)

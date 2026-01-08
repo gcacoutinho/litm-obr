@@ -1,10 +1,11 @@
 import OBR from '@owlbear-rodeo/sdk'
+import type { Character } from './types'
 import { migrateCharacter } from './types'
 import { getMyCharacter, saveMyCharacter } from './playerMetadata'
 
-const ROOM_FELLOWSHIP_IMPROVEMENTS_METADATA_KEY = 'litm-obr.fellowshipSpecialImprovements'
-const DEFAULT_IMPROVEMENTS = Array(10).fill('')
-const LOCAL_UPDATED_BY = 'local'
+const ROOM_FELLOWSHIP_IMPROVEMENTS_METADATA_KEY: string = 'litm-obr.fellowshipSpecialImprovements'
+const DEFAULT_IMPROVEMENTS: string[] = Array(10).fill('')
+const LOCAL_UPDATED_BY: string = 'local'
 
 export type FellowshipImprovementsPayload = {
   version: number
@@ -13,14 +14,14 @@ export type FellowshipImprovementsPayload = {
   data: string[]
 }
 
-let localVersion = 0
+let localVersion: number = 0
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
 
 function isStringArray(value: unknown): value is string[] {
-  return Array.isArray(value) && value.every(item => typeof item === 'string')
+  return Array.isArray(value) && value.every((item: unknown) => typeof item === 'string')
 }
 
 function isFellowshipImprovementsPayload(
@@ -44,7 +45,7 @@ function normalizeImprovements(value: string[] | null | undefined): string[] {
     return [...DEFAULT_IMPROVEMENTS]
   }
 
-  const trimmed = value.slice(0, DEFAULT_IMPROVEMENTS.length)
+  const trimmed: string[] = value.slice(0, DEFAULT_IMPROVEMENTS.length)
   if (trimmed.length < DEFAULT_IMPROVEMENTS.length) {
     return trimmed.concat(Array(DEFAULT_IMPROVEMENTS.length - trimmed.length).fill(''))
   }
@@ -62,7 +63,7 @@ function normalizePayload(payload: FellowshipImprovementsPayload): FellowshipImp
 export async function loadFellowshipImprovementsPayload(): Promise<FellowshipImprovementsPayload | null> {
   if (!isRoomMetadataAvailable()) {
     const data = await getMyCharacter()
-    const character = migrateCharacter(data)
+    const character: Character = migrateCharacter(data)
     return {
       version: localVersion,
       updatedAt: 0,
@@ -71,20 +72,20 @@ export async function loadFellowshipImprovementsPayload(): Promise<FellowshipImp
     }
   }
 
-  const metadata = await OBR.room.getMetadata()
-  const payload = metadata[ROOM_FELLOWSHIP_IMPROVEMENTS_METADATA_KEY]
+  const metadata: Record<string, unknown> = await OBR.room.getMetadata()
+  const payload: unknown = metadata[ROOM_FELLOWSHIP_IMPROVEMENTS_METADATA_KEY]
   return isFellowshipImprovementsPayload(payload) ? normalizePayload(payload) : null
 }
 
 export async function saveFellowshipImprovements(
   improvements: string[]
 ): Promise<FellowshipImprovementsPayload> {
-  const normalized = normalizeImprovements(improvements)
+  const normalized: string[] = normalizeImprovements(improvements)
 
   if (!isRoomMetadataAvailable()) {
-    const data = await getMyCharacter()
-    const character = migrateCharacter(data)
-    const updatedCharacter = {
+    const data: unknown = await getMyCharacter()
+    const character: Character = migrateCharacter(data)
+    const updatedCharacter: typeof character = {
       ...character,
       specialImprovements: normalized
     }
@@ -98,13 +99,13 @@ export async function saveFellowshipImprovements(
     }
   }
 
-  const updatedBy = OBR.player.id
-  const maxAttempts = 3
+  const updatedBy: string = OBR.player.id
+  const maxAttempts: number = 3
   let lastPayload: FellowshipImprovementsPayload | null = null
 
   for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-    const current = await loadFellowshipImprovementsPayload()
-    const nextVersion = (current?.version ?? 0) + 1
+    const current: FellowshipImprovementsPayload | null = await loadFellowshipImprovementsPayload()
+    const nextVersion: number = (current?.version ?? 0) + 1
     const nextPayload: FellowshipImprovementsPayload = {
       version: nextVersion,
       updatedAt: Date.now(),
@@ -114,7 +115,7 @@ export async function saveFellowshipImprovements(
 
     await OBR.room.setMetadata({ [ROOM_FELLOWSHIP_IMPROVEMENTS_METADATA_KEY]: nextPayload })
 
-    const confirmed = await loadFellowshipImprovementsPayload()
+    const confirmed: FellowshipImprovementsPayload | null = await loadFellowshipImprovementsPayload()
     if (confirmed?.version === nextVersion && confirmed.updatedBy === updatedBy) {
       return confirmed
     }
@@ -137,8 +138,8 @@ export function onFellowshipImprovementsChange(
     return () => {}
   }
 
-  return OBR.room.onMetadataChange((metadata) => {
-    const payload = metadata[ROOM_FELLOWSHIP_IMPROVEMENTS_METADATA_KEY]
+  return OBR.room.onMetadataChange((metadata: Record<string, unknown>) => {
+    const payload: unknown = metadata[ROOM_FELLOWSHIP_IMPROVEMENTS_METADATA_KEY]
     callback(isFellowshipImprovementsPayload(payload) ? normalizePayload(payload) : null)
   })
 }

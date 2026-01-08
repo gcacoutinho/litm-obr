@@ -1,10 +1,12 @@
+import type { ReactElement } from 'react';
 import weaknessTagSvg from '../assets/weakness-tag.svg?raw';
 
-const WeaknessTagLeading = () => {
+const WeaknessTagLeading = (): ReactElement => {
+  const svgMarkup: string = weaknessTagSvg;
   return (
     <div
       className="weakness-tag-leading"
-      dangerouslySetInnerHTML={{ __html: weaknessTagSvg }}
+      dangerouslySetInnerHTML={{ __html: svgMarkup }}
     />
   );
 };

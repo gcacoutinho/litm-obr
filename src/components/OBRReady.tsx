@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react'
 import { useState, useEffect, ReactNode } from 'react'
 import OBR from '@owlbear-rodeo/sdk'
 
@@ -16,17 +17,17 @@ interface OBRReadyProps {
  *   <App />
  * </OBRReady>
  */
-export function OBRReady({ children }: OBRReadyProps) {
-  const isAvailable = OBR.isAvailable
-  const [isReady, setIsReady] = useState(false)
-  const [showBypass, setShowBypass] = useState(false)
+export function OBRReady({ children }: OBRReadyProps): ReactElement {
+  const isAvailable: boolean = OBR.isAvailable
+  const [isReady, setIsReady] = useState<boolean>(false)
+  const [showBypass, setShowBypass] = useState<boolean>(false)
 
   useEffect(() => {
     if (!isAvailable) {
       return
     }
 
-    const timeoutId = window.setTimeout(() => {
+    const timeoutId: number = window.setTimeout(() => {
       setShowBypass(true)
     }, 5000)
 

@@ -1,4 +1,13 @@
+import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
+
+type LanguageCode = 'en' | 'pt-BR' | 'es'
+
+type LanguageOption = {
+  code: LanguageCode
+  label: string
+}
+
 type ConfigurationsProps = {
   onClearCharacter: () => void
 }
@@ -6,25 +15,29 @@ type ConfigurationsProps = {
 /**
  * Configurations page with settings for language selection.
  */
-const Configurations = ({ onClearCharacter }: ConfigurationsProps) => {
+const Configurations = ({ onClearCharacter }: ConfigurationsProps): ReactElement => {
   const { t, i18n } = useTranslation()
 
-  const languages = [
+  const languages: LanguageOption[] = [
     { code: 'en', label: t('config.english') },
     { code: 'pt-BR', label: t('config.portuguese') },
     { code: 'es', label: t('config.spanish') },
   ]
 
-  const handleLanguageChange = (languageCode: string) => {
+  const handleLanguageChange = (languageCode: LanguageCode): void => {
     i18n.changeLanguage(languageCode)
   }
 
-  const handleClearCharacterData = () => {
-    const shouldClear = window.confirm(t('config.clearCharacterConfirm'))
+  const handleClearCharacterData = (): void => {
+    const shouldClear: boolean = window.confirm(t('config.clearCharacterConfirm'))
     if (!shouldClear) {
       return
     }
     onClearCharacter()
+  }
+
+  const handleReportIssues = (): void => {
+    window.open('https://github.com/gcacoutinho/litm-obr/issues/new', '_blank')
   }
 
   return (
@@ -32,7 +45,7 @@ const Configurations = ({ onClearCharacter }: ConfigurationsProps) => {
       <div style={{ marginBottom: '2rem' }}>
         <label className="label-style">{t('config.selectLanguage')}</label>
         <div style={{ display: 'flex', gap: '0.5rem', margin: '1rem 1rem 0 1rem' }}>
-          {languages.map((lang) => (
+          {languages.map((lang: LanguageOption) => (
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
@@ -72,7 +85,7 @@ const Configurations = ({ onClearCharacter }: ConfigurationsProps) => {
       </div>
       <div style={{ marginBottom: '2rem' }}>
         <button
-          onClick={() => window.open('https://github.com/gcacoutinho/litm-obr/issues/new', '_blank')}
+          onClick={handleReportIssues}
           className="might-option"
           style={{
             marginLeft: '1rem',

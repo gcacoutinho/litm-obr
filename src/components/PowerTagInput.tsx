@@ -2,11 +2,13 @@ import React from 'react'
 import TextInput from './TextInput'
 import ScratchCheckbox from './ScratchCheckbox'
 
+type InputChangeHandler = React.ChangeEventHandler<HTMLInputElement>
+
 interface PowerTagInputProps {
   text: string
   isScratched: boolean
-  onTextChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onScratchedChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onTextChange: InputChangeHandler
+  onScratchedChange: InputChangeHandler
   placeholder?: string
 }
 
@@ -14,13 +16,13 @@ interface PowerTagInputProps {
  * Renders a single power tag input field with text and scratch checkbox.
  * Used in ThemeCard to manage supporting power tags.
  */
-export const PowerTagInput: React.FC<PowerTagInputProps> = ({
+export const PowerTagInput = ({
   text,
   isScratched,
   onTextChange,
   onScratchedChange,
   placeholder = 'Power Tag',
-}) => {
+}: PowerTagInputProps): React.ReactElement => {
   return (
     <TextInput
       value={text}

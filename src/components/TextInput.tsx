@@ -21,32 +21,36 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
  *   placeholder="Enter name"
  * />
  */
-const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(({ className, style, leading, trailing, ...props }, ref) => {
-  const defaultClass = 'input-base';
-  const combinedClass = className ? `${defaultClass} ${className}`.trim() : defaultClass;
-  const defaultStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box' };
+const TextInput: React.ForwardRefExoticComponent<
+  TextInputProps & React.RefAttributes<HTMLInputElement>
+> = React.forwardRef<HTMLInputElement, TextInputProps>(
+  ({ className, style, leading, trailing, ...props }, ref): React.ReactElement => {
+    const defaultClass: string = 'input-base';
+    const combinedClass: string = className ? `${defaultClass} ${className}`.trim() : defaultClass;
+    const defaultStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box' };
+    const input: React.ReactElement = (
+      <input ref={ref} className={combinedClass} {...props} style={{ ...defaultStyle, ...style }} />
+    );
+
+    // If no leading or trailing slots, use current behavior
+    if (!leading && !trailing) {
+      return (
+        <div className="input-wrapper">
+          {input}
+        </div>
+      );
+    }
   
-  const input = <input ref={ref} className={combinedClass} {...props} style={{ ...defaultStyle, ...style }} />;
-  
-  // If no leading or trailing slots, use current behavior
-  if (!leading && !trailing) {
+    // With leading/trailing slots, use flex layout
     return (
-      <div className="input-wrapper">
-        {input}
+      <div className="input-wrapper input-wrapper-flex">
+        {leading && <span className="input-leading">{leading}</span>}
+        <div className="input-content">
+          {input}
+        </div>
+        {trailing && <span className="input-trailing">{trailing}</span>}
       </div>
     );
-  }
-  
-  // With leading/trailing slots, use flex layout
-  return (
-    <div className="input-wrapper input-wrapper-flex">
-      {leading && <span className="input-leading">{leading}</span>}
-      <div className="input-content">
-        {input}
-      </div>
-      {trailing && <span className="input-trailing">{trailing}</span>}
-    </div>
-  );
 });
 
 TextInput.displayName = 'TextInput';

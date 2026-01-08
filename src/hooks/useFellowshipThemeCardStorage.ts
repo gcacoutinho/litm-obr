@@ -1,10 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { FellowshipThemeCardData, createEmptyFellowshipThemeCard } from '../obrd/types'
+import type { FellowshipRoomPayload } from '../obrd/fellowshipRoom'
 import {
   loadFellowshipRoomPayload,
   onFellowshipRoomPayloadChange,
   saveFellowshipRoomPatch
 } from '../obrd/fellowshipRoom'
+
+type UseFellowshipThemeCardStorageResult = {
+  fellowshipData: FellowshipThemeCardData | null
+  isLoading: boolean
+  updateFellowshipData: (updates: Partial<FellowshipThemeCardData>) => void
+}
 
 /**
  * Hook for managing fellowship theme card data storage with debounced saves.
@@ -18,24 +25,24 @@ import {
  * // Update fellowship data and it will save after 500ms of inactivity
  * updateFellowshipData({ weaknessTag: 'New Tag' })
  */
-export function useFellowshipThemeCardStorage() {
+export function useFellowshipThemeCardStorage(): UseFellowshipThemeCardStorageResult {
   const [fellowshipData, setFellowshipData] = useState<FellowshipThemeCardData | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const saveTimeoutRef = useRef<number | undefined>(undefined)
-  const versionRef = useRef(0)
+  const versionRef = useRef<number>(0)
 
   // Load fellowship data on mount
   useEffect(() => {
-    const loadFellowshipData = async () => {
+    const loadFellowshipData = async (): Promise<void> => {
       try {
-        const payload = await loadFellowshipRoomPayload()
+        const payload: FellowshipRoomPayload | null = await loadFellowshipRoomPayload()
         if (payload) {
           versionRef.current = payload.version
           setFellowshipData(payload.data)
         } else {
           setFellowshipData(createEmptyFellowshipThemeCard())
         }
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('[litm-obr] Failed to load fellowship theme card data:', error)
         setFellowshipData(createEmptyFellowshipThemeCard())
       } finally {
@@ -47,7 +54,7 @@ export function useFellowshipThemeCardStorage() {
   }, [])
 
   useEffect(() => {
-    const unsubscribe = onFellowshipRoomPayloadChange((payload) => {
+    const unsubscribe: () => void = onFellowshipRoomPayloadChange((payload: FellowshipRoomPayload | null) => {
       if (!payload) {
         return
       }
@@ -72,11 +79,11 @@ export function useFellowshipThemeCardStorage() {
   }, [])
 
   // Debounced save (500ms)
-  const updateFellowshipData = useCallback((updates: Partial<FellowshipThemeCardData>) => {
-    setFellowshipData((prevData) => {
+  const updateFellowshipData = useCallback((updates: Partial<FellowshipThemeCardData>): void => {
+    setFellowshipData((prevData: FellowshipThemeCardData | null): FellowshipThemeCardData | null => {
       if (!prevData) return prevData
 
-      const updated = { ...prevData, ...updates }
+      const updated: FellowshipThemeCardData = { ...prevData, ...updates }
 
       // Clear existing timeout
       if (saveTimeoutRef.current) {
@@ -89,7 +96,7 @@ export function useFellowshipThemeCardStorage() {
           .then((payload) => {
             versionRef.current = payload.version
           })
-          .catch((error) => {
+          .catch((error: unknown) => {
             console.error('[litm-obr] Failed to save fellowship theme card data:', error)
           })
       }, 500)

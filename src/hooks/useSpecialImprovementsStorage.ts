@@ -1,9 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import type { FellowshipImprovementsPayload } from '../obrd/fellowshipImprovementsRoom'
 import {
   loadFellowshipImprovementsPayload,
   onFellowshipImprovementsChange,
   saveFellowshipImprovements
 } from '../obrd/fellowshipImprovementsRoom'
+
+type UseSpecialImprovementsStorageResult = {
+  specialImprovements: string[]
+  isLoading: boolean
+  updateSpecialImprovements: (updates: string[]) => void
+}
 
 /**
  * Hook for managing special improvements data storage with debounced saves.
@@ -17,24 +24,25 @@ import {
  * // Update special improvements and it will save after 500ms of inactivity
  * updateSpecialImprovements(['Fire Resistance', '', ...])
  */
-export function useSpecialImprovementsStorage() {
+export function useSpecialImprovementsStorage(): UseSpecialImprovementsStorageResult {
   const [specialImprovements, setSpecialImprovements] = useState<string[]>(Array(10).fill(''))
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const saveTimeoutRef = useRef<number | undefined>(undefined)
-  const versionRef = useRef(0)
+  const versionRef = useRef<number>(0)
 
   // Load fellowship improvements on mount
   useEffect(() => {
-    const loadSpecialImprovements = async () => {
+    const loadSpecialImprovements = async (): Promise<void> => {
       try {
-        const payload = await loadFellowshipImprovementsPayload()
+        const payload: FellowshipImprovementsPayload | null =
+          await loadFellowshipImprovementsPayload()
         if (payload) {
           versionRef.current = payload.version
           setSpecialImprovements(payload.data)
         } else {
           setSpecialImprovements(Array(10).fill(''))
         }
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('[litm-obr] Failed to load special improvements:', error)
         setSpecialImprovements(Array(10).fill(''))
       } finally {
@@ -46,7 +54,8 @@ export function useSpecialImprovementsStorage() {
   }, [])
 
   useEffect(() => {
-    const unsubscribe = onFellowshipImprovementsChange((payload) => {
+    const unsubscribe: () => void = onFellowshipImprovementsChange(
+      (payload: FellowshipImprovementsPayload | null) => {
       if (!payload) {
         return
       }
@@ -57,7 +66,8 @@ export function useSpecialImprovementsStorage() {
 
       versionRef.current = payload.version
       setSpecialImprovements(payload.data)
-    })
+      }
+    )
 
     return unsubscribe
   }, [])
@@ -71,7 +81,7 @@ export function useSpecialImprovementsStorage() {
   }, [])
 
   // Debounced save (500ms)
-  const updateSpecialImprovements = useCallback((updates: string[]) => {
+  const updateSpecialImprovements = useCallback((updates: string[]): void => {
     setSpecialImprovements(updates)
 
     // Clear existing timeout
@@ -84,7 +94,7 @@ export function useSpecialImprovementsStorage() {
       try {
         const payload = await saveFellowshipImprovements(updates)
         versionRef.current = payload.version
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('[litm-obr] Failed to save special improvements:', error)
       }
     }, 500)
