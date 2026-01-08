@@ -36,7 +36,7 @@ type Tab = {
 
 function App(): ReactElement {
   const { t } = useTranslation()
-  const { character, isLoading, updateCharacter, clearCharacter } = useCharacterStorage()
+  const { character, isLoading, updateCharacter, clearCharacter, importCharacter } = useCharacterStorage()
   const role: PlayerRole = useObrPlayerRole()
   const [activeTab, setActiveTab] = useState<TabId>('hero-card')
   const tabContentRef = useRef<HTMLDivElement | null>(null)
@@ -133,7 +133,14 @@ function App(): ReactElement {
       case 'gm-overview':
         return <GmOverview role={role} />
       case 'configurations':
-        return <Configurations onClearCharacter={clearCharacter} />
+        return (
+          <Configurations
+            onClearCharacter={clearCharacter}
+            onImportCharacter={importCharacter}
+            character={character}
+            role={role}
+          />
+        )
       default:
         return null
     }

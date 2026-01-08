@@ -1,5 +1,10 @@
-import type { ReactElement } from 'react'
+import type { ChangeEvent, ReactElement } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { Character } from '../obrd/types'
+import type { ImportCharacterResult } from '../hooks/useCharacterStorage'
+import type { PlayerRole } from '../hooks/useObrPlayerRole'
+import TextAreaInput from '../components/TextAreaInput'
 
 type LanguageCode = 'en' | 'pt-BR' | 'es'
 
@@ -10,13 +15,26 @@ type LanguageOption = {
 
 type ConfigurationsProps = {
   onClearCharacter: () => void
+  onImportCharacter: (raw: string) => Promise<ImportCharacterResult>
+  character: Character
+  role: PlayerRole
+}
+
+type StatusTone = 'success' | 'error' | 'info'
+
+type StatusMessage = {
+  tone: StatusTone
+  text: string
 }
 
 /**
- * Configurations page with settings for language selection.
+ * Configurations page with settings for language selection and import/export tools.
  */
-const Configurations = ({ onClearCharacter }: ConfigurationsProps): ReactElement => {
+const Configurations = ({ onClearCharacter, onImportCharacter, character, role }: ConfigurationsProps): ReactElement => {
   const { t, i18n } = useTranslation()
+  const [importText, setImportText] = useState<string>('')
+  const [status, setStatus] = useState<StatusMessage | null>(null)
+  const [isImporting, setIsImporting] = useState<boolean>(false)
 
   const languages: LanguageOption[] = [
     { code: 'en', label: t('config.english') },
@@ -38,6 +56,95 @@ const Configurations = ({ onClearCharacter }: ConfigurationsProps): ReactElement
 
   const handleReportIssues = (): void => {
     window.open('https://github.com/gcacoutinho/litm-obr/issues/new', '_blank')
+  }
+
+  const sanitizeFileName = (value: string): string => {
+    const trimmed: string = value.trim()
+    const safe: string = trimmed.replace(/[^a-z0-9-_]+/gi, '_').replace(/^_+|_+$/g, '')
+    return safe || 'character'
+  }
+
+  const buildExportFileName = (): string => {
+    const baseName: string = sanitizeFileName(character.characterName)
+    return `${baseName}_${Date.now()}.json`
+  }
+
+  const handleExportDownload = (): void => {
+    const payload: string = JSON.stringify(character)
+    const blob: Blob = new Blob([payload], { type: 'application/json' })
+    const url: string = window.URL.createObjectURL(blob)
+    const anchor: HTMLAnchorElement = document.createElement('a')
+    anchor.href = url
+    anchor.download = buildExportFileName()
+    anchor.click()
+    window.URL.revokeObjectURL(url)
+  }
+
+  const handleExportCopy = async (): Promise<void> => {
+    const payload: string = JSON.stringify(character)
+    if (!navigator.clipboard?.writeText) {
+      setStatus({ tone: 'error', text: t('config.exportCopyUnsupported') })
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(payload)
+      setStatus({ tone: 'success', text: t('config.exportCopySuccess') })
+    } catch (error: unknown) {
+      console.warn('[litm-obr] Failed to copy character JSON.', error)
+      setStatus({ tone: 'error', text: t('config.exportCopyError') })
+    }
+  }
+
+  const handleImportFile = async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
+    const file: File | undefined = event.target.files?.[0]
+    if (!file) {
+      return
+    }
+
+    try {
+      const text: string = await file.text()
+      setImportText(text)
+    } catch (error: unknown) {
+      console.warn('[litm-obr] Failed to read import file.', error)
+      setStatus({ tone: 'error', text: t('config.importFileError') })
+    } finally {
+      event.target.value = ''
+    }
+  }
+
+  const handleImportApply = async (): Promise<void> => {
+    if (!importText.trim()) {
+      setStatus({ tone: 'error', text: t('config.importEmpty') })
+      return
+    }
+
+    const shouldImport: boolean = window.confirm(t('config.importConfirm'))
+    if (!shouldImport) {
+      return
+    }
+
+    setIsImporting(true)
+    const result: ImportCharacterResult = await onImportCharacter(importText)
+    setIsImporting(false)
+
+    switch (result.status) {
+      case 'success':
+        setImportText('')
+        setStatus({ tone: 'success', text: t('config.importSuccess') })
+        break
+      case 'invalid_json':
+        setStatus({ tone: 'error', text: t('config.importInvalidJson') })
+        break
+      case 'invalid_data':
+        setStatus({ tone: 'error', text: t('config.importInvalidData') })
+        break
+      case 'save_failed':
+        setStatus({ tone: 'error', text: t('config.importSaveError') })
+        break
+      default:
+        break
+    }
   }
 
   return (
@@ -65,6 +172,91 @@ const Configurations = ({ onClearCharacter }: ConfigurationsProps): ReactElement
           ))}
         </div>
       </div>
+      {role === 'PLAYER' ? (
+        <div style={{ marginBottom: '2rem' }}>
+          <label className="label-style">{t('config.characterImportExport')}</label>
+          <div style={{ margin: '1rem 1rem 0 1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <button
+                onClick={handleExportDownload}
+                className="might-option"
+                style={{
+                  padding: '0.6em 1.2em',
+                  borderRadius: '8px',
+                  border: '1px solid #e4d2c1',
+                  backgroundColor: '#f4e5d2',
+                  color: '#52281a',
+                  fontWeight: 'normal',
+                  cursor: 'pointer',
+                }}
+              >
+                {t('config.exportDownload')}
+              </button>
+              <button
+                onClick={handleExportCopy}
+                className="might-option"
+                style={{
+                  padding: '0.6em 1.2em',
+                  borderRadius: '8px',
+                  border: '1px solid #e4d2c1',
+                  backgroundColor: '#f4e5d2',
+                  color: '#52281a',
+                  fontWeight: 'normal',
+                  cursor: 'pointer',
+                }}
+              >
+                {t('config.exportCopy')}
+              </button>
+            </div>
+            <div>
+              <label className="label-style">{t('config.importLabel')}</label>
+              <div style={{ margin: '0.5rem 0 0.75rem 0' }}>
+                <input type="file" accept="application/json" onChange={handleImportFile} />
+              </div>
+              <TextAreaInput
+                lines={6}
+                value={importText}
+                placeholder={t('config.importPlaceholder')}
+                onChange={(event) => setImportText(event.target.value)}
+                style={{ overflow: 'auto' }}
+                spellCheck={false}
+              />
+              <button
+                onClick={handleImportApply}
+                className="might-option"
+                disabled={isImporting}
+                style={{
+                  marginTop: '0.75rem',
+                  padding: '0.6em 1.2em',
+                  borderRadius: '8px',
+                  border: '1px solid #b0482c',
+                  backgroundColor: '#f9d6d0',
+                  color: '#52281a',
+                  fontWeight: 'normal',
+                  cursor: 'pointer',
+                  opacity: isImporting ? 0.7 : 1,
+                }}
+              >
+                {t('config.importApply')}
+              </button>
+            </div>
+            {status ? (
+              <div
+                role="status"
+                style={{
+                  padding: '0.6rem 0.8rem',
+                  borderRadius: '6px',
+                  border: status.tone === 'error' ? '1px solid #b0482c' : '1px solid #e4d2c1',
+                  backgroundColor: status.tone === 'error' ? '#f9d6d0' : '#f4e5d2',
+                  color: '#52281a',
+                }}
+              >
+                {status.text}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
       <div style={{ marginBottom: '2rem' }}>
         <button
           onClick={handleClearCharacterData}

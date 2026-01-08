@@ -7,6 +7,17 @@ type UseCharacterStorageResult = {
   isLoading: boolean
   updateCharacter: (updates: Partial<Character>) => void
   clearCharacter: () => void
+  importCharacter: (raw: string) => Promise<ImportCharacterResult>
+}
+
+export type ImportCharacterResult =
+  | { status: 'success'; character: Character }
+  | { status: 'invalid_json' }
+  | { status: 'invalid_data' }
+  | { status: 'save_failed' }
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
 /**
@@ -81,6 +92,34 @@ export function useCharacterStorage(): UseCharacterStorageResult {
     }
     void clearMyCharacter()
   }, [])
+
+  const importCharacter = useCallback(async (raw: string): Promise<ImportCharacterResult> => {
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(raw)
+    } catch (error: unknown) {
+      console.warn('[litm-obr] Failed to parse character JSON.', error)
+      return { status: 'invalid_json' }
+    }
+
+    if (!isRecord(parsed)) {
+      return { status: 'invalid_data' }
+    }
+
+    const imported: Character = migrateCharacter(parsed)
+    setCharacter(imported)
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current)
+    }
+
+    try {
+      await saveMyCharacter(imported)
+      return { status: 'success', character: imported }
+    } catch (error: unknown) {
+      console.error('[litm-obr] Failed to save imported character:', error)
+      return { status: 'save_failed' }
+    }
+  }, [])
   
-  return { character, isLoading, updateCharacter, clearCharacter }
+  return { character, isLoading, updateCharacter, clearCharacter, importCharacter }
 }
