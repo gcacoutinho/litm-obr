@@ -1,9 +1,9 @@
 import OBR from '@owlbear-rodeo/sdk'
 import { Character, FellowshipThemeCardData } from './types'
 
-const STORAGE_KEY = 'litm-obr-character'
-const STORAGE_KEY_FELLOWSHIP = 'litm-obr-fellowship-theme-card'
-const DEFAULT_ROOM_KEY = 'default'
+const STORAGE_KEY: string = 'litm-obr-character'
+const STORAGE_KEY_FELLOWSHIP: string = 'litm-obr-fellowship-theme-card'
+const DEFAULT_ROOM_KEY: string = 'default'
 
 type CharacterStorageMap = Record<string, Character>
 
@@ -27,7 +27,7 @@ type StorageErrorListener = (event: StorageErrorEvent) => void
 /**
  * Set of registered error listeners
  */
-const errorListeners = new Set<StorageErrorListener>()
+const errorListeners: Set<StorageErrorListener> = new Set<StorageErrorListener>()
 
 /**
  * Register a callback to handle storage errors.
@@ -54,7 +54,7 @@ function emitError(type: StorageErrorType, message: string, originalError?: unkn
     originalError
   }
 
-  errorListeners.forEach(listener => {
+  errorListeners.forEach((listener: StorageErrorListener) => {
     try {
       listener(event)
     } catch (err) {
@@ -93,7 +93,7 @@ function isCharacterMap(value: unknown): value is CharacterStorageMap {
     return false
   }
 
-  return Object.values(value).every(entry => isCharacterData(entry))
+  return Object.values(value).every((entry: unknown) => isCharacterData(entry))
 }
 
 async function getRoomStorageKey(): Promise<string> {
@@ -103,7 +103,7 @@ async function getRoomStorageKey(): Promise<string> {
 
   try {
     return OBR.room.id
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn('[litm-obr] Failed to resolve room ID, using default key.', error)
     return DEFAULT_ROOM_KEY
   }
@@ -114,13 +114,13 @@ async function getRoomStorageKey(): Promise<string> {
  * Emits StorageErrorEvent if save fails.
  */
 export async function saveCharacter(character: Character): Promise<void> {
-  const roomKey = await getRoomStorageKey()
+  const roomKey: string = await getRoomStorageKey()
   try {
-    const serializedExisting = localStorage.getItem(STORAGE_KEY)
+    const serializedExisting: string | null = localStorage.getItem(STORAGE_KEY)
     let storageMap: CharacterStorageMap = {}
 
     if (serializedExisting !== null) {
-      const parsedExisting = JSON.parse(serializedExisting) as unknown
+      const parsedExisting: unknown = JSON.parse(serializedExisting)
       if (isCharacterData(parsedExisting)) {
         storageMap = { [roomKey]: parsedExisting }
       } else if (isCharacterMap(parsedExisting)) {
@@ -129,9 +129,9 @@ export async function saveCharacter(character: Character): Promise<void> {
     }
 
     storageMap[roomKey] = character
-    const serialized = JSON.stringify(storageMap)
+    const serialized: string = JSON.stringify(storageMap)
     localStorage.setItem(STORAGE_KEY, serialized)
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof DOMException && error.name === 'QuotaExceededError') {
       emitError(
         'quota_exceeded',
@@ -154,20 +154,20 @@ export async function saveCharacter(character: Character): Promise<void> {
  * Emits StorageErrorEvent if load fails.
  */
 export async function loadCharacter(): Promise<Character | null> {
-  const roomKey = await getRoomStorageKey()
+  const roomKey: string = await getRoomStorageKey()
   try {
-    const serialized = localStorage.getItem(STORAGE_KEY)
+    const serialized: string | null = localStorage.getItem(STORAGE_KEY)
     if (serialized === null) {
       return null
     }
 
-    const parsed = JSON.parse(serialized) as unknown
+    const parsed: unknown = JSON.parse(serialized)
 
     if (isCharacterData(parsed)) {
       const migratedMap: CharacterStorageMap = { [roomKey]: parsed }
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(migratedMap))
-      } catch (error) {
+      } catch (error: unknown) {
         emitError(
           'save_failed',
           'Failed to migrate character storage data.',
@@ -182,7 +182,7 @@ export async function loadCharacter(): Promise<Character | null> {
     }
 
     return null
-  } catch (error) {
+  } catch (error: unknown) {
     emitError(
       'load_failed',
       'Failed to load character data.',
@@ -197,14 +197,14 @@ export async function loadCharacter(): Promise<Character | null> {
  * Emits StorageErrorEvent if clear fails.
  */
 export async function clearCharacter(): Promise<void> {
-  const roomKey = await getRoomStorageKey()
+  const roomKey: string = await getRoomStorageKey()
   try {
-    const serializedExisting = localStorage.getItem(STORAGE_KEY)
+    const serializedExisting: string | null = localStorage.getItem(STORAGE_KEY)
     if (serializedExisting === null) {
       return
     }
 
-    const parsedExisting = JSON.parse(serializedExisting) as unknown
+    const parsedExisting: unknown = JSON.parse(serializedExisting)
     let storageMap: CharacterStorageMap = {}
 
     if (isCharacterData(parsedExisting)) {
@@ -223,7 +223,7 @@ export async function clearCharacter(): Promise<void> {
     }
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storageMap))
-  } catch (error) {
+  } catch (error: unknown) {
     emitError(
       'save_failed',
       'Failed to clear character data.',
@@ -238,9 +238,9 @@ export async function clearCharacter(): Promise<void> {
  */
 export function saveFellowshipThemeCard(data: FellowshipThemeCardData): void {
   try {
-    const serialized = JSON.stringify(data)
+    const serialized: string = JSON.stringify(data)
     localStorage.setItem(STORAGE_KEY_FELLOWSHIP, serialized)
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof DOMException && error.name === 'QuotaExceededError') {
       emitError(
         'quota_exceeded',
@@ -264,13 +264,13 @@ export function saveFellowshipThemeCard(data: FellowshipThemeCardData): void {
  */
 export function loadFellowshipThemeCard(): FellowshipThemeCardData | null {
   try {
-    const serialized = localStorage.getItem(STORAGE_KEY_FELLOWSHIP)
+    const serialized: string | null = localStorage.getItem(STORAGE_KEY_FELLOWSHIP)
     if (serialized === null) {
       return null
     }
-    const data = JSON.parse(serialized) as FellowshipThemeCardData
+    const data: FellowshipThemeCardData = JSON.parse(serialized) as FellowshipThemeCardData
     return data
-  } catch (error) {
+  } catch (error: unknown) {
     emitError(
       'load_failed',
       'Failed to load fellowship theme card data.',

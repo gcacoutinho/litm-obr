@@ -1,10 +1,13 @@
+import type { ChangeEvent, ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Character } from '../obrd/types'
+import { Character, ThemeMight } from '../obrd/types'
 import { TextInput, TextAreaInput, WeaknessTagLeading, ThemeTagInput, PowerTagInput, AdvancementSection } from '../components'
 import { useThemeCardForm } from '../hooks'
 
+type ThemeCardNumber = 1 | 2 | 3 | 4
+
 interface ThemeCardProps {
-  cardNumber: 1 | 2 | 3 | 4
+  cardNumber: ThemeCardNumber
   character: Character
   onUpdate: (updates: Partial<Character>) => void
 }
@@ -17,16 +20,16 @@ interface ThemeCardProps {
  * @param character - Current character data
  * @param onUpdate - Callback when theme card data changes
  */
-const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
+const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps): ReactElement => {
   const { t } = useTranslation()
   const form = useThemeCardForm({ cardNumber, character, onUpdate })
 
-  const mightOptions = ['origin', 'adventure', 'greatness'] as const
+  const mightOptions: ThemeMight[] = ['origin', 'adventure', 'greatness']
 
   return (
     <div>
       <div className="might-selector">
-        {mightOptions.map((option) => (
+        {mightOptions.map((option: ThemeMight) => (
           <button
             key={option}
             className={`might-option ${form.might === option ? 'active' : ''}`}
@@ -49,22 +52,28 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
          onScratchedChange={form.handleThemeScratchedChange}
          placeholder={t('themeCard.powerTag')}
        />
-       {form.powerTags.map((powerTag, index) => (
+       {form.powerTags.map((powerTag, index: number) => (
          <PowerTagInput
            key={`power-tag-${index}`}
            text={powerTag.text}
            isScratched={powerTag.isScratched}
-           onTextChange={(e) => form.handlePowerTagChange(index, { ...powerTag, text: e.currentTarget.value })}
-           onScratchedChange={(e) => form.handlePowerTagChange(index, { ...powerTag, isScratched: e.target.checked })}
+           onTextChange={(e: ChangeEvent<HTMLInputElement>) =>
+             form.handlePowerTagChange(index, { ...powerTag, text: e.currentTarget.value })
+           }
+           onScratchedChange={(e: ChangeEvent<HTMLInputElement>) =>
+             form.handlePowerTagChange(index, { ...powerTag, isScratched: e.target.checked })
+           }
            placeholder={`${t('themeCard.powerTag')} ${index + 1}`}
          />
        ))}
-       {form.weaknessTags.map((weaknessTag, index) => (
+       {form.weaknessTags.map((weaknessTag, index: number) => (
          <TextInput
            key={`weakness-tag-${index}`}
            leading={<WeaknessTagLeading />}
            value={weaknessTag}
-           onChange={(e) => form.handleWeaknessTagChange(index, e.currentTarget.value)}
+           onChange={(e: ChangeEvent<HTMLInputElement>) =>
+             form.handleWeaknessTagChange(index, e.currentTarget.value)
+           }
            placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
          />
        ))}
@@ -73,7 +82,9 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps) => {
         lines={3}
         placeholder={t('themeCard.quest')}
         value={form.quests}
-        onChange={(e) => form.handleQuestsChange((e.target as HTMLTextAreaElement).value)}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+          form.handleQuestsChange(e.currentTarget.value)
+        }
       />
       <div className="advancement-container">
         <AdvancementSection

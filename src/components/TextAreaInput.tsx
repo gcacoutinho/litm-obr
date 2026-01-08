@@ -21,15 +21,17 @@ interface TextAreaInputProps extends React.TextareaHTMLAttributes<HTMLTextAreaEl
  *   onChange={handleChange}
  * />
  */
-const TextAreaInput = React.forwardRef<HTMLTextAreaElement, TextAreaInputProps>(
-  ({ className, style, lines, value: propValue, ...props }, ref) => {
-    const defaultClass = 'input-base';
-    const combinedClass = className ? `${defaultClass} ${className}`.trim() : defaultClass;
+const TextAreaInput: React.ForwardRefExoticComponent<
+  TextAreaInputProps & React.RefAttributes<HTMLTextAreaElement>
+> = React.forwardRef<HTMLTextAreaElement, TextAreaInputProps>(
+  ({ className, style, lines, value: propValue, ...props }, ref): React.ReactElement => {
+    const defaultClass: string = 'input-base';
+    const combinedClass: string = className ? `${defaultClass} ${className}`.trim() : defaultClass;
 
-    const lineHeightEm = 1.5;
-    const lineHeight = `${lineHeightEm}em`;
+    const lineHeightEm: number = 1.5;
+    const lineHeight: string = `${lineHeightEm}em`;
 
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
     const defaultStyle: React.CSSProperties = {
       width: '100%',
@@ -49,7 +51,7 @@ const TextAreaInput = React.forwardRef<HTMLTextAreaElement, TextAreaInputProps>(
     return (
       <div className="input-wrapper">
         <textarea
-          ref={ref ? (el) => {
+          ref={ref ? (el: HTMLTextAreaElement | null) => {
             textareaRef.current = el;
             if (typeof ref === 'function') {
               ref(el);

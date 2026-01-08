@@ -1,14 +1,19 @@
 import OBR from '@owlbear-rodeo/sdk'
-import { Character } from './types'
+import type { Character } from './types'
 import { GmCharacterPayload, normalizeGmCharacterPayload } from './gmTypes'
 
-const GM_SYNC_CHANNEL = 'litm-obr.gm-sync'
+type BroadcastMessageEvent = {
+  data: unknown
+  connectionId: string
+}
+
+const GM_SYNC_CHANNEL: string = 'litm-obr.gm-sync'
 
 export type GmSyncMessage =
   | { type: 'character-update'; payload: GmCharacterPayload }
   | { type: 'resend-request'; requesterId: string }
 
-let localVersion = 0
+let localVersion: number = 0
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
@@ -23,7 +28,7 @@ function isResendRequest(value: unknown): value is { type: 'resend-request'; req
 }
 
 async function resolvePlayerName(fallback: string): Promise<string> {
-  const trimmed = fallback.trim()
+  const trimmed: string = fallback.trim()
   if (trimmed.length > 0) {
     return trimmed
   }
@@ -34,7 +39,7 @@ async function resolvePlayerName(fallback: string): Promise<string> {
 
   try {
     return await OBR.player.getName()
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn('[litm-obr] Failed to resolve player name for GM sync.', error)
     return fallback
   }
@@ -45,8 +50,8 @@ export async function sendCharacterUpdate(character: Character): Promise<void> {
     return
   }
 
-  const playerId = OBR.player.id
-  const playerName = await resolvePlayerName(character.playerName)
+  const playerId: string = OBR.player.id
+  const playerName: string = await resolvePlayerName(character.playerName)
   localVersion += 1
 
   const payload: GmCharacterPayload = {
@@ -83,15 +88,15 @@ export function onGmSyncMessage(
     return () => {}
   }
 
-  return OBR.broadcast.onMessage(GM_SYNC_CHANNEL, (event) => {
-    const data = event.data
+  return OBR.broadcast.onMessage(GM_SYNC_CHANNEL, (event: BroadcastMessageEvent) => {
+    const data: unknown = event.data
     if (isResendRequest(data)) {
       callback(data, event.connectionId)
       return
     }
 
     if (isRecord(data) && data.type === 'character-update') {
-      const normalized = normalizeGmCharacterPayload(data.payload)
+      const normalized: GmCharacterPayload | null = normalizeGmCharacterPayload(data.payload)
       if (normalized) {
         callback({ type: 'character-update', payload: normalized }, event.connectionId)
       }

@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react'
 import { useMemo, useState } from 'react'
 import InputCheckbox from './InputCheckbox'
 
@@ -15,7 +16,7 @@ interface InputCheckboxGroupProps {
   getAriaLabel?: (index: number) => string
 }
 
-const clampValue = (value: number, max: number) => {
+const clampValue = (value: number, max: number): number => {
   if (Number.isNaN(value)) {
     return 0
   }
@@ -32,27 +33,27 @@ const InputCheckboxGroup = ({
   checkboxClassName,
   onChange,
   getAriaLabel,
-}: InputCheckboxGroupProps) => {
-  const [internalValue, setInternalValue] = useState(() =>
-    clampValue(defaultValue, count),
+}: InputCheckboxGroupProps): ReactElement => {
+  const [internalValue, setInternalValue] = useState<number>(() =>
+    clampValue(defaultValue, count)
   )
-  const currentValue = clampValue(value ?? internalValue, count)
+  const currentValue: number = clampValue(value ?? internalValue, count)
 
-  const checkedStates = useMemo(
-    () => Array.from({ length: count }, (_, index) => index < currentValue),
+  const checkedStates: boolean[] = useMemo(
+    () => Array.from({ length: count }, (_: unknown, index: number) => index < currentValue),
     [count, currentValue],
   )
 
-  const handleCheckboxChange = (index: number, checked: boolean) => {
-    const nextValue = checked ? index + 1 : index
+  const handleCheckboxChange = (index: number, checked: boolean): void => {
+    const nextValue: number = checked ? index + 1 : index
     if (value === undefined) {
       setInternalValue(nextValue)
     }
     onChange?.(nextValue)
   }
 
-  const isHorizontal = orientation === 'horizontal'
-  const containerClassName = [
+  const isHorizontal: boolean = orientation === 'horizontal'
+  const containerClassName: string = [
     'checkbox-group',
     isHorizontal ? 'checkbox-group-horizontal' : null,
     className,

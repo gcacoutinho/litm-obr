@@ -19,7 +19,7 @@ const Advancement = ({
   labelStyle,
   checkboxClassName,
   checkboxAriaLabels,
-}: AdvancementProps) => {
+}: AdvancementProps): React.ReactElement => {
   const defaultContainerStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
@@ -29,8 +29,8 @@ const Advancement = ({
   const defaultLabelStyle: React.CSSProperties = {
     ...labelStyle,
   };
-  const getAriaLabel = checkboxAriaLabels
-    ? (index: number) => checkboxAriaLabels[index]
+  const getAriaLabel: ((index: number) => string) | undefined = checkboxAriaLabels
+    ? (index: number): string => checkboxAriaLabels[index]
     : undefined;
 
   return (

@@ -59,15 +59,18 @@ export interface Character {
 }
 
 export function createEmptyThemeCard(): ThemeCardData {
+  const powerTags: PowerTag[] = Array.from({ length: 6 }, (): PowerTag => ({
+    text: '',
+    isScratched: false
+  }))
+  const weaknessTags: WeaknessTag[] = Array.from({ length: 2 }, (): WeaknessTag => '')
+
   return {
     might: 'origin',
     type: '',
     theme: { text: '', isScratched: false },
-    powerTags: Array(6).fill(null).map(() => ({
-      text: '',
-      isScratched: false
-    })),
-    weaknessTags: ['', ''],
+    powerTags,
+    weaknessTags,
     quests: '',
     advancements: {
       abandon: 0,
@@ -78,13 +81,16 @@ export function createEmptyThemeCard(): ThemeCardData {
 }
 
 export function createEmptyFellowshipThemeCard(): FellowshipThemeCardData {
+  const powerTags: PowerTag[] = Array.from({ length: 7 }, (): PowerTag => ({
+    text: '',
+    isScratched: false
+  }))
+  const weaknessTags: WeaknessTag[] = Array.from({ length: 2 }, (): WeaknessTag => '')
+
   return {
     theme: { text: '', isScratched: false },
-    powerTags: Array(7).fill(null).map(() => ({
-      text: '',
-      isScratched: false
-    })),
-    weaknessTags: ['', ''],
+    powerTags,
+    weaknessTags,
     quests: '',
     advancements: {
       abandon: 0,
@@ -95,18 +101,26 @@ export function createEmptyFellowshipThemeCard(): FellowshipThemeCardData {
 }
 
 export function createEmptyCharacter(): Character {
+  const fellowshipRelationships: Character['fellowshipRelationships'] = Array.from(
+    { length: 5 },
+    (): Character['fellowshipRelationships'][number] => ({
+      companion: '',
+      relationshipTag: ''
+    })
+  )
+  const quintessences: string[] = Array.from({ length: 5 }, (): string => '')
+  const specialImprovements: string[] = Array.from({ length: 10 }, (): string => '')
+  const backpackItems: string[] = Array.from({ length: 10 }, (): string => '')
+
   return {
     characterName: '',
     playerName: '',
-    fellowshipRelationships: Array(5).fill(null).map(() => ({
-      companion: '',
-      relationshipTag: ''
-    })),
+    fellowshipRelationships,
     promises: 0,
-    quintessences: Array(5).fill(''),
-    specialImprovements: Array(10).fill(''),
+    quintessences,
+    specialImprovements,
     backpack: {
-      items: Array(10).fill(''),
+      items: backpackItems,
       notes: ''
     },
     themeCard1: createEmptyThemeCard(),
@@ -134,7 +148,7 @@ function isPowerTag(obj: unknown): obj is PowerTag {
 function isPowerTagArray(obj: unknown): obj is PowerTag[] {
   return (
     Array.isArray(obj) &&
-    obj.every(tag => isPowerTag(tag))
+    obj.every((tag: unknown) => isPowerTag(tag))
   )
 }
 
@@ -144,7 +158,7 @@ function isPowerTagArray(obj: unknown): obj is PowerTag[] {
 function isWeaknessTagArray(obj: unknown): obj is WeaknessTag[] {
   return (
     Array.isArray(obj) &&
-    obj.every(tag => typeof tag === 'string')
+    obj.every((tag: unknown) => typeof tag === 'string')
   )
 }
 
@@ -167,12 +181,12 @@ export function migrateCharacter(data: unknown): Character {
     return createEmptyCharacter()
   }
 
-  const obj = data as Record<string, unknown>
+  const obj: Record<string, unknown> = data as Record<string, unknown>
 
-  const clampNumber = (value: number, max: number) =>
+  const clampNumber = (value: number, max: number): number =>
     Math.min(Math.max(value, 0), max)
 
-  const countTruthy = (value: unknown, max: number) => {
+  const countTruthy = (value: unknown, max: number): number => {
     if (Array.isArray(value)) {
       return clampNumber(value.filter(Boolean).length, max)
     }
@@ -188,7 +202,7 @@ export function migrateCharacter(data: unknown): Character {
       return createEmptyThemeCard()
     }
     
-    const tc = themeCard as Record<string, unknown>
+    const tc: Record<string, unknown> = themeCard as Record<string, unknown>
     
     // Validate theme, fallback to empty if invalid
     const theme: PowerTag = isPowerTag(tc.theme) ? (tc.theme as PowerTag) : {
@@ -202,7 +216,7 @@ export function migrateCharacter(data: unknown): Character {
     // Validate weaknessTags array, fallback to empty if invalid
     const weaknessTags: WeaknessTag[] = isWeaknessTagArray(tc.weaknessTags) ? (tc.weaknessTags as WeaknessTag[]) : []
     
-    const rawAdvancements =
+    const rawAdvancements: Record<string, unknown> =
       tc.advancements && typeof tc.advancements === 'object'
         ? (tc.advancements as Record<string, unknown>)
         : {}
@@ -223,20 +237,39 @@ export function migrateCharacter(data: unknown): Character {
     }
   }
 
+  const fallbackRelationships: Character['fellowshipRelationships'] = Array.from(
+    { length: 5 },
+    (): Character['fellowshipRelationships'][number] => ({
+      companion: '',
+      relationshipTag: ''
+    })
+  )
+  const fellowshipRelationships: Character['fellowshipRelationships'] = Array.isArray(obj.fellowshipRelationships)
+    ? (obj.fellowshipRelationships as Character['fellowshipRelationships'])
+    : fallbackRelationships
+  const fallbackQuintessences: string[] = Array.from({ length: 5 }, (): string => '')
+  const quintessences: string[] = Array.isArray(obj.quintessences)
+    ? (obj.quintessences as string[])
+    : fallbackQuintessences
+  const fallbackSpecialImprovements: string[] = Array.from({ length: 10 }, (): string => '')
+  const specialImprovements: string[] = Array.isArray(obj.specialImprovements)
+    ? (obj.specialImprovements as string[])
+    : fallbackSpecialImprovements
+  const fallbackBackpackItems: string[] = Array.from({ length: 10 }, (): string => '')
+  const fallbackBackpack: Character['backpack'] = {
+    items: fallbackBackpackItems,
+    notes: ''
+  }
+  const backpack: Character['backpack'] = isBackpack(obj.backpack) ? obj.backpack : fallbackBackpack
+
   return {
     characterName: (obj.characterName as string) || '',
     playerName: (obj.playerName as string) || '',
-    fellowshipRelationships: Array.isArray(obj.fellowshipRelationships) ? obj.fellowshipRelationships : Array(5).fill(null).map(() => ({
-      companion: '',
-      relationshipTag: ''
-    })),
+    fellowshipRelationships,
     promises: countTruthy(obj.promises, 5),
-    quintessences: Array.isArray(obj.quintessences) ? obj.quintessences : Array(5).fill(''),
-    specialImprovements: Array.isArray(obj.specialImprovements) ? obj.specialImprovements : Array(10).fill(''),
-    backpack: isBackpack(obj.backpack) ? obj.backpack : {
-      items: Array(10).fill(''),
-      notes: ''
-    },
+    quintessences,
+    specialImprovements,
+    backpack,
     themeCard1: ensureThemeCardAdvancements(obj.themeCard1),
     themeCard2: ensureThemeCardAdvancements(obj.themeCard2),
     themeCard3: ensureThemeCardAdvancements(obj.themeCard3),

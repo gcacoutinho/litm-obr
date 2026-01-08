@@ -12,14 +12,18 @@ interface HeroCardProps {
  * Renders the hero card with character name, player name, fellowship relationships, promises, and quintessences.
  * Uses controlled component pattern with synchronization to parent character prop.
  */
-const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
+type FellowshipRelationships = Character['fellowshipRelationships']
+type Quintessences = Character['quintessences']
+
+const HeroCard = ({ character, onUpdate }: HeroCardProps): React.ReactElement => {
   const { t } = useTranslation()
   // Display values derived from character + pending changes
-  const [characterName, setCharacterName] = useState(character.characterName)
-  const [playerName, setPlayerName] = useState(character.playerName)
-  const [fellowshipRelationships, setFellowshipRelationships] = useState(character.fellowshipRelationships)
-  const [promises, setPromises] = useState(character.promises)
-  const [quintessences, setQuintessences] = useState(character.quintessences)
+  const [characterName, setCharacterName] = useState<string>(character.characterName)
+  const [playerName, setPlayerName] = useState<string>(character.playerName)
+  const [fellowshipRelationships, setFellowshipRelationships] =
+    useState<FellowshipRelationships>(character.fellowshipRelationships)
+  const [promises, setPromises] = useState<number>(character.promises)
+  const [quintessences, setQuintessences] = useState<Quintessences>(character.quintessences)
 
   // Sync local state when character prop changes
   useEffect(() => {
@@ -31,42 +35,48 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
   }, [character])
 
   // Helper to update array items and sync state
-  const updateArrayItem = <T,>(array: T[], index: number, updater: (item: T) => T, setState: (arr: T[]) => void, updateKey: keyof Character) => {
-    const updated = [...array]
+  const updateArrayItem = <T,>(
+    array: T[],
+    index: number,
+    updater: (item: T) => T,
+    setState: React.Dispatch<React.SetStateAction<T[]>>,
+    updateKey: keyof Character
+  ): void => {
+    const updated: T[] = [...array]
     updated[index] = updater(updated[index])
     setState(updated)
     onUpdate({ [updateKey]: updated } as Partial<Character>)
   }
 
-  const handleCharacterNameChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value
-    const lines = value.split('\n')
+  const handleCharacterNameChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
+    const value: string = e.target.value
+    const lines: string[] = value.split('\n')
     if (lines.length <= 2) {
       setCharacterName(value)
       onUpdate({ characterName: value })
     }
   }
 
-  const handlePlayerNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+  const handlePlayerNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const value: string = e.target.value
     setPlayerName(value)
     onUpdate({ playerName: value })
   }
 
-  const handleCompanionChange = (index: number, value: string) => {
+  const handleCompanionChange = (index: number, value: string): void => {
     updateArrayItem(fellowshipRelationships, index, item => ({ ...item, companion: value }), setFellowshipRelationships, 'fellowshipRelationships')
   }
 
-  const handleRelationshipTagChange = (index: number, value: string) => {
+  const handleRelationshipTagChange = (index: number, value: string): void => {
     updateArrayItem(fellowshipRelationships, index, item => ({ ...item, relationshipTag: value }), setFellowshipRelationships, 'fellowshipRelationships')
   }
 
-  const handlePromiseChange = (value: number) => {
+  const handlePromiseChange = (value: number): void => {
     setPromises(value)
     onUpdate({ promises: value })
   }
 
-  const handleQuintessenceChange = (index: number, value: string) => {
+  const handleQuintessenceChange = (index: number, value: string): void => {
     updateArrayItem(quintessences, index, () => value, setQuintessences, 'quintessences')
   }
 
@@ -94,13 +104,27 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
           <div className="hero-card-section-header hero-card-section-header-last">{t('heroCard.relationshipTag')}</div>
         </div>
         {/* Data Rows */}
-        {Array.from({ length: 5 }, (_, i) => (
+        {Array.from({ length: 5 }, (_: unknown, i: number) => (
           <div key={i} className="hero-card-row">
             <div className="hero-card-row-cell">
-              <TextInput type="text" placeholder={`${t('heroCard.companion')} ${i + 1}`} value={fellowshipRelationships[i].companion} onChange={(e) => handleCompanionChange(i, e.target.value)} />
+              <TextInput
+                type="text"
+                placeholder={`${t('heroCard.companion')} ${i + 1}`}
+                value={fellowshipRelationships[i].companion}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleCompanionChange(i, e.target.value)
+                }
+              />
             </div>
             <div className="hero-card-row-cell hero-card-row-cell-last">
-              <TextInput type="text" placeholder={`${t('heroCard.tag')} ${i + 1}`} value={fellowshipRelationships[i].relationshipTag} onChange={(e) => handleRelationshipTagChange(i, e.target.value)} />
+              <TextInput
+                type="text"
+                placeholder={`${t('heroCard.tag')} ${i + 1}`}
+                value={fellowshipRelationships[i].relationshipTag}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleRelationshipTagChange(i, e.target.value)
+                }
+              />
             </div>
           </div>
         ))}
@@ -116,10 +140,17 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps) => {
       </div>
       <div>
         <label className="label-style">{t('heroCard.quintessences')}</label>
-        {Array.from({ length: 5 }, (_, i) => (
+        {Array.from({ length: 5 }, (_: unknown, i: number) => (
           <div key={i} className="hero-card-row">
             <div className="hero-card-row-cell hero-card-row-cell-last">
-              <TextInput type="text" placeholder={`${t('heroCard.quintessence')} ${i + 1}`} value={quintessences[i]} onChange={(e) => handleQuintessenceChange(i, e.target.value)} />
+              <TextInput
+                type="text"
+                placeholder={`${t('heroCard.quintessence')} ${i + 1}`}
+                value={quintessences[i]}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleQuintessenceChange(i, e.target.value)
+                }
+              />
             </div>
           </div>
         ))}

@@ -1,8 +1,8 @@
 import OBR from '@owlbear-rodeo/sdk'
 import { GmCharacterPayload, normalizeGmCharacterPayload } from './gmTypes'
 
-const STORAGE_KEY = 'litm-obr-gm-characters'
-const DEFAULT_ROOM_KEY = 'default'
+const STORAGE_KEY: string = 'litm-obr-gm-characters'
+const DEFAULT_ROOM_KEY: string = 'default'
 
 type GmCharacterRoomMap = Record<string, GmCharacterPayload>
 type GmCharacterStorageMap = Record<string, GmCharacterRoomMap>
@@ -18,7 +18,7 @@ async function getRoomStorageKey(): Promise<string> {
 
   try {
     return OBR.room.id
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn('[litm-obr] Failed to resolve room ID for GM storage.', error)
     return DEFAULT_ROOM_KEY
   }
@@ -31,14 +31,14 @@ function parseStorageMap(value: unknown): GmCharacterStorageMap {
 
   const storageMap: GmCharacterStorageMap = {}
 
-  Object.entries(value).forEach(([roomId, roomValue]) => {
+  Object.entries(value).forEach(([roomId, roomValue]: [string, unknown]) => {
     if (!isRecord(roomValue)) {
       return
     }
 
     const roomMap: GmCharacterRoomMap = {}
-    Object.entries(roomValue).forEach(([playerId, payloadValue]) => {
-      const normalized = normalizeGmCharacterPayload(payloadValue)
+    Object.entries(roomValue).forEach(([playerId, payloadValue]: [string, unknown]) => {
+      const normalized: GmCharacterPayload | null = normalizeGmCharacterPayload(payloadValue)
       if (normalized) {
         roomMap[playerId] = normalized
       }
@@ -54,14 +54,14 @@ function parseStorageMap(value: unknown): GmCharacterStorageMap {
 
 async function loadAllRooms(): Promise<GmCharacterStorageMap> {
   try {
-    const serialized = localStorage.getItem(STORAGE_KEY)
+    const serialized: string | null = localStorage.getItem(STORAGE_KEY)
     if (!serialized) {
       return {}
     }
 
-    const parsed = JSON.parse(serialized) as unknown
+    const parsed: unknown = JSON.parse(serialized)
     return parseStorageMap(parsed)
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('[litm-obr] Failed to load GM character storage.', error)
     return {}
   }
@@ -70,23 +70,23 @@ async function loadAllRooms(): Promise<GmCharacterStorageMap> {
 async function saveAllRooms(storageMap: GmCharacterStorageMap): Promise<void> {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storageMap))
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('[litm-obr] Failed to save GM character storage.', error)
   }
 }
 
 export async function loadGmCharacters(): Promise<GmCharacterRoomMap> {
-  const roomKey = await getRoomStorageKey()
-  const storageMap = await loadAllRooms()
+  const roomKey: string = await getRoomStorageKey()
+  const storageMap: GmCharacterStorageMap = await loadAllRooms()
   return storageMap[roomKey] ?? {}
 }
 
 export async function saveGmCharacter(
   payload: GmCharacterPayload
 ): Promise<GmCharacterRoomMap> {
-  const roomKey = await getRoomStorageKey()
-  const storageMap = await loadAllRooms()
-  const roomMap = storageMap[roomKey] ?? {}
+  const roomKey: string = await getRoomStorageKey()
+  const storageMap: GmCharacterStorageMap = await loadAllRooms()
+  const roomMap: GmCharacterRoomMap = storageMap[roomKey] ?? {}
 
   roomMap[payload.playerId] = payload
   storageMap[roomKey] = roomMap

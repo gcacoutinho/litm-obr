@@ -5,7 +5,12 @@ import { OBRReady } from './components/OBRReady.tsx'
 import './style.css'
 import './i18n' // Initialize i18n before rendering
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+type Root = ReturnType<typeof ReactDOM.createRoot>
+
+const rootElement: HTMLElement | null = document.getElementById('root')
+const root: Root = ReactDOM.createRoot(rootElement as HTMLElement)
+
+root.render(
   <React.StrictMode>
     <OBRReady>
       <App />

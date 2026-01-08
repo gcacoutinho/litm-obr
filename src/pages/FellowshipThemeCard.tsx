@@ -1,3 +1,4 @@
+import type { ChangeEvent, ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput, TextAreaInput, WeaknessTagLeading, ThemeTagInput, PowerTagInput, AdvancementSection } from '../components'
 import { useFellowshipThemeCardForm } from '../hooks/useFellowshipThemeCardForm'
@@ -6,7 +7,7 @@ import { useFellowshipThemeCardForm } from '../hooks/useFellowshipThemeCardForm'
  * Renders the fellowship theme card with power tags, advancements, and quest tracking.
  * Manages form state through useFellowshipThemeCardForm hook.
  */
-const FellowshipThemeCard = () => {
+const FellowshipThemeCard = (): ReactElement => {
   const { t } = useTranslation()
   const form = useFellowshipThemeCardForm()
 
@@ -19,22 +20,28 @@ const FellowshipThemeCard = () => {
         onScratchedChange={form.handleThemeScratchedChange}
         placeholder={t('themeCard.powerTag')}
       />
-      {form.powerTags.map((powerTag, index) => (
+      {form.powerTags.map((powerTag, index: number) => (
         <PowerTagInput
           key={`power-tag-${index}`}
           text={powerTag.text}
           isScratched={powerTag.isScratched}
-          onTextChange={(e) => form.handlePowerTagChange(index, { ...powerTag, text: e.currentTarget.value })}
-          onScratchedChange={(e) => form.handlePowerTagChange(index, { ...powerTag, isScratched: e.target.checked })}
+          onTextChange={(e: ChangeEvent<HTMLInputElement>) =>
+            form.handlePowerTagChange(index, { ...powerTag, text: e.currentTarget.value })
+          }
+          onScratchedChange={(e: ChangeEvent<HTMLInputElement>) =>
+            form.handlePowerTagChange(index, { ...powerTag, isScratched: e.target.checked })
+          }
           placeholder={`${t('themeCard.powerTag')} ${index + 1}`}
         />
       ))}
-      {form.weaknessTags.map((weaknessTag, index) => (
+      {form.weaknessTags.map((weaknessTag, index: number) => (
         <TextInput
           key={`weakness-tag-${index}`}
           leading={<WeaknessTagLeading />}
           value={weaknessTag}
-          onChange={(e) => form.handleWeaknessTagChange(index, e.currentTarget.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            form.handleWeaknessTagChange(index, e.currentTarget.value)
+          }
           placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
         />
       ))}
@@ -43,7 +50,9 @@ const FellowshipThemeCard = () => {
         lines={3}
         placeholder={t('themeCard.quest')}
         value={form.quests}
-        onChange={(e) => form.handleQuestsChange((e.target as HTMLTextAreaElement).value)}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+          form.handleQuestsChange(e.currentTarget.value)
+        }
       />
       <div className="advancement-container">
         <AdvancementSection
