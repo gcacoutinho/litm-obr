@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react'
 import { Character, ThemeCardData, ThemeMight, PowerTag, WeaknessTag } from '../obrd/types'
+import { createThemeCardFormHandlers } from './themeCardFormUtils'
 
 type ThemeCardNumber = 1 | 2 | 3 | 4
 type ThemeCardKey = `themeCard${ThemeCardNumber}`
@@ -73,60 +74,16 @@ export function useThemeCardForm(
     updateThemeCard({ type: value })
   }
 
-  const handleThemeChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const value: string = e.currentTarget.value
-    const updatedTheme: PowerTag = { ...themeCardData.theme, text: value }
-    updateThemeCard({ theme: updatedTheme })
-  }
-
-  const handleThemeScratchedChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const checked: boolean = e.target.checked
-    const updatedTheme: PowerTag = { ...themeCardData.theme, isScratched: checked }
-    updateThemeCard({ theme: updatedTheme })
-  }
-
-  const handlePowerTagChange = (index: number, updatedTag: PowerTag): void => {
-    const updated: PowerTag[] = [...themeCardData.powerTags]
-    updated[index] = updatedTag
-    updateThemeCard({ powerTags: updated })
-  }
-
-  const handleWeaknessTagChange = (index: number, value: string): void => {
-    const updated: WeaknessTag[] = [...themeCardData.weaknessTags]
-    updated[index] = value
-    updateThemeCard({ weaknessTags: updated })
-  }
-
-  const handleQuestsChange = (value: string): void => {
-    updateThemeCard({ quests: value })
-  }
-
-  const handleAbandonChange = (value: number): void => {
-    updateThemeCard({
-      advancements: {
-        ...advancements,
-        abandon: value,
-      },
-    })
-  }
-
-  const handleImproveChange = (value: number): void => {
-    updateThemeCard({
-      advancements: {
-        ...advancements,
-        improve: value,
-      },
-    })
-  }
-
-  const handleMilestoneChange = (value: number): void => {
-    updateThemeCard({
-      advancements: {
-        ...advancements,
-        milestone: value,
-      },
-    })
-  }
+  const {
+    handleThemeChange,
+    handleThemeScratchedChange,
+    handlePowerTagChange,
+    handleWeaknessTagChange,
+    handleQuestsChange,
+    handleAbandonChange,
+    handleImproveChange,
+    handleMilestoneChange,
+  } = createThemeCardFormHandlers(themeCardData, updateThemeCard)
 
   return {
     might,
