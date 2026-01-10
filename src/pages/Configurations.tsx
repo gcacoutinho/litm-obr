@@ -268,24 +268,26 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
           </div>
         </div>
       ) : null}
-      <div style={{ marginBottom: '2rem' }}>
-        <button
-          onClick={handleClearCharacterData}
-          className="might-option"
-          style={{
-            marginLeft: '1rem',
-            padding: '0.6em 1.2em',
-            borderRadius: '8px',
-            border: '1px solid #b0482c',
-            backgroundColor: '#f9d6d0',
-            color: '#52281a',
-            fontWeight: 'normal',
-            cursor: 'pointer',
-          }}
-        >
-          {t('config.clearCharacterData')}
-        </button>
-      </div>
+      {role === 'PLAYER' ? (
+        <div style={{ marginBottom: '2rem' }}>
+          <button
+            onClick={handleClearCharacterData}
+            className="might-option"
+            style={{
+              marginLeft: '1rem',
+              padding: '0.6em 1.2em',
+              borderRadius: '8px',
+              border: '1px solid #b0482c',
+              backgroundColor: '#f9d6d0',
+              color: '#52281a',
+              fontWeight: 'normal',
+              cursor: 'pointer',
+            }}
+          >
+            {t('config.clearCharacterData')}
+          </button>
+        </div>
+      ) : null}
       <div style={{ marginBottom: '2rem' }}>
         <button
           onClick={handleReportIssues}
