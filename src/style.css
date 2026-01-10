@@ -251,7 +251,7 @@ td {
    text-align: center;
 }
 
-.promise-checkbox {
+.custom-checkbox {
    width: 18px;
    height: 18px;
    border-radius: 50%;
@@ -264,19 +264,18 @@ td {
    transition: all 0.2s ease;
 }
 
-.promise-checkbox:hover {
+.custom-checkbox:hover {
    border-color: #a0897a;
    box-shadow: 0 0 6px rgba(193, 169, 151, 0.5);
 }
 
-.promise-checkbox:checked {
+.custom-checkbox:checked {
     background-color: #52281a;
 }
 
 .checkbox-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
 .checkbox-group-horizontal {
@@ -286,7 +285,6 @@ td {
 .checkbox-group-row {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
 }
 
 .checkbox-group-horizontal .checkbox-group-row {
@@ -506,9 +504,6 @@ td {
   border-right: none;
 }
 
-.hero-promise-checkbox {
-  margin-right: 0.5rem;
-}
 
 .advancement-section {
   flex: 1;

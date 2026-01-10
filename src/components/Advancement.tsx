@@ -39,7 +39,7 @@ const Advancement = ({
         count={3}
         value={value}
         onChange={onCheckboxChange}
-        checkboxClassName={checkboxClassName || 'promise-checkbox'}
+        checkboxClassName={checkboxClassName || 'custom-checkbox'}
         getAriaLabel={getAriaLabel}
       />
       <div style={defaultLabelStyle}>{label}</div>
