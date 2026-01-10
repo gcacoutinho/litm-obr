@@ -11,15 +11,14 @@ export function useGmCharacterSync(role: PlayerRole): GmCharacterPayload[] {
   const [characters, setCharacters] = useState<Record<string, GmCharacterPayload>>({})
   const [partyPlayers, setPartyPlayers] = useState<Player[] | null>(null)
   const activePlayerIds = useMemo<string[] | null>(() => {
-    if (!partyPlayers) {
+    if (role !== 'GM' || !partyPlayers) {
       return null
     }
     return partyPlayers.map((player) => player.id)
-  }, [partyPlayers])
+  }, [partyPlayers, role])
 
   useEffect(() => {
     if (role !== 'GM') {
-      setPartyPlayers(null)
       return
     }
 
@@ -93,7 +92,7 @@ export function useGmCharacterSync(role: PlayerRole): GmCharacterPayload[] {
       return
     }
 
-    return onGmSyncMessage((message: GmSyncMessage, _connectionId: string) => {
+    return onGmSyncMessage((message: GmSyncMessage) => {
       if (message.type !== 'character-update') {
         return
       }

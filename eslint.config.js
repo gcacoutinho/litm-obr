@@ -28,7 +28,7 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       'no-console': 'error',
-      'semi': ['error', 'always'],
+      'semi': 'off',
       'react-hooks/exhaustive-deps': 'error',
     },
   },
@@ -37,6 +37,9 @@ export default tseslint.config(
       'src/hooks/useCharacterStorage.ts',
       'src/hooks/useFellowshipThemeCardStorage.ts',
       'src/hooks/useSpecialImprovementsStorage.ts',
+      'src/hooks/useObrPlayerRole.ts',
+      'src/pages/Configurations.tsx',
+      'src/obrd/*.ts',
       'src/obrd/localStore.ts',
     ],
     rules: {

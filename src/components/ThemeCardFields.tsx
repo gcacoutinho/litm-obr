@@ -6,7 +6,7 @@ import TextAreaInput from './TextAreaInput'
 import WeaknessTagLeading from './WeaknessTagLeading'
 import { ThemeTagInput } from './ThemeTagInput'
 import { PowerTagInput } from './PowerTagInput'
-import AdvancementSection from './AdvancementSection'
+import { AdvancementSection } from './AdvancementSection'
 
 type ThemeCardFieldsProps = {
   theme: PowerTag

@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   leading?: React.ReactNode;
@@ -30,7 +30,7 @@ const TextInput: React.ForwardRefExoticComponent<
     const combinedClass: string = className ? `${defaultClass} ${className}`.trim() : defaultClass;
     const defaultStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box' };
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const [highlightWidth, setHighlightWidth] = useState<number>(0);
+    const highlightContainerRef = useRef<HTMLDivElement | null>(null);
     const highlightText: string = useMemo(() => {
       if (typeof value === 'string' || typeof value === 'number') {
         return String(value);
@@ -46,9 +46,6 @@ const TextInput: React.ForwardRefExoticComponent<
 
       return '';
     }, [value, defaultValue]);
-    const highlightStyle: React.CSSProperties | undefined = highlightClassName
-      ? ({ '--highlight-width': `${highlightWidth}px` } as React.CSSProperties)
-      : undefined;
     const highlightActive: boolean = Boolean(highlightClassName && highlightText.length > 0);
 
     const handleInputRef = useCallback(
@@ -65,8 +62,12 @@ const TextInput: React.ForwardRefExoticComponent<
     );
 
     useLayoutEffect(() => {
+      const container = highlightContainerRef.current;
+      if (!container) {
+        return;
+      }
       if (!highlightClassName) {
-        setHighlightWidth(0);
+        container.style.removeProperty('--highlight-width');
         return;
       }
 
@@ -97,10 +98,10 @@ const TextInput: React.ForwardRefExoticComponent<
       const availableWidth = Math.max(0, input.clientWidth - paddingLeft - paddingRight);
       const measuredWidth = Math.ceil(context.measureText(highlightText).width);
       const nextWidth = Math.min(measuredWidth, availableWidth);
-      setHighlightWidth((prev) => (prev === nextWidth ? prev : nextWidth));
+      container.style.setProperty('--highlight-width', `${nextWidth}px`);
     }, [highlightClassName, highlightText]);
     const input: React.ReactElement = (
-      <div className="input-content" style={highlightStyle}>
+      <div ref={highlightContainerRef} className="input-content">
         {highlightActive && <span className={`input-highlight ${highlightClassName}`} />}
         <input
           ref={handleInputRef}

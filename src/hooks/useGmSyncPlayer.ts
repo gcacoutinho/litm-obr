@@ -26,7 +26,7 @@ export function useGmSyncPlayer(character: Character | null, role: PlayerRole): 
       return
     }
 
-    return onGmSyncMessage((message: GmSyncMessage, _connectionId: string) => {
+    return onGmSyncMessage((message: GmSyncMessage) => {
       if (message.type !== 'resend-request') {
         return
       }
