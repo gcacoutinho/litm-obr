@@ -9,7 +9,6 @@ import {
 
 type UseFellowshipThemeCardStorageResult = {
   fellowshipData: FellowshipThemeCardData | null
-  isLoading: boolean
   updateFellowshipData: (updates: Partial<FellowshipThemeCardData>) => void
 }
 
@@ -17,17 +16,16 @@ type UseFellowshipThemeCardStorageResult = {
  * Hook for managing fellowship theme card data storage with debounced saves.
  * Loads fellowship data on mount and provides update function with 500ms debounce.
  *
- * @returns Object with fellowshipData, isLoading, and updateFellowshipData callback
+ * @returns Object with fellowshipData and updateFellowshipData callback
  *
  * @example
- * const { fellowshipData, isLoading, updateFellowshipData } = useFellowshipThemeCardStorage()
+ * const { fellowshipData, updateFellowshipData } = useFellowshipThemeCardStorage()
  *
  * // Update fellowship data and it will save after 500ms of inactivity
- * updateFellowshipData({ weaknessTag: 'New Tag' })
+ * updateFellowshipData({ weaknessTags: ['New Tag'] })
  */
 export function useFellowshipThemeCardStorage(): UseFellowshipThemeCardStorageResult {
   const [fellowshipData, setFellowshipData] = useState<FellowshipThemeCardData | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
   const saveTimeoutRef = useRef<number | undefined>(undefined)
   const versionRef = useRef<number>(0)
 
@@ -45,8 +43,6 @@ export function useFellowshipThemeCardStorage(): UseFellowshipThemeCardStorageRe
       } catch (error: unknown) {
         console.error('[litm-obr] Failed to load fellowship theme card data:', error)
         setFellowshipData(createEmptyFellowshipThemeCard())
-      } finally {
-        setIsLoading(false)
       }
     }
 
@@ -105,5 +101,5 @@ export function useFellowshipThemeCardStorage(): UseFellowshipThemeCardStorageRe
     })
   }, [])
 
-  return { fellowshipData, isLoading, updateFellowshipData }
+  return { fellowshipData, updateFellowshipData }
 }

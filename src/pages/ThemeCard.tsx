@@ -77,7 +77,6 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps): ReactEl
           }
           highlightClassName="weakness-tag-highlight"
           placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
-          placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
         />
       ))}
       <label className="label-style">{t('themeCard.quest')}</label>
