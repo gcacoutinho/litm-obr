@@ -34,7 +34,8 @@ export const AdvancementSection = ({
         label={t(`themeCard.${type}`)}
         onCheckboxChange={onCheckboxChange}
         labelStyle={{
-          fontWeight: 'bold',
+          fontFamily: "'IM Fell English', serif",
+          fontWeight: 400,
           textTransform: 'uppercase',
           color: '#52281a',
           textAlign: 'center',

@@ -21,7 +21,8 @@ body {
   height: 100%;
   background-color: #f4e5d2;
   overflow: hidden;
-  font-family: 'Cormorant Unicase', serif;
+  font-family: 'Texturina', serif;
+  font-weight: 700;
 }
 
 #root {
@@ -170,7 +171,8 @@ td {
   cursor: pointer;
   border-bottom: none;
   border-radius: 4px 4px 0 0;
-  font-family: 'Cormorant Unicase', serif;
+  font-family: 'Texturina', serif;
+  font-weight: 700;
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -200,7 +202,8 @@ td {
    color: #52281a;
    border: none;
    border-bottom: 1px solid #e4d2c1;
-   font-family: 'Cormorant Unicase', serif;
+   font-family: 'Labrada', serif;
+   font-style: italic;
    font-size: 1em;
 }
 
@@ -219,7 +222,8 @@ td {
   align-items: center;
   flex-shrink: 0;
   color: #52281a;
-  font-family: 'Cormorant Unicase', serif;
+  font-family: 'Texturina', serif;
+  font-weight: 700;
 }
 
 .tab-content.hero-card {
@@ -247,7 +251,8 @@ td {
    text-transform: uppercase;
    box-sizing: border-box;
    color: #52281a;
-   font-family: 'Cormorant Unicase', serif;
+   font-family: 'IM Fell English', serif;
+   font-weight: 700;
    text-align: center;
 }
 
@@ -315,11 +320,10 @@ td {
   border-radius: 50px;
   transition: all 0.2s ease;
   color: #52281a;
-  font-family: 'Cormorant Unicase', serif;
-  font-weight: 700;
+  font-family: 'IM Fell English', serif;
+  font-weight: 400;
   text-transform: uppercase;
   background: none;
-  font-size: 1em;
   font-size: 1em;
 }
 
@@ -422,6 +426,11 @@ td {
   font-size: 1.2em;
 }
 
+.tag-input {
+  font-family: 'Labrada', serif;
+  font-style: italic;
+}
+
 /* Hero Card Styles */
 .hero-card-name-wrapper {
   margin: 1rem;
@@ -462,6 +471,7 @@ td {
   padding: 8px;
   color: #52281a;
   font-weight: bold;
+  font-family: 'IM Fell English', serif;
   text-align: center;
   background-color: #fef8ef;
   border-right: 1px solid #e4d2c1;
@@ -494,7 +504,8 @@ td {
 .hero-promises-label {
   margin-right: 1rem;
   color: #52281a;
-  font-weight: 700;
+  font-family: 'IM Fell English', serif;
+  font-weight: 400;
   text-transform: uppercase;
 }
 
@@ -597,6 +608,7 @@ td {
 .gm-character-name {
   font-size: 1.4rem;
   font-weight: 700;
+  font-family: 'IM Fell English', serif;
   text-transform: uppercase;
 }
 
@@ -620,6 +632,7 @@ td {
 .gm-label {
   text-transform: uppercase;
   font-weight: 700;
+  font-family: 'IM Fell English', serif;
   font-size: 0.8rem;
   color: #7a5b46;
 }
@@ -715,6 +728,7 @@ td {
 
 .gm-theme-header {
   font-weight: 700;
+  font-family: 'IM Fell English', serif;
   text-transform: uppercase;
   font-size: 0.9rem;
   color: #7a5b46;

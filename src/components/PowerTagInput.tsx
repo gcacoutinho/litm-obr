@@ -25,6 +25,7 @@ export const PowerTagInput = ({
 }: PowerTagInputProps): React.ReactElement => {
   return (
     <TextInput
+      className="tag-input"
       value={text}
       onChange={onTextChange}
       placeholder={placeholder}
