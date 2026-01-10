@@ -1,4 +1,4 @@
-import { Character, FellowshipThemeCardData, createEmptyCharacter } from './types'
+import { Character, FellowshipThemeCardData } from './types'
 import {
   loadCharacter,
   saveCharacter,
@@ -26,5 +26,3 @@ export async function getMyFellowshipThemeCard(): Promise<FellowshipThemeCardDat
 export async function saveMyFellowshipThemeCard(data: FellowshipThemeCardData): Promise<void> {
   saveFellowshipThemeCard(data)
 }
-
-export { createEmptyCharacter }
