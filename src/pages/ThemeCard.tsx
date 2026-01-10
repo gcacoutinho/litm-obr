@@ -75,8 +75,7 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps): ReactEl
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             form.handleWeaknessTagChange(index, e.currentTarget.value)
           }
-         highlightClassName="weakness-tag-highlight"
-          placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
+          highlightClassName="weakness-tag-highlight"
           placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
         />
       ))}
