@@ -25,7 +25,7 @@ export const ThemeTagInput = ({
 }: ThemeTagInputProps): React.ReactElement => {
   return (
     <TextInput
-      className="power-tag-large"
+      className="power-tag-large tag-input"
       value={text}
       onChange={onTextChange}
       placeholder={placeholder}

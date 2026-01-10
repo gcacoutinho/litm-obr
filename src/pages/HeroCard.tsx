@@ -136,7 +136,7 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps): React.ReactElement =>
           count={5}
           value={promises}
           onChange={handlePromiseChange}
-          checkboxClassName="promise-checkbox hero-promise-checkbox"
+          checkboxClassName="custom-checkbox"
         />
       </div>
       <div>

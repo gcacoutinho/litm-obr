@@ -39,12 +39,12 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps): ReactEl
           </button>
         ))}
       </div>
-       <TextInput
-         leading={<label>{t('themeCard.type')}</label>}
-         value={form.type}
-         onChange={form.handleTypeChange}
-         placeholder={t('themeCard.type')}
-       />
+      <TextInput
+        leading={<label>{t('themeCard.type')}</label>}
+        value={form.type}
+        onChange={form.handleTypeChange}
+        placeholder={t('themeCard.typePlaceholder')}
+      />
        <ThemeTagInput
          text={form.theme.text}
          isScratched={form.theme.isScratched}
@@ -67,17 +67,19 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps): ReactEl
          />
        ))}
        {form.weaknessTags.map((weaknessTag, index: number) => (
-          <TextInput
-            key={`weakness-tag-${index}`}
-            leading={<WeaknessTagLeading />}
-            value={weaknessTag}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              form.handleWeaknessTagChange(index, e.currentTarget.value)
-            }
-           highlightClassName="weakness-tag-highlight"
-            placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
-          />
-        ))}
+        <TextInput
+          key={`weakness-tag-${index}`}
+          leading={<WeaknessTagLeading />}
+          className="tag-input"
+          value={weaknessTag}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            form.handleWeaknessTagChange(index, e.currentTarget.value)
+          }
+         highlightClassName="weakness-tag-highlight"
+          placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
+          placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
+        />
+      ))}
       <label className="label-style">{t('themeCard.quest')}</label>
       <TextAreaInput
         lines={3}

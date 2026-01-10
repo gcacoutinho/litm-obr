@@ -26,6 +26,7 @@
   "backpack.item": "Objeto",
   
   "themeCard.type": "Tipo:",
+  "themeCard.typePlaceholder": "Tipo",
   "themeCard.weaknessTag": "Etiqueta de Debilidad",
   "themeCard.quest": "MISIÓN",
   "themeCard.powerTag": "Etiqueta de Poder",
