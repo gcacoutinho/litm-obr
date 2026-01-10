@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react'
 import { FellowshipThemeCardData, PowerTag, WeaknessTag, createEmptyFellowshipThemeCard } from '../obrd/types'
+import { createThemeCardFormHandlers } from './themeCardFormUtils'
 import { useFellowshipThemeCardStorage } from './useFellowshipThemeCardStorage'
 
 type UseFellowshipThemeCardFormResult = {
@@ -44,60 +45,16 @@ export function useFellowshipThemeCardForm(): UseFellowshipThemeCardFormResult {
   }
 
   // Handlers
-  const handleThemeChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const value: string = e.currentTarget.value
-    const updatedTheme: PowerTag = { ...current.theme, text: value }
-    updateFellowshipCard({ theme: updatedTheme })
-  }
-
-  const handleThemeScratchedChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const checked: boolean = e.target.checked
-    const updatedTheme: PowerTag = { ...current.theme, isScratched: checked }
-    updateFellowshipCard({ theme: updatedTheme })
-  }
-
-  const handlePowerTagChange = (index: number, updatedTag: PowerTag): void => {
-    const updated: PowerTag[] = [...current.powerTags]
-    updated[index] = updatedTag
-    updateFellowshipCard({ powerTags: updated })
-  }
-
-  const handleWeaknessTagChange = (index: number, value: string): void => {
-    const updated: WeaknessTag[] = [...current.weaknessTags]
-    updated[index] = value
-    updateFellowshipCard({ weaknessTags: updated })
-  }
-
-  const handleQuestsChange = (value: string): void => {
-    updateFellowshipCard({ quests: value })
-  }
-
-  const handleAbandonChange = (value: number): void => {
-    updateFellowshipCard({
-      advancements: {
-        ...advancements,
-        abandon: value,
-      },
-    })
-  }
-
-  const handleImproveChange = (value: number): void => {
-    updateFellowshipCard({
-      advancements: {
-        ...advancements,
-        improve: value,
-      },
-    })
-  }
-
-  const handleMilestoneChange = (value: number): void => {
-    updateFellowshipCard({
-      advancements: {
-        ...advancements,
-        milestone: value,
-      },
-    })
-  }
+  const {
+    handleThemeChange,
+    handleThemeScratchedChange,
+    handlePowerTagChange,
+    handleWeaknessTagChange,
+    handleQuestsChange,
+    handleAbandonChange,
+    handleImproveChange,
+    handleMilestoneChange,
+  } = createThemeCardFormHandlers(current, updateFellowshipCard)
 
   return {
     theme,
