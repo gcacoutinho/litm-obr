@@ -557,19 +557,7 @@ td {
   flex: 1;
   min-width: 0;
   position: relative;
-  overflow: visible;
-}
-
-.input-highlight-measure {
-  position: absolute;
-  top: 0;
-  left: 0;
-  visibility: hidden;
-  white-space: pre;
-  pointer-events: none;
-  border: none;
-  padding: 0;
-  height: auto;
+  overflow: hidden;
 }
 
 .input-highlight {

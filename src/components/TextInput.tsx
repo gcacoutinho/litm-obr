@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   leading?: React.ReactNode;
@@ -29,7 +29,7 @@ const TextInput: React.ForwardRefExoticComponent<
     const defaultClass: string = 'input-base';
     const combinedClass: string = className ? `${defaultClass} ${className}`.trim() : defaultClass;
     const defaultStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box' };
-    const measureRef = useRef<HTMLSpanElement>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const [highlightWidth, setHighlightWidth] = useState<number>(0);
     const highlightText: string = useMemo(() => {
       if (typeof value === 'string' || typeof value === 'number') {
@@ -51,30 +51,59 @@ const TextInput: React.ForwardRefExoticComponent<
       : undefined;
     const highlightActive: boolean = Boolean(highlightClassName && highlightText.length > 0);
 
+    const handleInputRef = useCallback(
+      (node: HTMLInputElement | null) => {
+        inputRef.current = node;
+
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      },
+      [ref],
+    );
+
     useLayoutEffect(() => {
       if (!highlightClassName) {
         setHighlightWidth(0);
         return;
       }
 
-      const measure = measureRef.current;
-      if (!measure) {
+      const input = inputRef.current;
+      if (!input) {
         return;
       }
 
-      const nextWidth = measure.offsetWidth;
+      const context = document.createElement('canvas').getContext('2d');
+      if (!context) {
+        return;
+      }
+
+      const style = window.getComputedStyle(input);
+      const font = [
+        style.fontStyle,
+        style.fontVariant,
+        style.fontWeight,
+        style.fontSize,
+        style.fontFamily,
+      ]
+        .filter((value) => value && value !== 'normal')
+        .join(' ');
+      context.font = font || `${style.fontSize} ${style.fontFamily}`;
+
+      const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
+      const paddingRight = Number.parseFloat(style.paddingRight) || 0;
+      const availableWidth = Math.max(0, input.clientWidth - paddingLeft - paddingRight);
+      const measuredWidth = Math.ceil(context.measureText(highlightText).width);
+      const nextWidth = Math.min(measuredWidth, availableWidth);
       setHighlightWidth((prev) => (prev === nextWidth ? prev : nextWidth));
-    }, [highlightClassName, highlightText, combinedClass]);
+    }, [highlightClassName, highlightText]);
     const input: React.ReactElement = (
       <div className="input-content" style={highlightStyle}>
-        {highlightClassName && (
-          <span ref={measureRef} className={`input-highlight-measure ${combinedClass}`} aria-hidden="true">
-            {highlightText}
-          </span>
-        )}
         {highlightActive && <span className={`input-highlight ${highlightClassName}`} />}
         <input
-          ref={ref}
+          ref={handleInputRef}
           className={combinedClass}
           {...props}
           value={value}
