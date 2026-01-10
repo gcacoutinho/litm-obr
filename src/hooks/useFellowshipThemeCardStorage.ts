@@ -23,7 +23,7 @@ type UseFellowshipThemeCardStorageResult = {
  * const { fellowshipData, isLoading, updateFellowshipData } = useFellowshipThemeCardStorage()
  *
  * // Update fellowship data and it will save after 500ms of inactivity
- * updateFellowshipData({ weaknessTag: 'New Tag' })
+ * updateFellowshipData({ weaknessTags: ['New Tag'] })
  */
 export function useFellowshipThemeCardStorage(): UseFellowshipThemeCardStorageResult {
   const [fellowshipData, setFellowshipData] = useState<FellowshipThemeCardData | null>(null)
