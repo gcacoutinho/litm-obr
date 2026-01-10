@@ -94,3 +94,29 @@ export async function saveGmCharacter(
 
   return roomMap
 }
+
+export async function pruneGmCharacters(activePlayerIds: string[]): Promise<GmCharacterRoomMap> {
+  const roomKey: string = await getRoomStorageKey()
+  const storageMap: GmCharacterStorageMap = await loadAllRooms()
+  const roomMap: GmCharacterRoomMap = storageMap[roomKey] ?? {}
+  const activeIds: Set<string> = new Set(activePlayerIds)
+
+  let changed: boolean = false
+  Object.keys(roomMap).forEach((playerId: string) => {
+    if (!activeIds.has(playerId)) {
+      delete roomMap[playerId]
+      changed = true
+    }
+  })
+
+  if (changed) {
+    if (Object.keys(roomMap).length > 0) {
+      storageMap[roomKey] = roomMap
+    } else {
+      delete storageMap[roomKey]
+    }
+    await saveAllRooms(storageMap)
+  }
+
+  return roomMap
+}
