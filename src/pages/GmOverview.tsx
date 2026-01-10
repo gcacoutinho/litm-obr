@@ -31,7 +31,7 @@ function formatPowerTag(tag: PowerTag, index: number): ReactElement | null {
 }
 
 function renderThemeCard(card: ThemeCardData): ReactElement {
-  const powerTags: ReactElement[] = card.powerTags
+  const powerTags: ReactElement[] = [card.theme, ...card.powerTags]
     .map((tag: PowerTag, index: number) => formatPowerTag(tag, index))
     .filter((tag): tag is ReactElement => tag !== null)
   const weaknessTags: string[] = card.weaknessTags.filter((tag: string) => tag.trim() !== '')
