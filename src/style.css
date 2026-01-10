@@ -557,7 +557,7 @@ td {
   flex: 1;
   min-width: 0;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .input-highlight {

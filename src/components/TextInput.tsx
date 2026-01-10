@@ -92,7 +92,11 @@ const TextInput: React.ForwardRefExoticComponent<
         .join(' ');
       context.font = font || `${style.fontSize} ${style.fontFamily}`;
 
-      const nextWidth = Math.ceil(context.measureText(highlightText).width);
+      const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
+      const paddingRight = Number.parseFloat(style.paddingRight) || 0;
+      const availableWidth = Math.max(0, input.clientWidth - paddingLeft - paddingRight);
+      const measuredWidth = Math.ceil(context.measureText(highlightText).width);
+      const nextWidth = Math.min(measuredWidth, availableWidth);
       setHighlightWidth((prev) => (prev === nextWidth ? prev : nextWidth));
     }, [highlightClassName, highlightText]);
     const input: React.ReactElement = (
