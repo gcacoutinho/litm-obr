@@ -179,7 +179,7 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
       {role === 'PLAYER' ? (
         <div style={{ marginBottom: '2rem' }}>
           <div>
-            <span className="label-style">{t('config.characterImportExport')}</span>
+            <span className="label-style">{t('config.manageCharacter')}</span>
           </div>
           <div style={{ margin: '1rem 1rem 0 1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -265,35 +265,35 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
                 {status.text}
               </div>
             ) : null}
+            <button
+              onClick={handleClearCharacterData}
+              className="might-option"
+              style={{
+                padding: '0.6em 1.2em',
+                borderRadius: '8px',
+                border: '1px solid #b0482c',
+                backgroundColor: '#f9d6d0',
+                color: '#52281a',
+                fontWeight: 'normal',
+                cursor: 'pointer',
+                alignSelf: 'flex-start',
+              }}
+            >
+              {t('config.clearCharacterData')}
+            </button>
           </div>
         </div>
       ) : null}
-      {role === 'PLAYER' ? (
-        <div style={{ marginBottom: '2rem' }}>
-          <button
-            onClick={handleClearCharacterData}
-            className="might-option"
-            style={{
-              marginLeft: '1rem',
-              padding: '0.6em 1.2em',
-              borderRadius: '8px',
-              border: '1px solid #b0482c',
-              backgroundColor: '#f9d6d0',
-              color: '#52281a',
-              fontWeight: 'normal',
-              cursor: 'pointer',
-            }}
-          >
-            {t('config.clearCharacterData')}
-          </button>
-        </div>
-      ) : null}
       <div style={{ marginBottom: '2rem' }}>
+        <div>
+          <span className="label-style">{t('config.support')}</span>
+        </div>
         <button
           onClick={handleReportIssues}
           className="might-option"
           style={{
             marginLeft: '1rem',
+            marginTop: '1rem',
             padding: '0.6em 1.2em',
             borderRadius: '8px',
             border: '1px solid #e4d2c1',
