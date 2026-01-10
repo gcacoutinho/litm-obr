@@ -45,13 +45,13 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps): ReactEl
         onChange={form.handleTypeChange}
         placeholder={t('themeCard.typePlaceholder')}
       />
-       <ThemeTagInput
-         text={form.theme.text}
-         isScratched={form.theme.isScratched}
-         onTextChange={form.handleThemeChange}
-         onScratchedChange={form.handleThemeScratchedChange}
-         placeholder={t('themeCard.powerTag')}
-       />
+      <ThemeTagInput
+        text={form.theme.text}
+        isScratched={form.theme.isScratched}
+        onTextChange={form.handleThemeChange}
+        onScratchedChange={form.handleThemeScratchedChange}
+        placeholder={t('themeCard.powerTag')}
+      />
        {form.powerTags.map((powerTag, index: number) => (
          <PowerTagInput
            key={`power-tag-${index}`}
@@ -66,7 +66,7 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps): ReactEl
            placeholder={`${t('themeCard.powerTag')} ${index + 1}`}
          />
        ))}
-       {form.weaknessTags.map((weaknessTag, index: number) => (
+      {form.weaknessTags.map((weaknessTag, index: number) => (
         <TextInput
           key={`weakness-tag-${index}`}
           leading={<WeaknessTagLeading />}
