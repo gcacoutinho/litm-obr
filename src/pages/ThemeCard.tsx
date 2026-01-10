@@ -39,12 +39,12 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps): ReactEl
           </button>
         ))}
       </div>
-       <TextInput
-         leading={<label>{t('themeCard.type')}</label>}
-         value={form.type}
-         onChange={form.handleTypeChange}
-         placeholder={t('themeCard.type')}
-       />
+      <TextInput
+        leading={<label>{t('themeCard.type')}</label>}
+        value={form.type}
+        onChange={form.handleTypeChange}
+        placeholder={t('themeCard.typePlaceholder')}
+      />
        <ThemeTagInput
          text={form.theme.text}
          isScratched={form.theme.isScratched}
