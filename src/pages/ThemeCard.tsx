@@ -70,6 +70,7 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps): ReactEl
          <TextInput
            key={`weakness-tag-${index}`}
            leading={<WeaknessTagLeading />}
+           className="tag-input"
            value={weaknessTag}
            onChange={(e: ChangeEvent<HTMLInputElement>) =>
              form.handleWeaknessTagChange(index, e.currentTarget.value)
