@@ -67,16 +67,17 @@ const ThemeCard = ({ cardNumber, character, onUpdate }: ThemeCardProps): ReactEl
          />
        ))}
        {form.weaknessTags.map((weaknessTag, index: number) => (
-         <TextInput
-           key={`weakness-tag-${index}`}
-           leading={<WeaknessTagLeading />}
-           value={weaknessTag}
-           onChange={(e: ChangeEvent<HTMLInputElement>) =>
-             form.handleWeaknessTagChange(index, e.currentTarget.value)
-           }
-           placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
-         />
-       ))}
+          <TextInput
+            key={`weakness-tag-${index}`}
+            leading={<WeaknessTagLeading />}
+            value={weaknessTag}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              form.handleWeaknessTagChange(index, e.currentTarget.value)
+            }
+           highlightClassName="weakness-tag-highlight"
+            placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
+          />
+        ))}
       <label className="label-style">{t('themeCard.quest')}</label>
       <TextAreaInput
         lines={3}

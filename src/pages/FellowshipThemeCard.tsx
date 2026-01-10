@@ -42,6 +42,7 @@ const FellowshipThemeCard = (): ReactElement => {
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             form.handleWeaknessTagChange(index, e.currentTarget.value)
           }
+          highlightClassName="weakness-tag-highlight"
           placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
         />
       ))}

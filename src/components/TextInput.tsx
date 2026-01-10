@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   leading?: React.ReactNode;
   trailing?: React.ReactNode;
+  highlightClassName?: string;
 }
 
 /**
@@ -24,12 +25,63 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const TextInput: React.ForwardRefExoticComponent<
   TextInputProps & React.RefAttributes<HTMLInputElement>
 > = React.forwardRef<HTMLInputElement, TextInputProps>(
-  ({ className, style, leading, trailing, ...props }, ref): React.ReactElement => {
+  ({ className, style, leading, trailing, highlightClassName, value, defaultValue, ...props }, ref): React.ReactElement => {
     const defaultClass: string = 'input-base';
     const combinedClass: string = className ? `${defaultClass} ${className}`.trim() : defaultClass;
     const defaultStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box' };
+    const measureRef = useRef<HTMLSpanElement>(null);
+    const [highlightWidth, setHighlightWidth] = useState<number>(0);
+    const highlightText: string = useMemo(() => {
+      if (typeof value === 'string' || typeof value === 'number') {
+        return String(value);
+      }
+
+      if (typeof defaultValue === 'string' || typeof defaultValue === 'number') {
+        return String(defaultValue);
+      }
+
+      if (Array.isArray(defaultValue)) {
+        return defaultValue.join(' ');
+      }
+
+      return '';
+    }, [value, defaultValue]);
+    const highlightStyle: React.CSSProperties | undefined = highlightClassName
+      ? ({ '--highlight-width': `${highlightWidth}px` } as React.CSSProperties)
+      : undefined;
+    const highlightActive: boolean = Boolean(highlightClassName && highlightText.length > 0);
+
+    useLayoutEffect(() => {
+      if (!highlightClassName) {
+        setHighlightWidth(0);
+        return;
+      }
+
+      const measure = measureRef.current;
+      if (!measure) {
+        return;
+      }
+
+      const nextWidth = measure.offsetWidth;
+      setHighlightWidth((prev) => (prev === nextWidth ? prev : nextWidth));
+    }, [highlightClassName, highlightText, combinedClass]);
     const input: React.ReactElement = (
-      <input ref={ref} className={combinedClass} {...props} style={{ ...defaultStyle, ...style }} />
+      <div className="input-content" style={highlightStyle}>
+        {highlightClassName && (
+          <span ref={measureRef} className={`input-highlight-measure ${combinedClass}`} aria-hidden="true">
+            {highlightText}
+          </span>
+        )}
+        {highlightActive && <span className={`input-highlight ${highlightClassName}`} />}
+        <input
+          ref={ref}
+          className={combinedClass}
+          {...props}
+          value={value}
+          defaultValue={defaultValue}
+          style={{ ...defaultStyle, ...style }}
+        />
+      </div>
     );
 
     // If no leading or trailing slots, use current behavior
@@ -45,9 +97,7 @@ const TextInput: React.ForwardRefExoticComponent<
     return (
       <div className="input-wrapper input-wrapper-flex">
         {leading && <span className="input-leading">{leading}</span>}
-        <div className="input-content">
-          {input}
-        </div>
+        {input}
         {trailing && <span className="input-trailing">{trailing}</span>}
       </div>
     );

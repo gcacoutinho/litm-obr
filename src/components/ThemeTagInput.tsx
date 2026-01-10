@@ -29,6 +29,7 @@ export const ThemeTagInput = ({
       value={text}
       onChange={onTextChange}
       placeholder={placeholder}
+      highlightClassName="power-tag-highlight"
       trailing={<ScratchCheckbox checked={isScratched} onChange={onScratchedChange} />}
     />
   )
