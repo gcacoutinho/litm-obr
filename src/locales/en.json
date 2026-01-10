@@ -26,6 +26,7 @@
   "backpack.item": "Item",
   
   "themeCard.type": "Type:",
+  "themeCard.typePlaceholder": "Type",
   "themeCard.weaknessTag": "Weakness tag",
   "themeCard.quest": "QUEST",
   "themeCard.powerTag": "Power Tag",
