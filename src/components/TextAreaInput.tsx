@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import './TextAreaInput.css';
 
 interface TextAreaInputProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -31,8 +31,6 @@ const TextAreaInput: React.ForwardRefExoticComponent<
     const lineHeightEm: number = 1.5;
     const lineHeight: string = `${lineHeightEm}em`;
 
-    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
     const defaultStyle: React.CSSProperties = {
       width: '100%',
       boxSizing: 'border-box',
@@ -51,14 +49,7 @@ const TextAreaInput: React.ForwardRefExoticComponent<
     return (
       <div className="input-wrapper">
         <textarea
-          ref={ref ? (el: HTMLTextAreaElement | null) => {
-            textareaRef.current = el;
-            if (typeof ref === 'function') {
-              ref(el);
-            } else if (ref) {
-              ref.current = el;
-            }
-          } : textareaRef}
+          ref={ref}
           rows={lines}
           className={combinedClass}
           value={propValue ?? ''}
