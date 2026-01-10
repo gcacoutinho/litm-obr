@@ -4,11 +4,11 @@ import OBR from '@owlbear-rodeo/sdk'
 export type PlayerRole = 'GM' | 'PLAYER' | 'UNKNOWN'
 
 export function useObrPlayerRole(): PlayerRole {
-  const [role, setRole] = useState<PlayerRole>('UNKNOWN')
+  const initialRole: PlayerRole = OBR.isAvailable ? 'UNKNOWN' : 'PLAYER'
+  const [role, setRole] = useState<PlayerRole>(initialRole)
 
   useEffect(() => {
     if (!OBR.isAvailable) {
-      setRole('PLAYER')
       return
     }
 

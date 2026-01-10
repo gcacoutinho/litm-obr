@@ -1,6 +1,5 @@
-import type { ChangeEvent, ReactElement } from 'react'
-import { useTranslation } from 'react-i18next'
-import { TextInput, TextAreaInput, WeaknessTagLeading, ThemeTagInput, PowerTagInput, AdvancementSection } from '../components'
+import type { ReactElement } from 'react'
+import { ThemeCardFields } from '../components'
 import { useFellowshipThemeCardForm } from '../hooks/useFellowshipThemeCardForm'
 
 /**
@@ -8,71 +7,27 @@ import { useFellowshipThemeCardForm } from '../hooks/useFellowshipThemeCardForm'
  * Manages form state through useFellowshipThemeCardForm hook.
  */
 const FellowshipThemeCard = (): ReactElement => {
-  const { t } = useTranslation()
   const form = useFellowshipThemeCardForm()
 
   return (
     <div>
-      <ThemeTagInput
-        text={form.theme.text}
-        isScratched={form.theme.isScratched}
-        onTextChange={form.handleThemeChange}
-        onScratchedChange={form.handleThemeScratchedChange}
-        placeholder={t('themeCard.powerTag')}
+      <ThemeCardFields
+        theme={form.theme}
+        powerTags={form.powerTags}
+        weaknessTags={form.weaknessTags}
+        quests={form.quests}
+        abandonAdvancements={form.abandonAdvancements}
+        improveAdvancements={form.improveAdvancements}
+        milestoneAdvancements={form.milestoneAdvancements}
+        onThemeChange={form.handleThemeChange}
+        onThemeScratchedChange={form.handleThemeScratchedChange}
+        onPowerTagChange={form.handlePowerTagChange}
+        onWeaknessTagChange={form.handleWeaknessTagChange}
+        onQuestsChange={form.handleQuestsChange}
+        onAbandonChange={form.handleAbandonChange}
+        onImproveChange={form.handleImproveChange}
+        onMilestoneChange={form.handleMilestoneChange}
       />
-      {form.powerTags.map((powerTag, index: number) => (
-        <PowerTagInput
-          key={`power-tag-${index}`}
-          text={powerTag.text}
-          isScratched={powerTag.isScratched}
-          onTextChange={(e: ChangeEvent<HTMLInputElement>) =>
-            form.handlePowerTagChange(index, { ...powerTag, text: e.currentTarget.value })
-          }
-          onScratchedChange={(e: ChangeEvent<HTMLInputElement>) =>
-            form.handlePowerTagChange(index, { ...powerTag, isScratched: e.target.checked })
-          }
-          placeholder={`${t('themeCard.powerTag')} ${index + 1}`}
-        />
-      ))}
-      {form.weaknessTags.map((weaknessTag, index: number) => (
-        <TextInput
-          key={`weakness-tag-${index}`}
-          leading={<WeaknessTagLeading />}
-          className="tag-input"
-          value={weaknessTag}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            form.handleWeaknessTagChange(index, e.currentTarget.value)
-          }
-          highlightClassName="weakness-tag-highlight"
-          placeholder={`${t('themeCard.weaknessTag')} ${index + 1}`}
-        />
-      ))}
-      <label className="label-style">{t('themeCard.quest')}</label>
-      <TextAreaInput
-        lines={3}
-        placeholder={t('themeCard.quest')}
-        value={form.quests}
-        onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-          form.handleQuestsChange(e.currentTarget.value)
-        }
-      />
-      <div className="advancement-container">
-        <AdvancementSection
-          type="abandon"
-          value={form.abandonAdvancements}
-          onCheckboxChange={form.handleAbandonChange}
-        />
-        <AdvancementSection
-          type="improve"
-          value={form.improveAdvancements}
-          onCheckboxChange={form.handleImproveChange}
-        />
-        <AdvancementSection
-          type="milestone"
-          value={form.milestoneAdvancements}
-          onCheckboxChange={form.handleMilestoneChange}
-        />
-      </div>
     </div>
   )
 }

@@ -24,9 +24,9 @@ type ThemeCardFormHandlers = {
   handleMilestoneChange: (value: number) => void
 }
 
-export function createThemeCardFormHandlers<T extends ThemeCardBasics>(
-  current: T,
-  update: (updates: Partial<T>) => void
+export function createThemeCardFormHandlers(
+  current: ThemeCardBasics,
+  update: (updates: Partial<ThemeCardBasics>) => void
 ): ThemeCardFormHandlers {
   const handleThemeChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const value: string = e.currentTarget.value

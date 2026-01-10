@@ -60,7 +60,11 @@ function App(): ReactElement {
       { id: 'configurations', label: t('tab.configurations') }
     ]
 
-  const currentIndex: number = tabs.findIndex((tab) => tab.id === activeTab)
+  const effectiveActiveTab: TabId = role === 'GM'
+    ? (activeTab === 'gm-overview' || activeTab === 'configurations' ? activeTab : 'gm-overview')
+    : (activeTab === 'gm-overview' ? 'hero-card' : activeTab)
+
+  const currentIndex: number = tabs.findIndex((tab) => tab.id === effectiveActiveTab)
   const isFirstTab: boolean = currentIndex === 0
   const isLastTab: boolean = currentIndex === tabs.length - 1
 
@@ -93,27 +97,14 @@ function App(): ReactElement {
     if (tabContentRef.current) {
       tabContentRef.current.scrollTop = 0
     }
-  }, [activeTab])
-
-  useEffect(() => {
-    if (role === 'GM') {
-      if (activeTab !== 'gm-overview' && activeTab !== 'configurations') {
-        setActiveTab('gm-overview')
-      }
-      return
-    }
-
-    if (activeTab === 'gm-overview') {
-      setActiveTab('hero-card')
-    }
-  }, [activeTab, role])
+  }, [effectiveActiveTab])
 
   const renderContent = (): ReactElement | null => {
     if (isLoading || !character) {
       return <div className="app-loading">{t('app.loading')}</div>
     }
 
-    switch (activeTab) {
+    switch (effectiveActiveTab) {
       case 'hero-card':
         return <HeroCard character={character} onUpdate={updateCharacter} />
       case 'backpack':
@@ -161,7 +152,7 @@ function App(): ReactElement {
           {tabs.map((tab: Tab) => (
             <button
               key={tab.id}
-              className={`tab ${activeTab === tab.id ? 'active' : ''}`}
+              className={`tab ${effectiveActiveTab === tab.id ? 'active' : ''}`}
               onClick={() => setActiveTab(tab.id)}
             >
               {tab.label}
@@ -177,7 +168,7 @@ function App(): ReactElement {
           ▶
         </button>
       </div>
-      <div ref={tabContentRef} className={`tab-content ${activeTab}`}>
+      <div ref={tabContentRef} className={`tab-content ${effectiveActiveTab}`}>
         {renderContent()}
       </div>
     </div>

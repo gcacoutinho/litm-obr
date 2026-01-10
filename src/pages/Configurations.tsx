@@ -35,19 +35,16 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
   const [isImporting, setIsImporting] = useState<boolean>(false)
   const [statusVisible, setStatusVisible] = useState<boolean>(false)
 
+  const showStatus = (next: StatusMessage): void => {
+    setStatus(next)
+    setStatusVisible(true)
+  }
+
   const languages: LanguageOption[] = [
     { code: 'en', label: t('config.english') },
     { code: 'pt-BR', label: t('config.portuguese') },
     { code: 'es', label: t('config.spanish') },
   ]
-
-  useEffect(() => {
-    if (status) {
-      setStatusVisible(true)
-    } else {
-      setStatusVisible(false)
-    }
-  }, [status])
 
   useEffect(() => {
     if (!status || status.tone !== 'success') {
@@ -114,7 +111,7 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
     try {
       const text: string = await file.text()
       if (!text.trim()) {
-        setStatus({ tone: 'error', text: t('config.importEmpty') })
+        showStatus({ tone: 'error', text: t('config.importEmpty') })
         return
       }
 
@@ -129,23 +126,23 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
 
       switch (result.status) {
         case 'success':
-          setStatus({ tone: 'success', text: t('config.importSuccess') })
+          showStatus({ tone: 'success', text: t('config.importSuccess') })
           break
         case 'invalid_json':
-          setStatus({ tone: 'error', text: t('config.importInvalidJson') })
+          showStatus({ tone: 'error', text: t('config.importInvalidJson') })
           break
         case 'invalid_data':
-          setStatus({ tone: 'error', text: t('config.importInvalidData') })
+          showStatus({ tone: 'error', text: t('config.importInvalidData') })
           break
         case 'save_failed':
-          setStatus({ tone: 'error', text: t('config.importSaveError') })
+          showStatus({ tone: 'error', text: t('config.importSaveError') })
           break
         default:
           break
       }
     } catch (error: unknown) {
       console.warn('[litm-obr] Failed to read import file.', error)
-      setStatus({ tone: 'error', text: t('config.importFileError') })
+      showStatus({ tone: 'error', text: t('config.importFileError') })
     }
 
     event.target.value = ''
