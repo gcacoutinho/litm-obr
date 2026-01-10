@@ -205,6 +205,8 @@ td {
    font-family: 'Labrada', serif;
    font-style: italic;
    font-size: 1em;
+   position: relative;
+   z-index: 1;
 }
 
 .flex-item-container {
@@ -554,6 +556,39 @@ td {
 .input-content {
   flex: 1;
   min-width: 0;
+  position: relative;
+  overflow: visible;
+}
+
+.input-highlight-measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  white-space: pre;
+  pointer-events: none;
+  border: none;
+  padding: 0;
+  height: auto;
+}
+
+.input-highlight {
+  position: absolute;
+  left: 0;
+  bottom: 0.2em;
+  height: 1em;
+  width: calc(var(--highlight-width, 0px) + 0.1em);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.power-tag-highlight {
+  background-color: #efd693;
+}
+
+.weakness-tag-highlight {
+  background-color: #ecb985;
 }
 
 /* Backpack styles */

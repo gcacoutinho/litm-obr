@@ -124,6 +124,7 @@ const HeroCard = ({ character, onUpdate }: HeroCardProps): React.ReactElement =>
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   handleRelationshipTagChange(i, e.target.value)
                 }
+                highlightClassName="power-tag-highlight"
               />
             </div>
           </div>
