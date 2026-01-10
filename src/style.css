@@ -568,7 +568,7 @@ td {
   background-color: #fef8ef;
   border: 1px solid #e4d2c1;
   border-radius: 12px;
-  padding: 1rem;
+  padding: 0.3rem 0.7rem 0.7rem 0.7rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
