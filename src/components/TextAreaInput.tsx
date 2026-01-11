@@ -32,8 +32,6 @@ const TextAreaInput: React.ForwardRefExoticComponent<
     const lineHeight: string = `${lineHeightEm}em`;
 
     const defaultStyle: React.CSSProperties = {
-      width: '100%',
-      boxSizing: 'border-box',
       resize: 'none',
       overflow: 'hidden',
       lineHeight: lineHeightEm,

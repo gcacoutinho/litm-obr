@@ -33,15 +33,8 @@ export const AdvancementSection = ({
         value={value}
         label={t(`themeCard.${type}`)}
         onCheckboxChange={onCheckboxChange}
-        labelStyle={{
-          fontFamily: "'IM Fell English', serif",
-          fontWeight: 400,
-          textTransform: 'uppercase',
-          color: '#52281a',
-          textAlign: 'center',
-        }}
         checkboxAriaLabels={ariaLabels[type]}
-        containerStyle={{ marginBottom: '1rem' }}
+        containerClassName="advancement--spaced"
       />
     </div>
   )

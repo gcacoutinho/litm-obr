@@ -150,23 +150,14 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
 
   return (
     <div>
-      <div style={{ marginBottom: '2rem' }}>
+      <div className="config-section">
         <label className="label-style">{t('config.selectLanguage')}</label>
-        <div style={{ display: 'flex', gap: '0.5rem', margin: '1rem 1rem 0 1rem' }}>
+        <div className="config-language-options">
           {languages.map((lang: LanguageOption) => (
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
-              className={`might-option ${i18n.language === lang.code ? 'active' : ''}`}
-              style={{
-                padding: '0.6em 1.2em',
-                borderRadius: '8px',
-                border: i18n.language === lang.code ? '2px solid #52281a' : '1px solid #e4d2c1',
-                backgroundColor: i18n.language === lang.code ? '#e4d2c1' : '#f4e5d2',
-                color: '#52281a',
-                fontWeight: i18n.language === lang.code ? 'bold' : 'normal',
-                cursor: 'pointer',
-              }}
+              className={`might-option config-button ${i18n.language === lang.code ? 'config-button--active' : ''}`}
             >
               {lang.label}
             </button>
@@ -174,53 +165,28 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
         </div>
       </div>
       {role === 'PLAYER' ? (
-        <div style={{ marginBottom: '2rem' }}>
+        <div className="config-section">
           <div>
             <span className="label-style">{t('config.manageCharacter')}</span>
           </div>
-          <div style={{ margin: '1rem 1rem 0 1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div className="config-actions">
+            <div className="config-actions-row">
               <button
                 onClick={handleExportDownload}
-                className="might-option"
-                style={{
-                  padding: '0.6em 1.2em',
-                  borderRadius: '8px',
-                  border: '1px solid #e4d2c1',
-                  backgroundColor: '#f4e5d2',
-                  color: '#52281a',
-                  fontWeight: 'normal',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                className="might-option config-button"
               >
                 {t('config.exportDownload')}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '0.5rem' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="config-icon">
                   <path d="M12 3v12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   <polyline points="7,10 12,15 17,10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M5 21h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
               <label
-                className="might-option"
-                style={{
-                  padding: '0.6em 1.2em',
-                  borderRadius: '8px',
-                  border: '1px solid #e4d2c1',
-                  backgroundColor: '#f4e5d2',
-                  color: '#52281a',
-                  fontWeight: 'normal',
-                  cursor: isImporting ? 'not-allowed' : 'pointer',
-                  opacity: isImporting ? 0.7 : 1,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                className={`might-option config-button ${isImporting ? 'config-button--disabled' : ''}`}
               >
                 {t('config.importLabel')}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '0.5rem' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="config-icon">
                   <path d="M12 21V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   <polyline points="7,14 12,9 17,14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M5 3h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -229,7 +195,7 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
                   type="file"
                   accept="application/json"
                   onChange={handleImportFile}
-                  style={{ display: 'none' }}
+                  className="config-file-input"
                   disabled={isImporting}
                 />
               </label>
@@ -237,71 +203,30 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
             {status ? (
               <div
                 role="status"
-                style={{
-                  padding: '0.6rem 0.8rem',
-                  borderRadius: '6px',
-                  border:
-                    status.tone === 'error'
-                      ? '1px solid #b0482c'
-                      : status.tone === 'success'
-                        ? '1px solid #c29a2b'
-                        : '1px solid #e4d2c1',
-                  backgroundColor:
-                    status.tone === 'error'
-                      ? '#f9d6d0'
-                      : status.tone === 'success'
-                        ? '#fff4c2'
-                        : '#f4e5d2',
-                  color: '#52281a',
-                  opacity: statusVisible ? 1 : 0,
-                  transform: statusVisible ? 'translateY(0)' : 'translateY(-6px)',
-                  transition: 'opacity 200ms ease, transform 200ms ease',
-                  pointerEvents: statusVisible ? 'auto' : 'none',
-                }}
+                className={`config-status config-status--${status.tone} ${statusVisible ? 'config-status--visible' : ''}`}
               >
                 {status.text}
               </div>
             ) : null}
             <button
               onClick={handleClearCharacterData}
-              className="might-option"
-              style={{
-                padding: '0.6em 1.2em',
-                borderRadius: '8px',
-                border: '1px solid #b0482c',
-                backgroundColor: '#f9d6d0',
-                color: '#52281a',
-                fontWeight: 'normal',
-                cursor: 'pointer',
-                alignSelf: 'flex-start',
-              }}
+              className="might-option config-button config-button--danger config-button--align-start"
             >
               {t('config.clearCharacterData')}
             </button>
           </div>
         </div>
       ) : null}
-      <div style={{ marginBottom: '2rem' }}>
+      <div className="config-section">
         <div>
           <span className="label-style">{t('config.support')}</span>
         </div>
         <button
           onClick={handleReportIssues}
-          className="might-option"
-          style={{
-            marginLeft: '1rem',
-            marginTop: '1rem',
-            padding: '0.6em 1.2em',
-            borderRadius: '8px',
-            border: '1px solid #e4d2c1',
-            backgroundColor: '#f4e5d2',
-            color: '#52281a',
-            fontWeight: 'normal',
-            cursor: 'pointer',
-          }}
+          className="might-option config-button config-support-button"
         >
           {t('config.reportIssues')}
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '0.5rem' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="config-icon">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             <polyline points="15,3 21,3 21,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             <line x1="10" y1="14" x2="21" y2="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

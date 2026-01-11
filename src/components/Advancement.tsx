@@ -5,8 +5,8 @@ interface AdvancementProps {
   value: number;
   label: string;
   onCheckboxChange: (value: number) => void;
-  containerStyle?: React.CSSProperties;
-  labelStyle?: React.CSSProperties;
+  containerClassName?: string;
+  labelClassName?: string;
   checkboxClassName?: string;
   checkboxAriaLabels?: [string, string, string];
 }
@@ -15,26 +15,23 @@ const Advancement = ({
   value,
   label,
   onCheckboxChange,
-  containerStyle,
-  labelStyle,
+  containerClassName,
+  labelClassName,
   checkboxClassName,
   checkboxAriaLabels,
 }: AdvancementProps): React.ReactElement => {
-  const defaultContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    ...containerStyle,
-  };
-
-  const defaultLabelStyle: React.CSSProperties = {
-    ...labelStyle,
-  };
+  const containerClass = containerClassName
+    ? `advancement ${containerClassName}`
+    : 'advancement';
+  const labelClass = labelClassName
+    ? `advancement-label ${labelClassName}`
+    : 'advancement-label';
   const getAriaLabel: ((index: number) => string) | undefined = checkboxAriaLabels
     ? (index: number): string => checkboxAriaLabels[index]
     : undefined;
 
   return (
-    <div style={defaultContainerStyle}>
+    <div className={containerClass}>
       <InputCheckboxGroup
         count={3}
         value={value}
@@ -42,7 +39,7 @@ const Advancement = ({
         checkboxClassName={checkboxClassName || 'custom-checkbox'}
         getAriaLabel={getAriaLabel}
       />
-      <div style={defaultLabelStyle}>{label}</div>
+      <div className={labelClass}>{label}</div>
     </div>
   );
 };

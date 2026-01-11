@@ -28,7 +28,6 @@ const TextInput: React.ForwardRefExoticComponent<
   ({ className, style, leading, trailing, highlightClassName, value, defaultValue, ...props }, ref): React.ReactElement => {
     const defaultClass: string = 'input-base';
     const combinedClass: string = className ? `${defaultClass} ${className}`.trim() : defaultClass;
-    const defaultStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box' };
     const inputRef = useRef<HTMLInputElement | null>(null);
     const highlightContainerRef = useRef<HTMLDivElement | null>(null);
     const highlightText: string = useMemo(() => {
@@ -109,7 +108,7 @@ const TextInput: React.ForwardRefExoticComponent<
           {...props}
           value={value}
           defaultValue={defaultValue}
-          style={{ ...defaultStyle, ...style }}
+          style={style}
         />
       </div>
     );
