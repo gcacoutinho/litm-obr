@@ -46,7 +46,6 @@ const TextInput: React.ForwardRefExoticComponent<
 
       return '';
     }, [value, defaultValue]);
-    const highlightPadding: number = 6;
     const highlightActive: boolean = Boolean(highlightClassName && highlightText.length > 0);
 
     const handleInputRef = useCallback(
@@ -69,10 +68,8 @@ const TextInput: React.ForwardRefExoticComponent<
       }
       if (!highlightClassName) {
         container.style.removeProperty('--highlight-width');
-        container.style.removeProperty('--highlight-padding');
         return;
       }
-      container.style.setProperty('--highlight-padding', `${highlightPadding}px`);
 
       const input = inputRef.current;
       if (!input) {
@@ -98,7 +95,7 @@ const TextInput: React.ForwardRefExoticComponent<
 
       const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
       const paddingRight = Number.parseFloat(style.paddingRight) || 0;
-      const availableWidth = Math.max(0, input.clientWidth - paddingLeft - paddingRight - highlightPadding);
+      const availableWidth = Math.max(0, input.clientWidth - paddingLeft - paddingRight);
       const measuredWidth = Math.ceil(context.measureText(highlightText).width);
       const nextWidth = Math.min(measuredWidth, availableWidth);
       container.style.setProperty('--highlight-width', `${nextWidth}px`);
