@@ -83,7 +83,7 @@ td {
 }
 
 .tab {
-  padding: 0.5rem 1rem;
+  padding: 0.3rem 0.7rem;
   border: 1px solid #88542b;
   background-color: #b27f57;
   cursor: pointer;
@@ -304,8 +304,7 @@ td {
 
 .might-selector {
   display: flex;
-  gap: 1rem;
-  justify-content: center;
+  justify-content: space-evenly;
   margin-bottom: 1rem;
   background-color: #e7d2b8;
   padding: 0.5rem;
@@ -329,6 +328,11 @@ td {
 
 .might-option:hover {
   border-color: #b27f57;
+}
+
+.might-option:focus,
+.might-option:focus-visible {
+  outline: 0;
 }
 
 .might-option.active {
