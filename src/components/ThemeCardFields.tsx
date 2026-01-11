@@ -52,7 +52,7 @@ const ThemeCardFields = ({
         isScratched={theme.isScratched}
         onTextChange={onThemeChange}
         onScratchedChange={onThemeScratchedChange}
-        placeholder={t('themeCard.powerTag')}
+        placeholder={t('themeCard.themeTag')}
       />
       {powerTags.map((powerTag, index: number) => (
         <PowerTagInput
