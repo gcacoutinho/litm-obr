@@ -565,7 +565,7 @@ td {
   left: 0;
   bottom: 0.2em;
   height: 1em;
-  width: calc(var(--highlight-width, 0px) + 0.1em);
+  width: calc(var(--highlight-width, 0px) + var(--highlight-padding, 0px));
   opacity: 0.55;
   pointer-events: none;
   z-index: 0;
