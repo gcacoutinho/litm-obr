@@ -198,15 +198,17 @@ td {
 
 
 .input-base {
-   background-color: transparent;
-   color: #52281a;
-   border: none;
-   border-bottom: 1px solid #e4d2c1;
-   font-family: 'Labrada', serif;
-   font-style: italic;
-   font-size: 1em;
-   position: relative;
-   z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: transparent;
+  color: #52281a;
+  border: none;
+  border-bottom: 1px solid #e4d2c1;
+  font-family: 'Labrada', serif;
+  font-style: italic;
+  font-size: 1em;
+  position: relative;
+  z-index: 1;
 }
 
 .flex-item-container {
@@ -256,6 +258,106 @@ td {
    font-family: 'IM Fell English', serif;
    font-weight: 700;
    text-align: center;
+}
+
+.config-section {
+  margin-bottom: 2rem;
+}
+
+.config-language-options {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 1rem 0 1rem;
+}
+
+.config-actions {
+  margin: 1rem 1rem 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.config-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.config-button {
+  padding: 0.6em 1.2em;
+  border-radius: 8px;
+  border: 1px solid #e4d2c1;
+  background-color: #f4e5d2;
+  color: #52281a;
+  font-weight: normal;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.config-button--active {
+  border: 2px solid #52281a;
+  background-color: #e4d2c1;
+  font-weight: bold;
+}
+
+.config-button--danger {
+  border: 1px solid #b0482c;
+  background-color: #f9d6d0;
+}
+
+.config-button--disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.config-button--align-start {
+  align-self: flex-start;
+}
+
+.config-support-button {
+  margin-left: 1rem;
+  margin-top: 1rem;
+}
+
+.config-status {
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  color: #52281a;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 200ms ease, transform 200ms ease;
+  pointer-events: none;
+}
+
+.config-status--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.config-status--error {
+  border: 1px solid #b0482c;
+  background-color: #f9d6d0;
+}
+
+.config-status--success {
+  border: 1px solid #c29a2b;
+  background-color: #fff4c2;
+}
+
+.config-status--info {
+  border: 1px solid #e4d2c1;
+  background-color: #f4e5d2;
+}
+
+.config-icon {
+  margin-left: 0.5rem;
+}
+
+.config-file-input {
+  display: none;
 }
 
 .custom-checkbox {
@@ -424,6 +526,23 @@ td {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
+}
+
+.advancement {
+  display: flex;
+  flex-direction: column;
+}
+
+.advancement--spaced {
+  margin-bottom: 1rem;
+}
+
+.advancement-label {
+  font-family: 'IM Fell English', serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #52281a;
+  text-align: center;
 }
 
 .power-tag-large {
