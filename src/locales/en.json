@@ -39,6 +39,11 @@
   "mightOptions.greatness": "Greatness",
   
   "app.loading": "Loading character...",
+  "obr.loading": "Initializing Misty Rodeo...",
+  "obr.modalTitle": "No connection to OBR",
+  "obr.modalBody": "Unable to load the Owlbear Rodeo SDK. You can continue without integration or try again.",
+  "obr.modalContinue": "Continue without OBR",
+  "obr.modalRetry": "Try again",
   "config.selectLanguage": "Select Language:",
   "config.english": "English",
   "config.portuguese": "Português (Brasil)",
