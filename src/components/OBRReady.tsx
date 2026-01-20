@@ -1,6 +1,5 @@
 import type { ReactElement } from 'react'
 import { useState, useEffect, ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
 import OBR from '@owlbear-rodeo/sdk'
 
 interface OBRReadyProps {
@@ -19,64 +18,46 @@ interface OBRReadyProps {
  * </OBRReady>
  */
 export function OBRReady({ children }: OBRReadyProps): ReactElement {
-  const { t } = useTranslation()
   const isAvailable: boolean = OBR.isAvailable
   const [isReady, setIsReady] = useState<boolean>(false)
-  const [showBypassModal, setShowBypassModal] = useState<boolean>(false)
-  const [isBypassing, setIsBypassing] = useState<boolean>(false)
-  const [retryCount, setRetryCount] = useState<number>(0)
+  const [showBypass, setShowBypass] = useState<boolean>(false)
 
   useEffect(() => {
+    if (!isAvailable) {
+      return
+    }
+
     const timeoutId: number = window.setTimeout(() => {
-      setShowBypassModal(true)
+      setShowBypass(true)
     }, 5000)
 
-    if (isAvailable) {
-      OBR.onReady(() => {
-        window.clearTimeout(timeoutId)
-        setIsReady(true)
-        setShowBypassModal(false)
-      })
-    }
+    OBR.onReady(() => {
+      window.clearTimeout(timeoutId)
+      setIsReady(true)
+    })
 
     return () => {
       window.clearTimeout(timeoutId)
     }
-  }, [isAvailable, retryCount])
+  }, [isAvailable])
 
-  if (isBypassing || isReady) {
+  if (!isAvailable) {
     return <>{children}</>
   }
-  const handleContinueWithoutObr = (): void => {
-    setIsBypassing(true)
+
+  if (!isReady) {
+    return (
+      <div className="obr-loading-container">
+        <div className="spinner"></div>
+        <p className="obr-loading-text">Initializing Misty Rodeo</p>
+        {showBypass ? (
+          <button type="button" onClick={() => setIsReady(true)}>
+            Continue without OBR
+          </button>
+        ) : null}
+      </div>
+    )
   }
 
-  const handleRetry = (): void => {
-    setShowBypassModal(false)
-    setIsReady(false)
-    setRetryCount((prev) => prev + 1)
-  }
-
-  return (
-    <div className="obr-loading-container">
-      <div className="spinner"></div>
-      <p className="obr-loading-text">{t('obr.loading')}</p>
-      {showBypassModal ? (
-        <div className="obr-modal-backdrop" role="dialog" aria-modal="true">
-          <div className="obr-modal">
-            <h2>{t('obr.modalTitle')}</h2>
-            <p>{t('obr.modalBody')}</p>
-            <div className="obr-modal-actions">
-              <button type="button" onClick={handleContinueWithoutObr}>
-                {t('obr.modalContinue')}
-              </button>
-              <button type="button" onClick={handleRetry}>
-                {t('obr.modalRetry')}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
-    </div>
-  )
+  return <>{children}</>
 }
