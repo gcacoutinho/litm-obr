@@ -59,7 +59,7 @@ td {
   padding: 8px;
 }
 
-.tab-bar {
+.view-bar {
   position: sticky;
   top: 0;
   display: flex;
@@ -67,64 +67,48 @@ td {
   background-color: #b27f57;
   z-index: 10;
   flex-shrink: 0;
+  padding: 0.4rem 0.6rem;
 }
 
-.tabs {
-  flex: 1;
-  display: flex;
-  overflow-x: auto;
-  white-space: nowrap;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+.view-selector {
+  position: relative;
+  width: 100%;
 }
 
-.tabs::-webkit-scrollbar {
-  display: none;
+.view-selector::after {
+  content: 'V';
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ebdecc;
+  font-size: 0.9rem;
+  pointer-events: none;
 }
 
-.tab {
-  padding: 0.3rem 0.7rem;
+.view-selector-control {
+  width: 100%;
+  padding: 0.4rem 2rem 0.4rem 0.8rem;
   border: 1px solid #88542b;
   background-color: #b27f57;
   cursor: pointer;
-  border-bottom: none;
-  border-radius: 4px 4px 0 0;
-  margin-right: 2px;
+  border-radius: 6px;
   color: #ebdecc;
   text-transform: uppercase;
+  font-family: 'Texturina', serif;
+  font-weight: 700;
+  appearance: none;
 }
 
-.tab:hover {
+.view-selector-control:hover {
   outline: none;
   background-color: #c2987a;
   color: #d4c4b8;
   border-color: #88542b;
 }
 
-.tab:focus {
+.view-selector-control:focus {
   outline: none;
-}
-
-.tab.active {
-  background-color: #88684f;
-}
-
-.scroll-arrow {
-  background-color: #b27f57;
-  border: 1px solid #88542b;
-  color: #ebdecc;
-  cursor: pointer;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border-radius: 4px 4px 0 0;
-}
-
-.scroll-arrow.left {
-  margin-right: 0.5rem;
-}
-
-.scroll-arrow.right {
-  margin-left: 0.5rem;
 }
 
 .tab-content {
@@ -161,41 +145,6 @@ td {
 *::-webkit-scrollbar-thumb:hover {
   background: #88684f;
 }
-
-.scroll-nav-arrow {
-  flex-shrink: 0;
-  padding: 0.5rem 1rem;
-  border: 1px solid #88542b;
-  background-color: #b27f57;
-  color: #ebdecc;
-  cursor: pointer;
-  border-bottom: none;
-  border-radius: 4px 4px 0 0;
-  font-family: 'Texturina', serif;
-  font-weight: 700;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-
-
-.scroll-nav-arrow:hover:not(:disabled) {
-  outline: none;
-  background-color: #c2987a;
-  color: #d4c4b8;
-  border-color: #88542b;
-}
-
-.scroll-nav-arrow:focus {
-  outline: none;
-}
-
-.scroll-nav-arrow:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-
 
 .input-base {
   width: 100%;
