@@ -106,6 +106,10 @@ td {
 
 .view-selector__menu {
   margin-top: 0.4rem;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
@@ -114,6 +118,7 @@ td {
   border-radius: 8px;
   padding: 0.35rem;
   box-shadow: 0 6px 16px rgba(82, 40, 26, 0.18);
+  z-index: 20;
 }
 
 .view-selector__option {
