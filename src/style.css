@@ -290,10 +290,23 @@ td {
   background-color: #f4e5d2;
   color: #52281a;
   font-weight: normal;
+  font-family: 'IM Fell English', serif;
+  text-transform: uppercase;
+  font-size: 1em;
+  transition: all 0.2s ease;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.config-button:hover {
+  border-color: #b27f57;
+}
+
+.config-button:focus,
+.config-button:focus-visible {
+  outline: 0;
 }
 
 .config-button--active {
@@ -441,6 +454,7 @@ td {
   border-color: #b27f57;
   border-width: 2px;
 }
+
 
 .scratch-checkbox-wrapper {
   display: inline-flex;

@@ -157,7 +157,7 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
-              className={`might-option config-button ${i18n.language === lang.code ? 'config-button--active' : ''}`}
+              className={`config-button ${i18n.language === lang.code ? 'config-button--active' : ''}`}
             >
               {lang.label}
             </button>
@@ -173,7 +173,7 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
             <div className="config-actions-row">
               <button
                 onClick={handleExportDownload}
-                className="might-option config-button"
+                className="config-button"
               >
                 {t('config.exportDownload')}
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="config-icon">
@@ -183,7 +183,7 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
                 </svg>
               </button>
               <label
-                className={`might-option config-button ${isImporting ? 'config-button--disabled' : ''}`}
+                className={`config-button ${isImporting ? 'config-button--disabled' : ''}`}
               >
                 {t('config.importLabel')}
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="config-icon">
@@ -210,7 +210,7 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
             ) : null}
             <button
               onClick={handleClearCharacterData}
-              className="might-option config-button config-button--danger config-button--align-start"
+              className="config-button config-button--danger config-button--align-start"
             >
               {t('config.clearCharacterData')}
             </button>
@@ -223,7 +223,7 @@ const Configurations = ({ onClearCharacter, onImportCharacter, character, role }
         </div>
         <button
           onClick={handleReportIssues}
-          className="might-option config-button config-support-button"
+          className="config-button config-support-button"
         >
           {t('config.reportIssues')}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="config-icon">
