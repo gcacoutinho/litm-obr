@@ -14,7 +14,7 @@ import Configurations from './pages/Configurations'
 import GmOverview from './pages/GmOverview'
 
 /**
- * Main application component with tabbed interface for character management.
+ * Main application component with view selector for character management.
  * Manages navigation between hero card, backpack, theme cards, and other sections.
  * Includes language selection and persistence.
  */
@@ -65,35 +65,7 @@ function App(): ReactElement {
     ? (activeTab === 'gm-overview' || activeTab === 'configurations' ? activeTab : 'gm-overview')
     : (activeTab === 'gm-overview' ? 'hero-card' : activeTab)
 
-  const currentIndex: number = tabs.findIndex((tab) => tab.id === effectiveActiveTab)
-  const isFirstTab: boolean = currentIndex === 0
-  const isLastTab: boolean = currentIndex === tabs.length - 1
-
-  const goToPrevious = (): void => {
-    if (!isFirstTab) {
-      setActiveTab(tabs[currentIndex - 1].id)
-    }
-  }
-
-  const goToNext = (): void => {
-    if (!isLastTab) {
-      setActiveTab(tabs[currentIndex + 1].id)
-    }
-  }
-
-  const scrollToSelectedTab = (): void => {
-    const selectedTab: HTMLElement | null = document.querySelector('.tab.active') as HTMLElement | null
-    if (selectedTab) {
-      selectedTab.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center'
-      })
-    }
-  }
-
   useEffect(() => {
-    scrollToSelectedTab()
     // Reset tab-content scroll to top
     if (tabContentRef.current) {
       tabContentRef.current.scrollTop = 0
@@ -141,34 +113,21 @@ function App(): ReactElement {
   return (
     <>
       <div className="card">
-        <div className="tab-bar">
-          <button
-            className="scroll-nav-arrow left"
-            onClick={goToPrevious}
-            disabled={isFirstTab}
-            aria-label="Previous tab"
+        <div className="view-selector">
+          <select
+            id="view-selector"
+            className="view-selector-control"
+            value={effectiveActiveTab}
+            onChange={(event) => setActiveTab(event.target.value as TabId)}
+            aria-label={t('app.selectView')}
           >
-            ◀
-          </button>
-          <div className="tabs">
             {tabs.map((tab: Tab) => (
-              <button
-                key={tab.id}
-                className={`tab ${effectiveActiveTab === tab.id ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab.id)}
-              >
+              <option key={tab.id} value={tab.id}>
                 {tab.label}
-              </button>
+              </option>
             ))}
-          </div>
-          <button
-            className="scroll-nav-arrow right"
-            onClick={goToNext}
-            disabled={isLastTab}
-            aria-label="Next tab"
-          >
-            ▶
-          </button>
+          </select>
+          <span className="view-selector-caret" aria-hidden="true">V</span>
         </div>
         <div ref={tabContentRef} className={`tab-content ${effectiveActiveTab}`}>
           {renderContent()}
