@@ -40,7 +40,9 @@ function App(): ReactElement {
   const { character, isLoading, updateCharacter, clearCharacter, importCharacter } = useCharacterStorage()
   const role: PlayerRole = useObrPlayerRole()
   const [activeTab, setActiveTab] = useState<TabId>('hero-card')
+  const [isViewMenuOpen, setIsViewMenuOpen] = useState(false)
   const tabContentRef = useRef<HTMLDivElement | null>(null)
+  const viewMenuRef = useRef<HTMLDivElement | null>(null)
 
   useGmSyncPlayer(character, role)
 
@@ -65,40 +67,36 @@ function App(): ReactElement {
     ? (activeTab === 'gm-overview' || activeTab === 'configurations' ? activeTab : 'gm-overview')
     : (activeTab === 'gm-overview' ? 'hero-card' : activeTab)
 
-  const currentIndex: number = tabs.findIndex((tab) => tab.id === effectiveActiveTab)
-  const isFirstTab: boolean = currentIndex === 0
-  const isLastTab: boolean = currentIndex === tabs.length - 1
+  const activeTabLabel: string = tabs.find((tab) => tab.id === effectiveActiveTab)?.label ?? ''
 
-  const goToPrevious = (): void => {
-    if (!isFirstTab) {
-      setActiveTab(tabs[currentIndex - 1].id)
-    }
-  }
-
-  const goToNext = (): void => {
-    if (!isLastTab) {
-      setActiveTab(tabs[currentIndex + 1].id)
-    }
-  }
-
-  const scrollToSelectedTab = (): void => {
-    const selectedTab: HTMLElement | null = document.querySelector('.tab.active') as HTMLElement | null
-    if (selectedTab) {
-      selectedTab.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center'
-      })
-    }
+  const toggleViewMenu = (): void => {
+    setIsViewMenuOpen((prev) => !prev)
   }
 
   useEffect(() => {
-    scrollToSelectedTab()
+    setIsViewMenuOpen(false)
     // Reset tab-content scroll to top
     if (tabContentRef.current) {
       tabContentRef.current.scrollTop = 0
     }
   }, [effectiveActiveTab])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent): void => {
+      if (!viewMenuRef.current) {
+        return
+      }
+
+      if (!viewMenuRef.current.contains(event.target as Node)) {
+        setIsViewMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   const renderContent = (): ReactElement | null => {
     if (isLoading || !character) {
@@ -141,34 +139,39 @@ function App(): ReactElement {
   return (
     <>
       <div className="card">
-        <div className="tab-bar">
+        <div ref={viewMenuRef} className="view-selector">
           <button
-            className="scroll-nav-arrow left"
-            onClick={goToPrevious}
-            disabled={isFirstTab}
-            aria-label="Previous tab"
+            type="button"
+            className="view-selector__trigger"
+            onClick={toggleViewMenu}
+            aria-haspopup="listbox"
+            aria-expanded={isViewMenuOpen}
+            aria-label={activeTabLabel || 'Select view'}
           >
-            ◀
+            <span className="view-selector__label">{activeTabLabel}</span>
+            <span className="view-selector__chevron" aria-hidden="true">
+              V
+            </span>
           </button>
-          <div className="tabs">
-            {tabs.map((tab: Tab) => (
-              <button
-                key={tab.id}
-                className={`tab ${effectiveActiveTab === tab.id ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-          <button
-            className="scroll-nav-arrow right"
-            onClick={goToNext}
-            disabled={isLastTab}
-            aria-label="Next tab"
-          >
-            ▶
-          </button>
+          {isViewMenuOpen ? (
+            <div className="view-selector__menu" role="listbox" aria-label={activeTabLabel || 'Select view'}>
+              {tabs.map((tab: Tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  className={`view-selector__option${effectiveActiveTab === tab.id ? ' view-selector__option--active' : ''}`}
+                  onClick={() => {
+                    setActiveTab(tab.id)
+                    setIsViewMenuOpen(false)
+                  }}
+                  role="option"
+                  aria-selected={effectiveActiveTab === tab.id}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          ) : null}
         </div>
         <div ref={tabContentRef} className={`tab-content ${effectiveActiveTab}`}>
           {renderContent()}
