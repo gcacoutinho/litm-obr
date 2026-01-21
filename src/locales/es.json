@@ -39,6 +39,7 @@
   "mightOptions.greatness": "Grandeza",
   
   "app.loading": "Cargando personaje...",
+  "app.selectView": "Seleccionar vista",
   "obr.loading": "Inicializando Misty Rodeo...",
   "obr.modalTitle": "Sin conexión con OBR",
   "obr.modalBody": "No pudimos cargar el SDK de Owlbear Rodeo. Puedes continuar sin integración o intentarlo de nuevo.",
