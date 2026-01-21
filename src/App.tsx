@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react'
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Analytics } from '@vercel/analytics/react'
 import './App.css'
 import { useCharacterStorage, useGmSyncPlayer, useObrPlayerRole } from './hooks'
 import type { PlayerRole } from './hooks/useObrPlayerRole'
@@ -138,40 +139,43 @@ function App(): ReactElement {
   }
 
   return (
-    <div className="card">
-      <div className="tab-bar">
-        <button
-          className="scroll-nav-arrow left"
-          onClick={goToPrevious}
-          disabled={isFirstTab}
-          aria-label="Previous tab"
-        >
-          ◀
-        </button>
-        <div className="tabs">
-          {tabs.map((tab: Tab) => (
-            <button
-              key={tab.id}
-              className={`tab ${effectiveActiveTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
+    <>
+      <div className="card">
+        <div className="tab-bar">
+          <button
+            className="scroll-nav-arrow left"
+            onClick={goToPrevious}
+            disabled={isFirstTab}
+            aria-label="Previous tab"
+          >
+            ◀
+          </button>
+          <div className="tabs">
+            {tabs.map((tab: Tab) => (
+              <button
+                key={tab.id}
+                className={`tab ${effectiveActiveTab === tab.id ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          <button
+            className="scroll-nav-arrow right"
+            onClick={goToNext}
+            disabled={isLastTab}
+            aria-label="Next tab"
+          >
+            ▶
+          </button>
         </div>
-        <button
-          className="scroll-nav-arrow right"
-          onClick={goToNext}
-          disabled={isLastTab}
-          aria-label="Next tab"
-        >
-          ▶
-        </button>
+        <div ref={tabContentRef} className={`tab-content ${effectiveActiveTab}`}>
+          {renderContent()}
+        </div>
       </div>
-      <div ref={tabContentRef} className={`tab-content ${effectiveActiveTab}`}>
-        {renderContent()}
-      </div>
-    </div>
+      <Analytics />
+    </>
   )
 }
 
