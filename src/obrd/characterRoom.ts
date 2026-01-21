@@ -1,19 +1,11 @@
 import OBR from '@owlbear-rodeo/sdk'
 import { Character, migrateCharacter } from './types'
 
-const ROOM_CHARACTER_METADATA_KEY: string = 'litm-obr.characters'
+const ROOM_CHARACTER_METADATA_PREFIX: string = 'com.litm-obr/characters/'
 
 export type CharacterRoomEntry = {
-  ownerId: string
   updatedAt: number
   gzip: string
-}
-
-export type CharacterRoomPayload = {
-  version: number
-  updatedAt: number
-  updatedBy: string
-  entries: Record<string, CharacterRoomEntry>
 }
 
 export type CharacterRoomSnapshot = {
@@ -28,27 +20,17 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function isCharacterRoomEntry(value: unknown): value is CharacterRoomEntry {
   if (!isRecord(value)) return false
   return (
-    typeof value.ownerId === 'string' &&
     typeof value.updatedAt === 'number' &&
     typeof value.gzip === 'string'
   )
 }
 
-function isCharacterRoomPayload(value: unknown): value is CharacterRoomPayload {
-  if (!isRecord(value)) return false
-  const entries: unknown = value.entries
-  if (!isRecord(entries)) return false
-
-  return (
-    typeof value.version === 'number' &&
-    typeof value.updatedAt === 'number' &&
-    typeof value.updatedBy === 'string' &&
-    Object.values(entries).every((entry: unknown) => isCharacterRoomEntry(entry))
-  )
-}
-
 function isRoomMetadataAvailable(): boolean {
   return OBR.isAvailable && OBR.isReady
+}
+
+function buildCharacterKey(ownerId: string): string {
+  return `${ROOM_CHARACTER_METADATA_PREFIX}${ownerId}`
 }
 
 function bytesToBase64(bytes: Uint8Array): string {
@@ -76,11 +58,9 @@ async function gzipString(value: string): Promise<string | null> {
   }
 
   try {
-    const stream = new CompressionStream('gzip')
-    const writer = stream.writable.getWriter()
-    await writer.write(new TextEncoder().encode(value))
-    await writer.close()
-    const buffer = await new Response(stream.readable).arrayBuffer()
+    const input = new Blob([value]).stream()
+    const compressedStream = input.pipeThrough(new CompressionStream('gzip'))
+    const buffer = await new Response(compressedStream).arrayBuffer()
     return bytesToBase64(new Uint8Array(buffer))
   } catch (error: unknown) {
     console.error('[litm-obr] Failed to gzip character data.', error)
@@ -107,14 +87,14 @@ async function gunzipString(base64: string): Promise<string | null> {
   }
 }
 
-async function loadCharacterRoomPayload(): Promise<CharacterRoomPayload | null> {
+async function loadCharacterRoomEntry(ownerId: string): Promise<CharacterRoomEntry | null> {
   if (!isRoomMetadataAvailable()) {
     return null
   }
 
   const metadata: Record<string, unknown> = await OBR.room.getMetadata()
-  const payload: unknown = metadata[ROOM_CHARACTER_METADATA_KEY]
-  return isCharacterRoomPayload(payload) ? payload : null
+  const entry: unknown = metadata[buildCharacterKey(ownerId)]
+  return isCharacterRoomEntry(entry) ? entry : null
 }
 
 async function parseRoomEntry(entry: CharacterRoomEntry): Promise<Character | null> {
@@ -137,13 +117,8 @@ export async function loadMyCharacterFromRoom(): Promise<Character | null> {
     return null
   }
 
-  const payload: CharacterRoomPayload | null = await loadCharacterRoomPayload()
-  if (!payload) {
-    return null
-  }
-
   const ownerId: string = OBR.player.id
-  const entry: CharacterRoomEntry | undefined = payload.entries[ownerId]
+  const entry: CharacterRoomEntry | null = await loadCharacterRoomEntry(ownerId)
   if (!entry) {
     return null
   }
@@ -162,41 +137,22 @@ export async function saveMyCharacterToRoom(character: Character): Promise<void>
   }
 
   const ownerId: string = OBR.player.id
-  const updatedBy: string = ownerId
+  const metadataKey: string = buildCharacterKey(ownerId)
   const maxAttempts: number = 3
-  let lastPayload: CharacterRoomPayload | null = null
 
   for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-    const current: CharacterRoomPayload | null = await loadCharacterRoomPayload()
-    const entries: Record<string, CharacterRoomEntry> = {
-      ...(current?.entries ?? {})
-    }
     const now: number = Date.now()
-    entries[ownerId] = {
-      ownerId,
+    const entry: CharacterRoomEntry = {
       updatedAt: now,
       gzip: compressed
     }
 
-    const nextPayload: CharacterRoomPayload = {
-      version: (current?.version ?? 0) + 1,
-      updatedAt: now,
-      updatedBy,
-      entries
-    }
+    await OBR.room.setMetadata({ [metadataKey]: entry })
 
-    await OBR.room.setMetadata({ [ROOM_CHARACTER_METADATA_KEY]: nextPayload })
-
-    const confirmed: CharacterRoomPayload | null = await loadCharacterRoomPayload()
-    if (confirmed?.version === nextPayload.version && confirmed.updatedBy === updatedBy) {
+    const confirmed: CharacterRoomEntry | null = await loadCharacterRoomEntry(ownerId)
+    if (confirmed?.updatedAt === entry.updatedAt && confirmed.gzip === entry.gzip) {
       return
     }
-
-    lastPayload = nextPayload
-  }
-
-  if (lastPayload) {
-    console.warn('[litm-obr] Failed to confirm room character metadata update.')
   }
 }
 
@@ -206,22 +162,8 @@ export async function clearMyCharacterFromRoom(): Promise<void> {
   }
 
   const ownerId: string = OBR.player.id
-  const current: CharacterRoomPayload | null = await loadCharacterRoomPayload()
-  if (!current || !(ownerId in current.entries)) {
-    return
-  }
-
-  const entries: Record<string, CharacterRoomEntry> = { ...current.entries }
-  delete entries[ownerId]
-
-  const nextPayload: CharacterRoomPayload = {
-    version: current.version + 1,
-    updatedAt: Date.now(),
-    updatedBy: ownerId,
-    entries
-  }
-
-  await OBR.room.setMetadata({ [ROOM_CHARACTER_METADATA_KEY]: nextPayload })
+  const metadataKey: string = buildCharacterKey(ownerId)
+  await OBR.room.setMetadata({ [metadataKey]: null })
 }
 
 export function onMyCharacterRoomSnapshotChange(
@@ -242,14 +184,8 @@ export function onMyCharacterRoomSnapshotChange(
     const ownerId: string = OBR.player.id
 
     unsubscribe = OBR.room.onMetadataChange((metadata: Record<string, unknown>) => {
-      const payload: unknown = metadata[ROOM_CHARACTER_METADATA_KEY]
-      if (!isCharacterRoomPayload(payload)) {
-        callback(null)
-        return
-      }
-
-      const entry: CharacterRoomEntry | undefined = payload.entries[ownerId]
-      if (!entry) {
+      const entry: unknown = metadata[buildCharacterKey(ownerId)]
+      if (!isCharacterRoomEntry(entry)) {
         callback(null)
         return
       }
