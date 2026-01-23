@@ -1,6 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Character, createEmptyCharacter, migrateCharacter } from '../obrd/types'
-import { clearMyCharacter, getMyCharacter, saveMyCharacter } from '../obrd/playerMetadata'
+import { saveCharacter as saveCharacterToLocal } from '../obrd/localStore'
+import {
+  clearMyCharacter,
+  getMyCharacter,
+  onMyCharacterRoomChange,
+  saveMyCharacter
+} from '../obrd/playerMetadata'
 
 type UseCharacterStorageResult = {
   character: Character | null
@@ -36,6 +42,7 @@ export function useCharacterStorage(): UseCharacterStorageResult {
   const [character, setCharacter] = useState<Character | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const saveTimeoutRef = useRef<number | undefined>(undefined)
+  const lastRoomUpdatedAtRef = useRef<number>(0)
   
   // Load character on mount
   useEffect(() => {
@@ -59,6 +66,26 @@ export function useCharacterStorage(): UseCharacterStorageResult {
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current)
       }
+    }
+  }, [])
+
+  useEffect(() => {
+    const unsubscribe = onMyCharacterRoomChange((snapshot) => {
+      if (!snapshot) {
+        return
+      }
+
+      if (snapshot.entry.updatedAt <= lastRoomUpdatedAtRef.current) {
+        return
+      }
+
+      lastRoomUpdatedAtRef.current = snapshot.entry.updatedAt
+      setCharacter(snapshot.character)
+      void saveCharacterToLocal(snapshot.character)
+    })
+
+    return () => {
+      unsubscribe()
     }
   }, [])
   
